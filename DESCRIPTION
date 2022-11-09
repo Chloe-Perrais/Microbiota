@@ -1,0 +1,31 @@
+Package: Microbiota
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+        c(person(given = "Nicolas",
+           family = "RODE",
+           role = c("aut", "cre"),
+           email = "nicolas.rode@inrae.fr"),
+      person(given = "Chooi Lin",
+           family = "PHOOI",
+           role = c("aut"),
+           email = "phooi.chooilin@student.upm.edu.my"),
+      person(given = "Lorie",
+           family = "ZHANG",
+           role = c("aut"),
+           email = "lorie.zhang@supagro.fr"),
+      person(given = "David",
+           family = "GERIN-JEAN",
+           role = c("aut"),
+           email = "david.gerin-jean@supagro.fr"),
+      person(given = "cChloe",
+           family = "PERRAIS",
+           role = c("aut"),
+           email = "chloe.perrais@supagro.fr"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+ByteCompile: true
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
