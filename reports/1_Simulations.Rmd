@@ -82,11 +82,11 @@ anova(m1, test="Chisq")
 anova(m0, m1, test="Chisq")
 
 #Linear model
-m0 <- lmer(log(count+1)~1+(1|sample), data = data)
+m0 <- lme4::lmer(log(count+1)~1+(1|sample), data = data)
 summary(m0)
 
 
-varcomp <- data.frame(VarCorr(m0))$vcov
+varcomp <- data.frame(lme4::VarCorr(m0))$vcov
 
 repeatability = varcomp[1]/sum(varcomp)
 repeatability
