@@ -26,5 +26,70 @@ devtools::load_all()
 # Simulations
 
 ```{r }
+rpois(n=1000, 100)
+ 
+
+x=rpois(n=1000, lambda =100)
+hist(x)
+
+mean(x)
+var(x)
+#x=rpois(n=10, lambda = c(50,100)) if we want to have 2 different values for lambda, then recycle the values
+
+z=rnbinom(n=10000,mu = 100, size = 1) #mu is the mean of distribution and the variance is mu+mu^2/size 
+mean(z)
+var(z)
+
+```
+# Analyses
+```{r }
+data=data.frame(sample=rep(c("sample_1","sample_2")), count=rpois(n=1000, lambda = c(10,100)))
+data
+tapply(data$count, data$sample, mean)
+
+#ANOVA
+m0 <- aov(log(count+1)~1, data = data)
+summary(m0)
+
+m1 <- aov(log(count+1)~sample, data = data)
+summary(m1)
+
+anova(m1)
+
+anova(m0, m1, test="F")
+
+#Linear model
+m0 <- lm(log(count+1)~1, data = data)
+summary(m0)
+
+m1 <- lm(log(count+1)~sample, data = data)
+summary(m1)
+
+anova(m1)
+anova(m0, m1, test="F")
+
+# GLM
+m0 <- glm(count~1, data = data, family="poisson")
+summary(m0)
+-2*logLik(m0)
+
+m1 <- glm(count~sample, data = data, family="poisson")
+summary(m1)
+-2*logLik(m1)
+-2*logLik(m0)+2*logLik(m1)
+
+anova(m1, test="Chisq")
+anova(m0, m1, test="Chisq")
+
+#Linear model
+m0 <- lmer(log(count+1)~1+(1|sample), data = data)
+summary(m0)
+
+
+varcomp <- data.frame(VarCorr(m0))$vcov
+
+repeatability = varcomp[1]/sum(varcomp)
+repeatability
+
 
 ```
