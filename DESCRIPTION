@@ -22,7 +22,7 @@ Authors@R:
            family = "PERRAIS",
            role = c("aut"),
            email = "chloe.perrais@supagro.fr"))
-Description: reschear compoments of analyze the microbiota of Drosophila 
+Description: Reschear compendium to analyze the Metabarcoding microbiota of Drosophila 
 License: CC0
 ByteCompile: true
 Encoding: UTF-8
