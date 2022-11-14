@@ -34,6 +34,7 @@ usethis::use_package("here")
 usethis::use_package("ggplot2", type = "Depends")
 usethis::use_package("readxl")
 usethis::use_package("dplyr")
+usethis::use_package("lme4")
 
 ## Update NAMESPACE file
 devtools::document()
