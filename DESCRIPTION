@@ -32,6 +32,7 @@ RoxygenNote: 7.2.1
 Imports: 
     dplyr,
     here,
+    mc2d,
     readxl
 Depends: 
     ggplot2

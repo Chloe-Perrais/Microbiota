@@ -103,7 +103,16 @@ repeatability
 
 #Sample abundance table
 ```{r}
+nOTU=3
+Nhabitats=10
 sample_Binomial(Nhabitats=10, prob=0.5, mean_nindiviuals_per_habitat=5)
+abundance_table <- sample_Multinomial(Nhabitats=Nhabitats, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=5)
 
+
+## Please add the missing columns here with fake names for Division, Class, ..., Genus
+taxonomy <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU))
+taxonomy
+metadata <- data.frame(sample=paste0("sample_", 1:Nhabitats), TypeofHabitat=sample(c("Type1", "Type2"), Nhabitats, replace = TRUE))
+table(metadata$TypeofHabitat)
 ```
 
