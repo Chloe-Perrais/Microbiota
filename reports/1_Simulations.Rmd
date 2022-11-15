@@ -88,7 +88,7 @@ anova(m0, m1, test="Chisq")
 ```{r }
 data <- sample_Poisson(sample=c("sample_1","sample_2"), count=10, lambda= c(10,100))
 #Linear model
-m0 <- lme4::lmer(log(count+1)~1+(1|sample), data = data) #lme4 = package ... lmer = function 
+m0 <- lme4::lmer(log(count+1)~1+(1|sample), data = data)
 summary(m0)
 
 ## Extract variance components
@@ -100,3 +100,10 @@ repeatability
 
 
 ```
+
+#Sample abundance table
+```{r}
+ sample_Binomial(Nhabitats=100, prob=0.5, nindiviual_per_habitat=5)
+
+```
+
