@@ -103,7 +103,7 @@ repeatability
 
 #Sample abundance table
 ```{r}
- sample_Binomial(Nhabitats=100, prob=0.5, nindiviual_per_habitat=5)
+sample_Binomial(Nhabitats=10, prob=0.5, mean_nindiviuals_per_habitat=5)
 
 ```
 

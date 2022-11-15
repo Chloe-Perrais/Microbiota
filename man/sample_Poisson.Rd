@@ -10,7 +10,7 @@ sample_Poisson(sample, count, lambda)
 \item{sample}{count lambda}
 }
 \value{
-dataframe data
+dataframe
 }
 \description{
 Functions that randomly samples Poisson data and returns a dataframe

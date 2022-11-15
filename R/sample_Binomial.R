@@ -10,12 +10,14 @@ sample_Binomial <- function(Nhabitats, prob, mean_nindiviuals_per_habitat){
   if(length(mean_nindiviuals_per_habitat)==1){
     count <- rpois(n=Nhabitats, lambda = mean_nindiviuals_per_habitat)
   data <- rbinom(n=Nhabitats, p=prob, size=count)
+  data <- rbind(data,count-data)
   }else{
     data <- rbinom(n=Nhabitats, p=prob, size=mean_nindiviuals_per_habitat)
+  data <- rbind(data,mean_nindiviuals_per_habitat-data)
   }
-  data <- rbind(data,nindiviual_per_habitat-data)
-  colnames(data)=paste0("sample_",1:100)
+  
+  colnames(data)=paste0("sample_", 1:Nhabitats)
   rownames(data)= c("OTU1","OTU2")
   return(data)
 }
-#' @examples sample_Binomial(Nhabitats=100, prob=0.5, nindiviual_per_habitat=5)
+#' @examples sample_Binomial(Nhabitats=100, prob=0.5, mean_nindiviuals_per_habitat=5)
