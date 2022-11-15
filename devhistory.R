@@ -28,6 +28,9 @@ dir.create("plots")
 
 ## Create a R directory and a file for functions
 usethis::use_r("utils-pipe")
+usethis::use_r("sample_Poisson")
+usethis::use_r("sample_Binomial")
+
 
 ## Update DESCRIPTION file
 usethis::use_package("here")
@@ -41,4 +44,3 @@ devtools::document()
 
 ## Load all required packages
 devtools::load_all()
-
