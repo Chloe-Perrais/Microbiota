@@ -4,10 +4,10 @@
 \alias{sample_Binomial}
 \title{Sampling function for the abundances of species in different habitats}
 \usage{
-sample_Binomial(Nhabitats, prob, mean_nindiviuals_per_habitat)
+sample_Binomial(Nsamples, prob, mean_nindiviuals_per_habitat)
 }
 \arguments{
-\item{Nhabitats}{number of habitats (could be either a vector of values or a single value that will be recycle)}
+\item{Nsamples}{number of samples (could be either a vector of values or a single value that will be recycle)}
 
 \item{prob}{frequency of OTU1 (could be either a vector of values or a single value that will be recycle)}
 
