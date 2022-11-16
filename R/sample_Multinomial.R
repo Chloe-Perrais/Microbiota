@@ -15,7 +15,8 @@ sample_Multinomial <- function(Nhabitats, prob, mean_nindiviuals_per_habitat){
     data <- t(mc2d::rmultinomial(n=Nhabitats, p=prob, size=mean_nindiviuals_per_habitat))
   }
   colnames(data)=paste0("sample_", 1:Nhabitats)
-  rownames(data)= paste0("OTU", 1:length(prob))
+  data <- data.frame(otu=paste0("OTU", 1:length(prob)), data)
+  #rownames(data)= paste0("OTU", 1:length(prob))
   return(data)
 }
 #' @examples sample_Multinomial(Nhabitats=100, prob=0.5, mean_nindiviuals_per_habitat=5)
