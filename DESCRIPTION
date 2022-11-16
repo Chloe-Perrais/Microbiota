@@ -33,6 +33,9 @@ Imports:
     dplyr,
     here,
     mc2d,
-    readxl
+    phyloseq,
+    phyloseq.extended,
+    readxl,
+    vegan
 Depends: 
     ggplot2
