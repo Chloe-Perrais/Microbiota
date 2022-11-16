@@ -22,7 +22,6 @@ devtools::load_all()
 ```
 
 
-
 # Simulations
 
 ```{r }
@@ -101,18 +100,73 @@ repeatability
 
 ```
 
-#Sample abundance table
+# Sample abundance table
+## Only two OTUs (binomial sampling)
+```{r}
+
+sample_Binomial(Nhabitats=10, prob=0.5, mean_nindiviuals_per_habitat=5)
+```
+
+## More than two OTUs (multinomial sampling)
+### Sample abundance table
 ```{r}
 nOTU=3
 Nhabitats=10
-sample_Binomial(Nhabitats=10, prob=0.5, mean_nindiviuals_per_habitat=5)
-abundance_table <- sample_Multinomial(Nhabitats=Nhabitats, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=5)
-
+## Sample OTU abundance data
+otu_mat <- sample_Multinomial(Nhabitats=Nhabitats, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=10)
 
 ## Please add the missing columns here with fake names for Division, Class, ..., Genus
-taxonomy <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU))
-taxonomy
-metadata <- data.frame(sample=paste0("sample_", 1:Nhabitats), TypeofHabitat=sample(c("Type1", "Type2"), Nhabitats, replace = TRUE))
-table(metadata$TypeofHabitat)
+## Create table with taxonomy
+tax_mat <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU))
+
+## create metadata
+samples_df <- data.frame(sample=paste0("sample_", 1:Nhabitats), TypeofHabitat=as.character(sample(c("Type1", "Type2"), Nhabitats, replace = TRUE)), Temperature=as.character(sample(c(17, 20), Nhabitats, replace = TRUE)))
+
+## Check number of the two habitats
+table(samples_df$TypeofHabitat)
+
+## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+
 ```
 
+
+### Rarefaction curves
+```{r, eval=FALSE}
+
+## Prepare plot
+p <- phyloseq.extended::ggrare(yourphyloseqobject,
+            step = 2,
+            color = "TypeofHabitat",
+            plot = TRUE,
+            parallel = TRUE,
+            se = FALSE)
+
+## Define a minimum sample size for rarefaction curve
+minSampSize<- min(sample_sums(yourphyloseqobject))
+
+## Split plot by type of habitat
+p <- p + 
+  facet_wrap(~ TypeofHabitat ) + 
+  geom_vline(xintercept = minSampSize, color = "gray60")
+p
+```
+
+### Plot abundance and alpha diversity by sample
+```{r}
+## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
+         
+```
+### Beta diversity
+```{r, eval=FALSE}
+  dist.a <- distance(yourphyloseqobject, method = "bray")
+  pa <- phyloseq.extended::plot_dist_as_heatmap(dist.a, title = "Heatmap plot of the beta distance (Bray Curtis) 
+between each pair of samples") + 
+    theme(plot.title = element_text(hjust = 0.5))
+  pa
+  
+```
+
+# Usefull links
+https://southgreenplatform.github.io/trainings/linux/metabarcodingPractice/#rarefaction
+https://vaulot.github.io/tutorials/Phyloseq_tutorial.html
+http://joey711.github.io/waste-not-supplemental/minimal-rarefy-example/minimal-rarefy-example.html
