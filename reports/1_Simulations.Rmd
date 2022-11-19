@@ -26,7 +26,6 @@ devtools::load_all()
 ## Poisson distribution
 ```{r }
 rpois(n=1000, 100)
- 
 
 x=rpois(n=1000, lambda =100)
 hist(x)
@@ -168,6 +167,7 @@ sum((data$OTU1/rowSums(data)-mean(data$OTU1/rowSums(data)))^2)/Nsamples
 
 ## Cl: please note that the observed and expected variances only match when the number of replicates (i.e. the number of habitats) is large 
 ```
+
 # Compute variance when sampling abundance table with more than two OTUs (multinomial sampling)
 ## Sample abundance table
 ```{r}
@@ -179,19 +179,55 @@ otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nin
 
 ```
 
-## Prepare data for phyloseq analysis
+## Create data for Phyloseq analysis
 ```{r}
 ## Please add the missing columns here with fake names for Division, Class, ..., Genus
 ## Create table with taxonomy
-tax_mat <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU))
+tax_mat <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU),Division=paste0("Division", 1:nOTU), Class=paste0("Class", 1:nOTU), Order=paste0("Order", 1:nOTU), Family=paste0("Family", 1:nOTU), Genus=paste0("Genus", 1:nOTU))
 
 ## Create fake metadata
 samples_df <- data.frame(sample=paste0("sample_", 1:Nsamples), TypeofHabitat=as.character(sample(c("Type1", "Type2"), Nsamples, replace = TRUE)), Temperature=as.character(sample(c(17, 20), Nsamples, replace = TRUE)))
 
 ## Check number of the two habitats
 table(samples_df$TypeofHabitat)
+```
+
+##Prepare data for phyloseq analysis
+```{r}
 
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+
+##Define the row names from the columns
+otu_mat <- otu_mat %>%
+  tibble::column_to_rownames("otu") 
+tax_mat <- tax_mat %>% 
+  tibble::column_to_rownames("otu")
+samples_df <- samples_df %>% 
+  tibble::column_to_rownames("sample") 
+
+##Transform into matrixes otu and tax tables
+otu_mat <- as.matrix(otu_mat)
+tax_mat <- as.matrix(tax_mat)
+
+##Transform to phyloseq objects
+OTU = otu_table(otu_mat, taxa_are_rows = TRUE)
+TAX = tax_table(tax_mat)
+samples = sample_data(samples_df)
+  
+carbom <- phyloseq(OTU, TAX, samples)
+carbom
+```
+
+##Visualize data
+```{r}
+sample_names(carbom)
+rank_names(carbom)
+sample_variables(carbom)
+
+##Normalize number of reads in each sample using median sequencing depth.
+total = median(sample_sums(carbom))
+standf = function(x, t=total) round(t * (x / sum(x)))
+carbom = transform_sample_counts(carbom, standf)
 
 ```
 
