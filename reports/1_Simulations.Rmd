@@ -232,14 +232,54 @@ total = median(sample_sums(carbom))
 standf = function(x, t=total) round(t * (x / sum(x)))
 carbom = transform_sample_counts(carbom, standf)
 
+# dev.off()  #if plot_bar not working 
+plot_bar(carbom, fill = "Division")
+
+plot_bar(carbom, fill = "Division") + 
+  geom_bar(aes(color=Division, fill=Division), stat="identity", position="stack")
+
+```
+
+## Heatmap
+```{r}
+plot_heatmap(carbom, method = "NMDS", distance = "bray")
+
+# change carbom to carbom_abund 
+plot_heatmap(carbom, method = "MDS", distance = "(A+B-2*J)/(A+B-J)", 
+               taxa.label = "Class", taxa.order = "Class", 
+               trans=NULL, low="beige", high="red", na.value="beige")
 ```
 
 
-## Rarefaction curves
+## Example 
 ```{r, eval=FALSE}
 
 ## Prepare plot
-p <- phyloseq.extended::ggrare(yourphyloseqobject,
+
+plot_richness(carbom, measures=c("Chao1", "Shannon"))
+
+# Regroup together samples from the same fraction. No fraction here 
+plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
+  
+# Ordination
+carbom.ord <- ordinate(carbom, "NMDS", "bray")
+
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", shape= "Division", 
+                title="OTUs")
+
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", 
+                  title="OTUs", label="Class") + 
+                  facet_wrap(~Division, 3)
+
+plot_ordination(carbom, carbom.ord, type="samples", color="fraction", shape="level", title="Samples") + geom_point(size=3)
+
+#why cannot run? 
+#plot_ordination(carbom, carbom.ord, type="split", color="Class", shape="level", title="biplot", label = "station") + geom_point(size=3)
+```
+
+## Rarefaction curves
+```{r}
+p <- phyloseq.extended::ggrare(carbom,
             step = 2,
             color = "TypeofHabitat",
             plot = TRUE,
@@ -247,7 +287,7 @@ p <- phyloseq.extended::ggrare(yourphyloseqobject,
             se = FALSE)
 
 ## Define a minimum sample size for rarefaction curve
-minSampSize<- min(sample_sums(yourphyloseqobject))
+minSampSize<- min(sample_sums(carbom))
 
 ## Split plot by type of habitat
 p <- p + 
@@ -259,11 +299,13 @@ p
 ## Plot abundance and alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
+
+
          
 ```
 ## Beta diversity
 ```{r, eval=FALSE}
-  dist.a <- distance(yourphyloseqobject, method = "bray")
+  dist.a <- distance(carbom, method = "bray")
   pa <- phyloseq.extended::plot_dist_as_heatmap(dist.a, title = "Heatmap plot of the beta distance (Bray Curtis) 
 between each pair of samples") + 
     theme(plot.title = element_text(hjust = 0.5))
