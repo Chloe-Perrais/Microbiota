@@ -197,6 +197,9 @@ table(samples_df$TypeofHabitat)
 
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
 
+library(phyloseq)
+library(phyloseq.extended)
+library(tidyverse)
 ##Define the row names from the columns
 otu_mat <- otu_mat %>%
   tibble::column_to_rownames("otu") 
