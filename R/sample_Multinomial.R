@@ -7,7 +7,7 @@
 #'
 #' @return dataframe
 #' @export
-sample_Multinomial <- function(Nsamples, prob, mean_nindiviuals_per_habitat){
+sample_Multinomial <- function(Nsamples, prob, mean_nindiviuals_per_habitat, seed){
   set.seed(seed)
   if(length(mean_nindiviuals_per_habitat)==1){
     count <- rpois(n=Nsamples, lambda = mean_nindiviuals_per_habitat)

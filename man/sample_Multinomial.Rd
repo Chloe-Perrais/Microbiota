@@ -4,7 +4,7 @@
 \alias{sample_Multinomial}
 \title{Sampling function for the abundances of species in different habitats}
 \usage{
-sample_Multinomial(Nsamples, prob, mean_nindiviuals_per_habitat)
+sample_Multinomial(Nsamples, prob, mean_nindiviuals_per_habitat, seed)
 }
 \arguments{
 \item{Nsamples}{number of samples (could be either a vector of values or a single value that will be recycle)}
