@@ -300,7 +300,11 @@ p
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
 
+plot_richness(carbom, measures=c("Chao1", "Shannon"))
 
+#Regroup together samples from the same fraction.
+
+plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
          
 ```
 ## Beta diversity
