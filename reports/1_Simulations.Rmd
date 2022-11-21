@@ -26,10 +26,8 @@ devtools::load_all()
 ## Poisson distribution
 ```{r }
 rpois(n=1000, 100)
-
 x=rpois(n=1000, lambda =100)
 hist(x)
-
 mean(x)
 var(x)
 #x=rpois(n=10, lambda = c(50,100)) if we want to have 2 different values for lambda, then recycle the values
@@ -39,7 +37,6 @@ var(x)
 z=rnbinom(n=10000,mu = 100, size = 1) #mu is the mean of distribution and the variance is mu+mu^2/size 
 mean(z)
 var(z)
-
 ```
 
 # ANOVA, LM, GLM and LMM in R
@@ -47,40 +44,29 @@ var(z)
 ```{r }
 data=data.frame(sample=rep(c("sample_1","sample_2")), count=rpois(n=1000, lambda = c(10,100)))
 head(data)
-
 tapply(data$count, data$sample, mean)
-
 #ANOVA
 m0 <- aov(log(count+1)~1, data = data)
 summary(m0)
-
 m1 <- aov(log(count+1)~sample, data = data)
 summary(m1)
-
 anova(m1)
-
 anova(m0, m1, test="F")
-
 #Linear model
 m0 <- lm(log(count+1)~1, data = data)
 summary(m0)
-
 m1 <- lm(log(count+1)~sample, data = data)
 summary(m1)
-
 anova(m1)
 anova(m0, m1, test="F")
-
 # GLM
 m0 <- glm(count~1, data = data, family="poisson")
 summary(m0)
 -2*logLik(m0)
-
 m1 <- glm(count~sample, data = data, family="poisson")
 summary(m1)
 -2*logLik(m1)
 -2*logLik(m0)+2*logLik(m1)
-
 anova(m1, test="Chisq")
 anova(m0, m1, test="Chisq")
 ```
@@ -90,22 +76,17 @@ data <- sample_Poisson(sample=c("sample_1","sample_2"), count=10, lambda= c(10,1
 #Linear model
 m0 <- lme4::lmer(log(count+1)~1+(1|sample), data = data)
 summary(m0)
-
 ## Extract variance components
 varcomp <- data.frame(lme4::VarCorr(m0))$vcov
-
 ## Compute repeatability
 repeatability = varcomp[1]/sum(varcomp)
 repeatability
-
-
 ```
 
 <<<<<<< HEAD
 #Sample abundance table
 ```{r}
-sample_Binomial(Nsamples=100, prob=0.5, mean_nindiviuals_per_habitat=5)
-
+sample_Binomial(Nsamples =100, prob=0.5, mean_nindiviuals_per_habitat=5)
 ```
 
 =======
@@ -116,20 +97,15 @@ Nsamples=1000
 lambda=50
 ## Fixed number of individuals per sample
 data <- sample_Binomial(Nsamples=Nsamples, prob=0.5, mean_nindiviuals_per_habitat=rep(lambda, Nsamples))
-
 ## Estimate probability p with a Binomial glm
 m0 <- glm(cbind(OTU1, OTU2)~1, data = data, family="binomial")
 summary(m0)
-
 ## Observed proportion
 mean(data$OTU1/rowSums(data))
-
 ## Estimated proportion based on logit link
 1/(1+exp(-coef(m0)))
-
 ## Compute observed variance
 sum((data$OTU1-mean(data$OTU1))^2)/Nsamples
-
 ## Compute expected variance
 ## The formula is available in Wikipedia
 lambda*0.5*(1-0.5)
@@ -138,45 +114,36 @@ lambda*0.5*(1-0.5)
 ## Random number of individuals/reads in each sample
 ```{r}
 ## For a general introduction to the issue of estimating the frequency of a sequence using pooled-sequencing, see: Rode et al 2018 https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12723
-
 Nsamples=1000
 lambda=50
 data <- sample_Binomial(Nsamples=Nsamples, prob=0.5, mean_nindiviuals_per_habitat=lambda)
-
 ## Remove rows with zeros as they are never observed in an experiment
 data <- data[rowSums(data)!=0,]
-
 ## Estimate probability p with a Binomial glm
 m1 <- glm(cbind(OTU1, OTU2)~1, data = data, family="binomial")
 summary(m1)
-
 ## Observed proportion
 mean(data$OTU1/rowSums(data))
-
 ## Estimated proportion based on logit link
 1/(1+exp(-coef(m1)))
-
 ## Observed variance of the frequency
 sum((data$OTU1/rowSums(data)-mean(data$OTU1/rowSums(data)))^2)/Nsamples
-
 ## Expected variance
 ## Assuming that the original number of bacterial cells is very large and that their is no overdispersion in sequencing depth
 ## See Gautier et al 2018: https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fmec.12360&file=mec12360-sup-0002-SupplementMaterialS1.pdf
 ## Eq. 6 with the number of bacterial cells, n_p, very large and the overdispersion in sequencing depth, s_lambda_p, equals 0): 
 (0.5*(1-0.5))*((1+lambda)/lambda^2)
-
 ## Cl: please note that the observed and expected variances only match when the number of replicates (i.e. the number of habitats) is large 
 ```
 
 # Compute variance when sampling abundance table with more than two OTUs (multinomial sampling)
 ## Sample abundance table
 ```{r}
-nOTU=10
+nOTU=3
 Nsamples=10
 lambda=10
 ## Sample OTU abundance data
 otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=lambda)
-
 ```
 
 ## Create data for Phyloseq analysis
@@ -184,22 +151,18 @@ otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nin
 ## Please add the missing columns here with fake names for Division, Class, ..., Genus
 ## Create table with taxonomy
 tax_mat <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU),Division=paste0("Division", 1:nOTU), Class=paste0("Class", 1:nOTU), Order=paste0("Order", 1:nOTU), Family=paste0("Family", 1:nOTU), Genus=paste0("Genus", 1:nOTU))
-
 ## Create fake metadata
 samples_df <- data.frame(sample=paste0("sample_", 1:Nsamples), TypeofHabitat=as.character(sample(c("Type1", "Type2"), Nsamples, replace = TRUE)), Temperature=as.character(sample(c(17, 20), Nsamples, replace = TRUE)))
-
 ## Check number of the two habitats
 table(samples_df$TypeofHabitat)
 ```
 
 ##Prepare data for phyloseq analysis
 ```{r}
-
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
 library(phyloseq)
 library(phyloseq.extended)
 library(tidyverse)
-
 ##Define the row names from the columns
 otu_mat <- otu_mat %>%
   tibble::column_to_rownames("otu") 
@@ -207,11 +170,9 @@ tax_mat <- tax_mat %>%
   tibble::column_to_rownames("otu")
 samples_df <- samples_df %>% 
   tibble::column_to_rownames("sample") 
-
 ##Transform into matrixes otu and tax tables
 otu_mat <- as.matrix(otu_mat)
 tax_mat <- as.matrix(tax_mat)
-
 ##Transform to phyloseq objects
 OTU = otu_table(otu_mat, taxa_are_rows = TRUE)
 TAX = tax_table(tax_mat)
@@ -226,30 +187,55 @@ carbom
 sample_names(carbom)
 rank_names(carbom)
 sample_variables(carbom)
-
 ##Normalize number of reads in each sample using median sequencing depth.
 total = median(sample_sums(carbom))
 standf = function(x, t=total) round(t * (x / sum(x)))
 carbom = transform_sample_counts(carbom, standf)
-
+# dev.off()  #if plot_bar not working 
 plot_bar(carbom, fill = "Division")
+plot_bar(carbom, fill = "Division") + 
+  geom_bar(aes(color=Division, fill=Division), stat="identity", position="stack")
+```
 
+## Heatmap
+```{r}
+plot_heatmap(carbom, method = "NMDS", distance = "bray")
+# change carbom to carbom_abund 
+plot_heatmap(carbom, method = "MDS", distance = "(A+B-2*J)/(A+B-J)", 
+               taxa.label = "Class", taxa.order = "Class", 
+               trans=NULL, low="beige", high="red", na.value="beige")
+```
+
+
+## Example 
+```{r, eval=FALSE}
+## Prepare plot
+plot_richness(carbom, measures=c("Chao1", "Shannon"))
+# Regroup together samples from the same fraction. No fraction here 
+plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
+  
+# Ordination
+carbom.ord <- ordinate(carbom, "NMDS", "bray")
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", shape= "Division", 
+                title="OTUs")
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", 
+                  title="OTUs", label="Class") + 
+                  facet_wrap(~Division, 3)
+plot_ordination(carbom, carbom.ord, type="samples", color="fraction", shape="level", title="Samples") + geom_point(size=3)
+#why cannot run? 
+#plot_ordination(carbom, carbom.ord, type="split", color="Class", shape="level", title="biplot", label = "station") + geom_point(size=3)
 ```
 
 ## Rarefaction curves
-```{r, eval=FALSE}
-
-## Prepare plot
-p <- phyloseq.extended::ggrare(yourphyloseqobject,
+```{r}
+p <- phyloseq.extended::ggrare(carbom,
             step = 2,
             color = "TypeofHabitat",
             plot = TRUE,
             parallel = TRUE,
             se = FALSE)
-
 ## Define a minimum sample size for rarefaction curve
-minSampSize<- min(sample_sums(yourphyloseqobject))
-
+minSampSize<- min(sample_sums(carbom))
 ## Split plot by type of habitat
 p <- p + 
   facet_wrap(~ TypeofHabitat ) + 
@@ -264,7 +250,7 @@ p
 ```
 ## Beta diversity
 ```{r, eval=FALSE}
-  dist.a <- distance(yourphyloseqobject, method = "bray")
+  dist.a <- distance(carbom, method = "bray")
   pa <- phyloseq.extended::plot_dist_as_heatmap(dist.a, title = "Heatmap plot of the beta distance (Bray Curtis) 
 between each pair of samples") + 
     theme(plot.title = element_text(hjust = 0.5))
