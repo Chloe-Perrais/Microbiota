@@ -2,11 +2,13 @@
 #' @param Nsamples number of samples (could be either a vector of values or a single value that will be recycle)
 #' @param prob frequency of all OTUs (could be either a vector of values or a single value that will be recycle)
 #' @param mean_nindiviuals_per_habitat average number of individuals per habitat (could be either a vector of values or a single value that will be recycle)
+#' @param seed seed used to perform simulations
 #' @description Functions that randomly sample abundance data in N habitat and return the abundance table
 #'
 #' @return dataframe
 #' @export
 sample_Multinomial <- function(Nsamples, prob, mean_nindiviuals_per_habitat){
+  set.seed(seed)
   if(length(mean_nindiviuals_per_habitat)==1){
     count <- rpois(n=Nsamples, lambda = mean_nindiviuals_per_habitat)
     data <- t(mc2d::rmultinomial(n=Nsamples, p=prob, size=count))

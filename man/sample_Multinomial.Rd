@@ -12,6 +12,8 @@ sample_Multinomial(Nsamples, prob, mean_nindiviuals_per_habitat)
 \item{prob}{frequency of all OTUs (could be either a vector of values or a single value that will be recycle)}
 
 \item{mean_nindiviuals_per_habitat}{average number of individuals per habitat (could be either a vector of values or a single value that will be recycle)}
+
+\item{seed}{seed used to perform simulations}
 }
 \value{
 dataframe
