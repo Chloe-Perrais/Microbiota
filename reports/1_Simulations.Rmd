@@ -83,10 +83,10 @@ repeatability = varcomp[1]/sum(varcomp)
 repeatability
 ```
 
-<<<<<<< HEAD
 #Sample abundance table
 ```{r}
 sample_Binomial(Nsamples =100, prob=0.5, mean_nindiviuals_per_habitat=5)
+
 ```
 
 =======
@@ -160,6 +160,7 @@ table(samples_df$TypeofHabitat)
 ##Prepare data for phyloseq analysis
 ```{r}
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+
 library(phyloseq)
 library(phyloseq.extended)
 library(tidyverse)
@@ -176,8 +177,8 @@ tax_mat <- as.matrix(tax_mat)
 ##Transform to phyloseq objects
 OTU = otu_table(otu_mat, taxa_are_rows = TRUE)
 TAX = tax_table(tax_mat)
-samples = sample_data(samples_df)
-  
+samples = sample_data(samples)
+
 carbom <- phyloseq(OTU, TAX, samples)
 carbom
 ```
@@ -200,28 +201,55 @@ plot_bar(carbom, fill = "Division") +
 ## Heatmap
 ```{r}
 plot_heatmap(carbom, method = "NMDS", distance = "bray")
-# change carbom to carbom_abund 
 plot_heatmap(carbom, method = "MDS", distance = "(A+B-2*J)/(A+B-J)", 
                taxa.label = "Class", taxa.order = "Class", 
                trans=NULL, low="beige", high="red", na.value="beige")
-```
+# dev.off()  #if plot_bar not working 
+plot_bar(carbom, fill = "Division")
 
+plot_bar(carbom, fill = "Division") + 
+  geom_bar(aes(color=Division, fill=Division), stat="identity", position="stack")
+
+```
 
 ## Example 
 ```{r, eval=FALSE}
 ## Prepare plot
 plot_richness(carbom, measures=c("Chao1", "Shannon"))
 # Regroup together samples from the same fraction. No fraction here 
+
+# dev.off()  #if plot_bar not working 
+plot_bar(carbom, fill = "Division")
+
+plot_bar(carbom,x = "TypeofHabitat", fill = "Division") + 
+  geom_bar(aes(color=Division, fill=Division), stat="identity", position="stack")
+
+plot_richness(carbom,x= "TypeofHabitat", measures=c("Chao1", "Shannon"))
+
+# Regroup together samples from the same fraction. No fraction here 
+
 plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
   
 # Ordination
 carbom.ord <- ordinate(carbom, "NMDS", "bray")
+
 plot_ordination(carbom, carbom.ord, type="taxa", color="Class", shape= "Division", 
                 title="OTUs")
 plot_ordination(carbom, carbom.ord, type="taxa", color="Class", 
                   title="OTUs", label="Class") + 
                   facet_wrap(~Division, 3)
 plot_ordination(carbom, carbom.ord, type="samples", color="fraction", shape="level", title="Samples") + geom_point(size=3)
+
+
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", shape= "Division", 
+                title="OTUs")
+
+plot_ordination(carbom, carbom.ord, type="taxa", color="Class", 
+                  title="OTUs", label="Class") + 
+                  facet_wrap(~Division, 3)
+
+plot_ordination(carbom, carbom.ord, type="samples", color="fraction", shape="level", title="Samples") + geom_point(size=3)
+
 #why cannot run? 
 #plot_ordination(carbom, carbom.ord, type="split", color="Class", shape="level", title="biplot", label = "station") + geom_point(size=3)
 ```
@@ -236,6 +264,7 @@ p <- phyloseq.extended::ggrare(carbom,
             se = FALSE)
 ## Define a minimum sample size for rarefaction curve
 minSampSize<- min(sample_sums(carbom))
+
 ## Split plot by type of habitat
 p <- p + 
   facet_wrap(~ TypeofHabitat ) + 
@@ -246,6 +275,12 @@ p
 ## Plot abundance and alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
+
+plot_richness(carbom, measures=c("Chao1", "Shannon"))
+
+#Regroup together samples from the same fraction.
+
+plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
          
 ```
 ## Beta diversity
@@ -266,4 +301,3 @@ https://onlinelibrary.wiley.com/doi/full/10.1111/mec.12360?casa_token=mAV0ynj312
 https://southgreenplatform.github.io/trainings/linux/metabarcodingPractice/#rarefaction
 https://vaulot.github.io/tutorials/Phyloseq_tutorial.html
 http://joey711.github.io/waste-not-supplemental/minimal-rarefy-example/minimal-rarefy-example.html
->>>>>>> 9940898a5456136f2997249efe1133f2a1adadb0
