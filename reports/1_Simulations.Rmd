@@ -255,10 +255,16 @@ plot_heatmap(carbom, method = "MDS", distance = "(A+B-2*J)/(A+B-J)",
 ```{r, eval=FALSE}
 
 ## Prepare plot
+# dev.off()  #if plot_bar not working 
+plot_bar(carbom, fill = "Division")
 
-plot_richness(carbom, measures=c("Chao1", "Shannon"))
+plot_bar(carbom,x = "TypeofHabitat", fill = "Division") + 
+  geom_bar(aes(color=Division, fill=Division), stat="identity", position="stack")
+
+plot_richness(carbom,x= "TypeofHabitat", measures=c("Chao1", "Shannon"))
 
 # Regroup together samples from the same fraction. No fraction here 
+
 plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
   
 # Ordination
