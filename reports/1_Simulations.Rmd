@@ -104,7 +104,7 @@ repeatability
 <<<<<<< HEAD
 #Sample abundance table
 ```{r}
- sample_Binomial(Nhabitats=100, prob=0.5, nindiviual_per_habitat=5)
+sample_Binomial(Nsamples=100, prob=0.5, mean_nindiviuals_per_habitat=5)
 
 ```
 
@@ -171,7 +171,7 @@ sum((data$OTU1/rowSums(data)-mean(data$OTU1/rowSums(data)))^2)/Nsamples
 # Compute variance when sampling abundance table with more than two OTUs (multinomial sampling)
 ## Sample abundance table
 ```{r}
-nOTU=3
+nOTU=10
 Nsamples=10
 lambda=10
 ## Sample OTU abundance data
@@ -196,6 +196,9 @@ table(samples_df$TypeofHabitat)
 ```{r}
 
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+library(phyloseq)
+library(phyloseq.extended)
+library(tidyverse)
 
 ##Define the row names from the columns
 otu_mat <- otu_mat %>%
@@ -229,8 +232,9 @@ total = median(sample_sums(carbom))
 standf = function(x, t=total) round(t * (x / sum(x)))
 carbom = transform_sample_counts(carbom, standf)
 
-```
+plot_bar(carbom, fill = "Division")
 
+```
 
 ## Rarefaction curves
 ```{r, eval=FALSE}
