@@ -304,7 +304,7 @@ plot_richness(carbom, measures=c("Chao1", "Shannon"))
 
 #Regroup together samples from the same fraction.
 
-#plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
+plot_richness(carbom, measures=c("Chao1", "Shannon"), x="level", color="fraction")
          
 ```
 ## Beta diversity
