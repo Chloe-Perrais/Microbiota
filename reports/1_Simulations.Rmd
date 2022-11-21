@@ -154,14 +154,14 @@ sum((data$OTU1/rowSums(data)-mean(data$OTU1/rowSums(data)))^2)/Nsamples
 ## Cl: please note that the observed and expected variances only match when the number of replicates (i.e. the number of habitats) is large 
 ```
 
-# Compute alpha and beta diversity when OTU proportions are the sample across samples (multinomial sampling)
+# Compute alpha and beta diversity when OTU proportions are the same across samples (multinomial sampling)
 ## Sample abundance table
 ```{r}
 nOTU=3
 Nsamples=10
 lambda=10
 ## Sample OTU abundance data
-otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=lambda)
+otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=lambda, seed=1)
 ```
 
 ## Create data for Phyloseq analysis
@@ -189,7 +189,7 @@ tax_mat <- tax_mat %>%
   tibble::column_to_rownames("otu")
 samples_df <- samples_df %>% 
   tibble::column_to_rownames("sample") 
-## Transform into matrixes otu and tax tables
+## Transform into matrices otu and tax tables
 otu_mat <- as.matrix(otu_mat)
 tax_mat <- as.matrix(tax_mat)
 ## Transform to phyloseq objects
@@ -208,7 +208,7 @@ phyloseq::rank_names(carbom)
 phyloseq::sample_variables(carbom)
 
 ## Plot without normalization
-phyloseq::plot_bar(carbom, fill = "Division")
+phyloseq::plot_bar(carbom, fill = "OTU")
 
 phyloseq::plot_bar(carbom, fill = "Supergroup") + 
   geom_bar(aes(color=Supergroup, fill=Supergroup), stat="identity", position="stack")
@@ -277,7 +277,7 @@ pa
 ```
 
 ## Perform ordination
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 
 carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
 
@@ -299,24 +299,28 @@ phyloseq::plot_heatmap(carbom, method = "NMDS", distance = "(A+B-2*J)/(A+B-J)",
                trans=NULL, low="beige", high="red", na.value="beige")      
 ```
 
-# Compute alpha and beta diversity when OTU proportions are the sample across samples (multinomial sampling)
+# Compute alpha and beta diversity when OTU proportions are not the same across samples (multinomial sampling)
 ## Sample abundance table
 ```{r}
 nOTU=3
 Nsamples=10
 lambda=10
 ## Sample OTU abundance data
-otu_mat <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=lambda)
+otu_mat1 <- sample_Multinomial(Nsamples=Nsamples, prob=c(0.1, 0.1, 0.8), mean_nindiviuals_per_habitat=lambda, seed=1)
+otu_mat2 <- sample_Multinomial(Nsamples=Nsamples, prob=c(1/3, 1/3, 1/3), mean_nindiviuals_per_habitat=lambda, seed=1)
+otu_mat <- cbind(otu_mat1, otu_mat2[,-1])
+colnames(otu_mat) = c("otu", paste0("sample_", 1:(Nsamples*2)))
+
 ```
 
 ## Create data for Phyloseq analysis
 ```{r}
-## Please add the missing columns here with fake names for Division, Class, ..., Genus
+
 ## Create table with taxonomy
 tax_mat <- data.frame(otu=paste0("OTU", 1:nOTU), Domain=rep("Eukaryota", nOTU), Supergroup=paste0("Supergroup", 1:nOTU), Division=paste0("Division", 1:nOTU), Class=paste0("Class", 1:nOTU), Order=paste0("Order", 1:nOTU), Family=paste0("Family", 1:nOTU), Genus=paste0("Genus", 1:nOTU))
 
 ## Create fake metadata
-samples_df <- data.frame(sample=paste0("sample_", 1:Nsamples), TypeofHabitat=as.character(sample(c("Type1", "Type2"), Nsamples, replace = TRUE)), Temperature=as.character(sample(c(17, 20), Nsamples, replace = TRUE)))
+samples_df <- data.frame(sample=paste0("sample_", 1:(Nsamples*2)), TypeofHabitat=rep(c("Type1", "Type2"), each=Nsamples), Temperature=as.character(sample(c(17, 20), 2*Nsamples, replace = TRUE)))
 
 ## Check number of the two habitats/temperatures
 table(samples_df$TypeofHabitat)
@@ -334,7 +338,7 @@ tax_mat <- tax_mat %>%
   tibble::column_to_rownames("otu")
 samples_df <- samples_df %>% 
   tibble::column_to_rownames("sample") 
-## Transform into matrixes otu and tax tables
+## Transform into matrices otu and tax tables
 otu_mat <- as.matrix(otu_mat)
 tax_mat <- as.matrix(tax_mat)
 ## Transform to phyloseq objects
@@ -353,10 +357,10 @@ phyloseq::rank_names(carbom)
 phyloseq::sample_variables(carbom)
 
 ## Plot without normalization
-phyloseq::plot_bar(carbom, fill = "Division")
+phyloseq::plot_bar(carbom, fill = "OTU")
 
-phyloseq::plot_bar(carbom, fill = "Supergroup") + 
-  geom_bar(aes(color=Supergroup, fill=Supergroup), stat="identity", position="stack")
+phyloseq::plot_bar(carbom, fill = "OTU") + 
+  geom_bar(aes(color=OTU, fill=OTU), stat="identity", position="stack")
     
 ## Normalize number of reads in each sample using median sequencing depth.
 #total = median(phyloseq::sample_sums(carbom))
@@ -391,6 +395,9 @@ p
 
 phyloseq::plot_richness(carbom, measures=c("Observed", "Chao1", "Shannon"))
 
+## Put the same color of samples from the same type of habitat
+phyloseq::plot_richness(carbom, measures=c("Observed", "Chao1", "Shannon"), color="TypeofHabitat")
+  
 ## Compute Shannon index by hand form Sample 1
 P_OTU1 <- otu_mat["OTU1", "sample_1"]/sum(otu_mat[, "sample_1"])
 P_OTU2 <- otu_mat["OTU2", "sample_1"]/sum(otu_mat[, "sample_1"])
@@ -405,16 +412,15 @@ P_OTU3 <- otu_mat["OTU3", "sample_3"]/sum(otu_mat[, "sample_3"])
 P_OTU1+P_OTU2+P_OTU3
 H_Sample_3=-(P_OTU1*log(P_OTU1)+P_OTU2*log(P_OTU2)+P_OTU3*log(P_OTU3))
 
-## Put the same color of samples from the same type of habitat
-phyloseq::plot_richness(carbom, measures=c("Observed", "Chao1", "Shannon"), color="TypeofHabitat")
-         
+       
 ```
 
 ## Beta diversity
 ```{r, eval=TRUE}
 
 dist.a <- phyloseq::distance(carbom, method = "bray")
-pa <- phyloseq.extended::plot_dist_as_heatmap(dist.a, show.names = TRUE, title = "Heatmap plot of the beta distance (Bray Curtis) 
+
+pa <- phyloseq.extended::plot_dist_as_heatmap(dist.a, show.names = TRUE, order=paste0("sample_", 1:(2*Nsamples)), title = "Heatmap plot of the beta distance (Bray Curtis) 
 between each pair of samples") + 
     theme(plot.title = element_text(hjust = 0.5))
 pa
@@ -422,7 +428,7 @@ pa
 ```
 
 ## Perform ordination
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 
 carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
 
@@ -430,9 +436,9 @@ carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
 phyloseq::plot_ordination(carbom, carbom.ord, type="taxa", color="Genus", shape= "Genus", 
                   title="OTUs")
 
-phyloseq::plot_ordination(carbom, carbom.ord, type="samples", color="TypeofHabitat", title="Samples") + geom_point(size=1)
+phyloseq::plot_ordination(carbom, carbom.ord, type="samples", color="TypeofHabitat", title="Samples", label="TypeofHabitat") + geom_point(size=1)
 
-phyloseq::plot_ordination(carbom, carbom.ord, type="split", title="biplot", shape="TypeofHabitat", label = "Temperature") + geom_point(size=3)
+phyloseq::plot_ordination(carbom, carbom.ord, type="split", title="biplot", color="TypeofHabitat", label = "Temperature") + geom_point(size=3)
 
 ## Plot ordination as heat map
 phyloseq::plot_heatmap(carbom, method = "NMDS", distance = "bray", 
