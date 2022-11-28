@@ -37,11 +37,15 @@ usethis::use_package("here")
 usethis::use_package("ggplot2", type = "Depends")
 usethis::use_package("readxl")
 usethis::use_package("dplyr")
+usethis::use_package("magrittr")
 usethis::use_package("lme4")
 usethis::use_package("mc2d")
 usethis::use_package("phyloseq")
 usethis::use_package("vegan")
 usethis::use_package("phyloseq.extended")
+usethis::use_package("dada2")
+usethis::use_package("data.table")
+
 
 ## Update NAMESPACE file
 devtools::document()
