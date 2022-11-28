@@ -30,14 +30,17 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
 Imports: 
+    ape,
     dada2,
     data.table,
     dplyr,
     here,
+    matrixStats,
     mc2d,
     phyloseq,
     phyloseq.extended,
     readxl,
+    scales,
     vegan
 Depends: 
     ggplot2

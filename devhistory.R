@@ -45,7 +45,10 @@ usethis::use_package("vegan")
 usethis::use_package("phyloseq.extended")
 usethis::use_package("dada2")
 usethis::use_package("data.table")
-
+usethis::use_package("gridExtra")
+usethis::use_package("ape")
+usethis::use_package("scales")
+usethis::use_package("matrixStats")
 
 ## Update NAMESPACE file
 devtools::document()
