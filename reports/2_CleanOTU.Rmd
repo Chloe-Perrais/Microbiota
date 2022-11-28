@@ -44,13 +44,15 @@ Export an abundance table tsv file cleaned for taxonomy and filtered for chimera
 # Load input files from data folder
 ```{r }
 ## Follow the instructions to install dada2: https://benjjneb.github.io/dada2/
-  
-  
-name<-"2022JRLAT-16S" #name will be used to import files and write names before extension of the different output tables. to modify
+
+name <-"2022JRLAT-16S" #name will be used to import files and write names before extension of the different output tables. to modify
 
 ## Import multi-affiliation data
 mt <- data.table::fread(file=file.path(here::here(), "data", "raw_data", "Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv"), sep="\t", header=TRUE) # to modify (name of the multihits tsv file)
+dim(mt)
+
 mh <- data.table::data.table(bidouille=mt$blast_taxonomy, blast_taxonomy=mt$blast_taxonomy, observation_name=mt$`#observation_name`)
+head(mh)
 ## Remove file
 rm(mt)
 
@@ -69,11 +71,13 @@ mh$bidouille <- gsub(" +;", ";", mh$bidouille, perl=TRUE)
 
 ## Deconstruction of the taxonomic column ('blast_taxonomy') in 7 taxonomic fields
 toto <- mh[ , "bidouille"] %>% tidyr::separate(bidouille, c("tx1","tx2","tx3","tx4","tx5","tx6","tx7"), ";")
+head(toto)
 
 mh <- cbind(toto, mh[, c("observation_name" ,"blast_taxonomy")]) # observation name is the cluster ID and useful to link with the abundance tsv file
 rm(toto)
 
 ## Replacement of 'chloroplast' and 'mitochondria' by 'plantae' in all 7 taxonomic fields
+## Remove one "grepl("Chloroplast", mh$tx4, ignore.case=TRUE)"
 mh[grepl("Chloroplast", mh$tx4, ignore.case=TRUE)|grepl("Chloroplast", mh$tx4, ignore.case=TRUE)|grepl("Mitochondria", mh$tx5, ignore.case=TRUE), 1:7] <- c("Plantae")
 
 ## Overwriting of the species field with 'unknown species' if presence of 'incertae sedis' in any of upper taxonomic fields 
@@ -117,15 +121,19 @@ mh$tx6[which(todo)] <- gsub(" .*$", "", mh$tx7[which(todo)])
 
 ## Ignoring of 'unknown species' or 'unknown genus' under a threshold
 thresh=0.5 # to modify % threshold below which 'unknown' are ignored
-mh$clus <- as.integer(gsub("Cluster_","",mh$observation_name))
+mh$clus <- as.integer(gsub("Cluster_", "", mh$observation_name))
 mh$blast_taxonomy <- NULL
 
+## Add a column with the number of rows per cluster in affiliation table
 my.genus.result <- data.table::as.data.table(unique(mh %>% dplyr::add_count(clus, tx1, tx2, tx3, tx4, tx5, tx6, observation_name)))
-my.genus.result$ntot<-  data.table::as.data.table(unique(mh %>% dplyr::add_count(observation_name)))$n
+head(my.genus.result)
+my.genus.result$ntot <-  data.table::as.data.table(unique(mh %>% dplyr::add_count(observation_name)))$n
+head(my.genus.result)
+
 data.table::setkey(my.genus.result, clus, n)
 my.genus.result$prop.genus <- my.genus.result$n/my.genus.result$ntot
 my.genus.result$ignore.genus <-FALSE
-my.genus.result$ignore.genus <- my.genus.result$ignore.genus | (grepl("unknown",my.genus.result$tx6,perl=TRUE,ignore.case=TRUE) & my.genus.result$prop.genus <thresh)
+my.genus.result$ignore.genus <- my.genus.result$ignore.genus | (grepl("unknown", my.genus.result$tx6, perl=TRUE, ignore.case=TRUE) & my.genus.result$prop.genus < thresh)
 #nrow(my.genus.result)
 #names(my.genus.result)
 
@@ -169,6 +177,7 @@ my.mh.result <- data.table::data.table(observation_name=my.second.result$observa
   paste(r[2:8], sep=";", collapse=";")
 }))
 #nrow(my.mh.result)
+dim(my.mh.result)
 
 ```
 
@@ -229,7 +238,8 @@ ab$tx6[which(todo)] <- gsub(" .*$", "", ab$tx7[which(todo)])
 my.ab.result <- data.table::data.table(observation_name=ab$observation_name,  blast_taxonomy= apply(ab, 1, function(r) {
   paste(r[1:7], sep=";", collapse=";")
 }))
-
+head(my.ab.result)
+dim(my.ab.result)
 
 ```
 
@@ -245,7 +255,7 @@ final$blast_taxonomy.y<-NULL
 data.table::setcolorder(final,c(2,3,4,5,6,7,8,9,10,1,11:(ncol(final))))
 fordada <- final[order(as.integer(gsub("Cluster_", "", final$observation_name)))]
 fordada <- as.data.frame(fordada)
-
+head(fordada)
 ```
 
 # Remove chimeras
@@ -253,23 +263,26 @@ fordada <- as.data.frame(fordada)
 
 ## Tune data structure
 samples <- colnames(fordada)[seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))]
+
 fordada.m <- data.matrix(fordada[ , seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))])
 rownames(fordada.m) <- fordada$seed_sequence
 fordada.t <- t(fordada.m)
 
-##
+## Remove chimeras with isBimeraDenovo
 bimeras.v <- dada2::isBimeraDenovo(dada2::getUniques(fordada.t), minFoldParentOverAbundance=4, verbose=TRUE)
 bimeras.df <- data.frame(x=as.logical(bimeras.v), seq=names(bimeras.v))
+head(bimeras.df)
 
-
+## Export sequences that are not chimeras
 write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_cleaned_abundance.txt",sep="")), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
 
+## Export sequences that are chimeras
 write.table(fordada[bimeras.df$x==TRUE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_list.txt", sep="")), sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)#downloading of identified chimeras
 
 ## Summary file
 number_of_total_clusters = nrow(fordada)
-number_of_bimeras = nrow(fordada[bimeras.df$x==FALSE,])
-number_of_nobimeras = nrow(fordada[bimeras.df$x==TRUE,])
+number_of_bimeras = nrow(fordada[bimeras.df$x==TRUE,])
+number_of_nobimeras = nrow(fordada[bimeras.df$x==FALSE,])
 summary.df = data.frame(number_of_total_clusters, number_of_bimeras, number_of_nobimeras)
 write.table(summary.df,file=file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_summary.txt",sep="")),sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)
 
