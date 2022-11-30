@@ -32,6 +32,7 @@ RoxygenNote: 7.2.2
 Imports: 
     dplyr,
     here,
+    lme4,
     mc2d,
     phyloseq,
     phyloseq.extended,
