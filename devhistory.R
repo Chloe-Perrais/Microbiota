@@ -31,6 +31,8 @@ usethis::use_r("utils-pipe")
 usethis::use_r("sample_Poisson")
 usethis::use_r("sample_Binomial")
 usethis::use_r("sample_Multinomial")
+usethis::use_r("clean_OTU")
+usethis::use_r("find_chimeras")
 
 ## Update DESCRIPTION file
 usethis::use_package("here")
