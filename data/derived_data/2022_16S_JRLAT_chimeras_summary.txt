@@ -1,2 +1,2 @@
 number_of_total_clusters	number_of_bimeras	number_of_nobimeras
-265	100	165
+263	99	164
