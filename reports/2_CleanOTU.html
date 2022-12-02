@@ -12,7 +12,7 @@
 <meta name="author" content="Sylvain Piry, Nicolas Rode" />
 
 
-<title>2_Clean OTU</title>
+<title>2_Clean OTUs</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1502,1339 +1502,793 @@ font-size: 0.95em;
 
 
 
-<h1 class="title toc-ignore">2_Clean OTU</h1>
+<h1 class="title toc-ignore">2_Clean OTUs</h1>
 <h4 class="author">Sylvain Piry, Nicolas Rode</h4>
-<h4 class="date">01-December-2022</h4>
+<h4 class="date">02-December-2022</h4>
 
 </div>
 
 
-<p>Work on raw abundance and multihits text files from Frogs.</p>
-<p>Correct the taxonomy of each cluster of the abundance tsv file tagged
-‘multi-affiliation’, from decision rules applied on the cleaned
-multihits tsv file:</p>
-<p>Clean the taxonomy (7 ranks:
-Kingdom,Phylum,Class,Order,Family,Genus,Species) of each hit of the two
-files for: - the special characters ’<a href></a>_“0123456789.’ in
-all 7 taxonomic ranks. - ‘mitochondria’ (in the Family rank) and
-‘chloroplast’ (in the Class rank), which are replaced by plantae in all
-7 taxonomic ranks. - ‘unidentified’, ‘sp.’ and ‘bacterium’, which are
-replaced by ‘unknown species’ in the Species rank . - unexpected number
-of words in all 7 taxonomic ranks. - for the species and genus ranks
-only: if the number of ‘unknown species’ hits &lt; % threshold then
-ignore them. - for all taxonomic ranks: - if there is a unique taxonomic
-name, then rename by this taxonomic name. - if there is a unique
-taxonomic name and an ‘unknown’, then rename by ‘unknown’. - if there
-are two or more taxonomic names, then name ‘multi-affiliation’.</p>
-<p>Identify chimeric sequences using the isBimeraDenovo(…) function in
-the dada2 library</p>
-<p>Export an abundance table tsv file cleaned for taxonomy and filtered
-for chimeras.</p>
-<div id="load-input-files-from-data-folder" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Load input files from
-data folder</h1>
+<div id="clean-16s" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Clean 16S</h1>
 <pre class="r"><code>## Follow the instructions to install dada2: https://benjjneb.github.io/dada2/
 
-#clean_OTU(abundance_table=&quot;Galaxy21-[FROGS_BIOM_to_TSV__abundance.tsv].tsv&quot;, affiliation_table=&quot;Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv&quot;, thresh=0.5, name = &quot;2022JRLAT-16S&quot;)</code></pre>
+clean_OTU(abundance_table=&quot;16S_Galaxy17-[FROGS_BIOM_to_TSV__abundance.tsv].tsv&quot;, affiliation_table=&quot;16S_Galaxy18-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv&quot;, thresh=0.5, name = &quot;2022_16S_JRLAT&quot;, removecol=&quot;NC-Index&quot;)</code></pre>
+<pre><code>## [1] &quot;Remaining colnames&quot;
+##   [1] &quot;#comment&quot;                  &quot;rdp_tax_and_bootstrap&quot;    
+##   [3] &quot;blast_taxonomy&quot;            &quot;blast_subject&quot;            
+##   [5] &quot;blast_perc_identity&quot;       &quot;blast_perc_query_coverage&quot;
+##   [7] &quot;blast_evalue&quot;              &quot;blast_aln_length&quot;         
+##   [9] &quot;seed_id&quot;                   &quot;seed_sequence&quot;            
+##  [11] &quot;observation_name&quot;          &quot;observation_sum&quot;          
+##  [13] &quot;ADT-ST-ISS-XXX-01-A&quot;       &quot;ADT-ST-ISS-XXX-01-B&quot;      
+##  [15] &quot;ADT-ST-ISS-XXX-01-C&quot;       &quot;ADT-ST-ISS-XXX-02-A&quot;      
+##  [17] &quot;ADT-ST-ISS-XXX-02-B&quot;       &quot;ADT-ST-ISS-XXX-02-C&quot;      
+##  [19] &quot;ADT-ST-ISS-XXX-03-A&quot;       &quot;ADT-ST-ISS-XXX-03-B&quot;      
+##  [21] &quot;ADT-ST-ISS-XXX-03-C&quot;       &quot;ADT-ST-ISS-XXX-04-A&quot;      
+##  [23] &quot;ADT-ST-ISS-XXX-04-B&quot;       &quot;ADT-ST-ISS-XXX-04-C&quot;      
+##  [25] &quot;ADT-ST-ISS-XXX-05-A&quot;       &quot;ADT-ST-ISS-XXX-05-B&quot;      
+##  [27] &quot;ADT-ST-ISS-XXX-05-C&quot;       &quot;ADT-ST-ISS-XXX-06-A&quot;      
+##  [29] &quot;ADT-ST-ISS-XXX-06-B&quot;       &quot;ADT-ST-ISS-XXX-06-C&quot;      
+##  [31] &quot;ADT-ST-ISS-XXX-07-A&quot;       &quot;ADT-ST-ISS-XXX-07-B&quot;      
+##  [33] &quot;ADT-ST-ISS-XXX-07-C&quot;       &quot;ADT-ST-ISS-XXX-08-A&quot;      
+##  [35] &quot;ADT-ST-ISS-XXX-08-B&quot;       &quot;ADT-ST-ISS-XXX-08-C&quot;      
+##  [37] &quot;ADT-ST-ISS-XXX-09-A&quot;       &quot;ADT-ST-ISS-XXX-09-B&quot;      
+##  [39] &quot;ADT-ST-ISS-XXX-09-C&quot;       &quot;ADT-ST-ISS-XXX-10-A&quot;      
+##  [41] &quot;ADT-ST-ISS-XXX-10-B&quot;       &quot;ADT-ST-ISS-XXX-10-C&quot;      
+##  [43] &quot;BL-AEST01157-A&quot;            &quot;BL-AEST01157-B&quot;           
+##  [45] &quot;BL-AEST01157-C&quot;            &quot;BL-AEST01191-A&quot;           
+##  [47] &quot;BL-AEST01191-B&quot;            &quot;BL-AEST01191-C&quot;           
+##  [49] &quot;BL-AEST01286-A&quot;            &quot;BL-AEST01286-B&quot;           
+##  [51] &quot;BL-AEST01286-C&quot;            &quot;BL-AEST01308-A&quot;           
+##  [53] &quot;BL-AEST01308-B&quot;            &quot;BL-AEST01308-C&quot;           
+##  [55] &quot;BL-AEST01404-A&quot;            &quot;BL-AEST01404-B&quot;           
+##  [57] &quot;BL-AEST01404-C&quot;            &quot;BL-AEST01475-A&quot;           
+##  [59] &quot;BL-AEST01475-B&quot;            &quot;BL-AEST01475-C&quot;           
+##  [61] &quot;BL-PUREE0001-A&quot;            &quot;BL-PUREE0001-B&quot;           
+##  [63] &quot;BL-PUREE0001-C&quot;            &quot;BL-PUREE0002-A&quot;           
+##  [65] &quot;BL-PUREE0002-B&quot;            &quot;BL-PUREE0002-C&quot;           
+##  [67] &quot;CH-AEST01155-A&quot;            &quot;CH-AEST01155-B&quot;           
+##  [69] &quot;CH-AEST01155-C&quot;            &quot;CH-AEST01189-A&quot;           
+##  [71] &quot;CH-AEST01189-B&quot;            &quot;CH-AEST01189-C&quot;           
+##  [73] &quot;CH-AEST01284-A&quot;            &quot;CH-AEST01284-B&quot;           
+##  [75] &quot;CH-AEST01284-C&quot;            &quot;CH-AEST01306-A&quot;           
+##  [77] &quot;CH-AEST01306-B&quot;            &quot;CH-AEST01306-C&quot;           
+##  [79] &quot;CH-AEST01402-A&quot;            &quot;CH-AEST01402-B&quot;           
+##  [81] &quot;CH-AEST01402-C&quot;            &quot;CH-AEST01473-A&quot;           
+##  [83] &quot;CH-AEST01473-B&quot;            &quot;CH-AEST01473-C&quot;           
+##  [85] &quot;CH-PUREE0001-A&quot;            &quot;CH-PUREE0001-B&quot;           
+##  [87] &quot;CH-PUREE0001-C&quot;            &quot;CH-PUREE0002-A&quot;           
+##  [89] &quot;CH-PUREE0002-B&quot;            &quot;CH-PUREE0002-C&quot;           
+##  [91] &quot;CTL-DN-MOC-COM-01-A&quot;       &quot;CTL-DN-MOC-COM-01-B&quot;      
+##  [93] &quot;CTL-DN-MOC-COM-01-C&quot;       &quot;CTL-DN-MOC-COM-02-A&quot;      
+##  [95] &quot;CTL-DN-MOC-COM-02-B&quot;       &quot;CTL-DN-MOC-COM-02-C&quot;      
+##  [97] &quot;CTL-NO-DNA-PCR-XX-A&quot;       &quot;CTL-NO-DNA-PCR-XX-B&quot;      
+##  [99] &quot;CTL-NO-DNA-PCR-XX-C&quot;       &quot;CTL-XX-DNA-EXT-01-A&quot;      
+## [101] &quot;CTL-XX-DNA-EXT-01-B&quot;       &quot;CTL-XX-DNA-EXT-01-C&quot;      
+## [103] &quot;CTL-XX-LRV-COI-01-A&quot;       &quot;CTL-XX-LRV-COI-01-B&quot;      
+## [105] &quot;CTL-XX-LRV-COI-01-C&quot;       &quot;CTL-XX-LRV-COI-02-A&quot;      
+## [107] &quot;CTL-XX-LRV-COI-02-B&quot;       &quot;CTL-XX-LRV-COI-02-C&quot;      
+## [109] &quot;CTL-XX-WAT-LRV-01-A&quot;       &quot;CTL-XX-WAT-LRV-01-B&quot;      
+## [111] &quot;CTL-XX-WAT-LRV-01-C&quot;       &quot;CTL-XX-WAT-LRV-02-A&quot;      
+## [113] &quot;CTL-XX-WAT-LRV-02-B&quot;       &quot;CTL-XX-WAT-LRV-02-C&quot;      
+## [115] &quot;CTM-ST-ISS-XXX-02-A&quot;       &quot;CTM-ST-ISS-XXX-02-B&quot;      
+## [117] &quot;CTM-ST-ISS-XXX-02-C&quot;       &quot;CTM-ST-ISS-XXX-04-A&quot;      
+## [119] &quot;CTM-ST-ISS-XXX-04-B&quot;       &quot;CTM-ST-ISS-XXX-04-C&quot;      
+## [121] &quot;FRT-BL-CAR-UNF-XX-A&quot;       &quot;FRT-BL-CAR-UNF-XX-B&quot;      
+## [123] &quot;FRT-BL-CAR-UNF-XX-C&quot;       &quot;FRT-BL-CAR-UNO-XX-A&quot;      
+## [125] &quot;FRT-BL-CAR-UNO-XX-B&quot;       &quot;FRT-BL-CAR-UNO-XX-C&quot;      
+## [127] &quot;FRT-BL-ISL-UNF-XX-A&quot;       &quot;FRT-BL-ISL-UNF-XX-B&quot;      
+## [129] &quot;FRT-BL-ISL-UNF-XX-C&quot;       &quot;FRT-BL-ISL-UNO-XX-A&quot;      
+## [131] &quot;FRT-BL-ISL-UNO-XX-B&quot;       &quot;FRT-BL-ISL-UNO-XX-C&quot;      
+## [133] &quot;FRT-BL-MAZ-INF-01-A&quot;       &quot;FRT-BL-MAZ-INF-01-B&quot;      
+## [135] &quot;FRT-BL-MAZ-INF-01-C&quot;       &quot;FRT-BL-MAZ-INF-02-A&quot;      
+## [137] &quot;FRT-BL-MAZ-INF-02-B&quot;       &quot;FRT-BL-MAZ-INF-02-C&quot;      
+## [139] &quot;FRT-BL-MAZ-UNF-01-A&quot;       &quot;FRT-BL-MAZ-UNF-01-B&quot;      
+## [141] &quot;FRT-BL-MAZ-UNF-01-C&quot;       &quot;FRT-BL-MAZ-UNF-02-A&quot;      
+## [143] &quot;FRT-BL-MAZ-UNF-02-B&quot;       &quot;FRT-BL-MAZ-UNF-02-C&quot;      
+## [145] &quot;FRT-BL-MAZ-UNF-03-A&quot;       &quot;FRT-BL-MAZ-UNF-03-B&quot;      
+## [147] &quot;FRT-BL-MAZ-UNF-03-C&quot;       &quot;FRT-BL-MAZ-UNF-04-A&quot;      
+## [149] &quot;FRT-BL-MAZ-UNF-04-B&quot;       &quot;FRT-BL-MAZ-UNF-04-C&quot;      
+## [151] &quot;FRT-ST-ISS-IND-XX-A&quot;       &quot;FRT-ST-ISS-IND-XX-B&quot;      
+## [153] &quot;FRT-ST-ISS-IND-XX-C&quot;       &quot;FRT-ST-ISS-INM-XX-A&quot;      
+## [155] &quot;FRT-ST-ISS-INM-XX-B&quot;       &quot;FRT-ST-ISS-INM-XX-C&quot;      
+## [157] &quot;FRT-ST-ISS-UNF-01-A&quot;       &quot;FRT-ST-ISS-UNF-01-B&quot;      
+## [159] &quot;FRT-ST-ISS-UNF-01-C&quot;       &quot;FRT-ST-ISS-UNF-02-A&quot;      
+## [161] &quot;FRT-ST-ISS-UNF-02-B&quot;       &quot;FRT-ST-ISS-UNF-02-C&quot;      
+## [163] &quot;FRT-ST-ISS-UNF-03-A&quot;       &quot;FRT-ST-ISS-UNF-03-B&quot;      
+## [165] &quot;FRT-ST-ISS-UNF-03-C&quot;       &quot;FRT-ST-ISS-UNF-04-A&quot;      
+## [167] &quot;FRT-ST-ISS-UNF-04-B&quot;       &quot;FRT-ST-ISS-UNF-04-C&quot;      
+## [169] &quot;FRT-ST-ISS-UNF-05-A&quot;       &quot;FRT-ST-ISS-UNF-05-B&quot;      
+## [171] &quot;FRT-ST-ISS-UNF-05-C&quot;       &quot;FRT-ST-ISS-UNF-06-A&quot;      
+## [173] &quot;FRT-ST-ISS-UNF-06-B&quot;       &quot;FRT-ST-ISS-UNF-XX-A&quot;      
+## [175] &quot;FRT-ST-ISS-UNF-XX-B&quot;       &quot;FRT-ST-ISS-UNF-XX-C&quot;      
+## [177] &quot;FRT-ST-ISS-UNO-XX-A&quot;       &quot;FRT-ST-ISS-UNO-XX-B&quot;      
+## [179] &quot;FRT-ST-ISS-UNO-XX-C&quot;       &quot;FRT-ST-MAZ-UNF-01-A&quot;      
+## [181] &quot;FRT-ST-MAZ-UNF-01-B&quot;       &quot;FRT-ST-MAZ-UNF-01-C&quot;      
+## [183] &quot;FRT-ST-MAZ-UNF-02-A&quot;       &quot;FRT-ST-MAZ-UNF-02-B&quot;      
+## [185] &quot;FRT-ST-MAZ-UNF-02-C&quot;       &quot;FRT-ST-MAZ-UNF-03-A&quot;      
+## [187] &quot;FRT-ST-MAZ-UNF-03-B&quot;       &quot;FRT-ST-MAZ-UNF-03-C&quot;      
+## [189] &quot;FRT-ST-MAZ-UNF-04-A&quot;       &quot;FRT-ST-MAZ-UNF-04-B&quot;      
+## [191] &quot;FRT-ST-MAZ-UNF-04-C&quot;       &quot;FRT-ST-MAZ-UNF-05-A&quot;      
+## [193] &quot;FRT-ST-MAZ-UNF-05-B&quot;       &quot;FRT-ST-MAZ-UNF-05-C&quot;      
+## [195] &quot;LRV-BB-MAZ-XXX-01-A&quot;       &quot;LRV-BB-MAZ-XXX-01-B&quot;      
+## [197] &quot;LRV-BB-MAZ-XXX-01-C&quot;       &quot;LRV-BB-MAZ-XXX-02-A&quot;      
+## [199] &quot;LRV-BB-MAZ-XXX-02-B&quot;       &quot;LRV-BB-MAZ-XXX-02-C&quot;      
+## [201] &quot;LRV-BB-MAZ-XXX-03-A&quot;       &quot;LRV-BB-MAZ-XXX-03-B&quot;      
+## [203] &quot;LRV-BB-MAZ-XXX-03-C&quot;       &quot;LRV-ST-ISS-XXX-01-A&quot;      
+## [205] &quot;LRV-ST-ISS-XXX-01-B&quot;       &quot;LRV-ST-ISS-XXX-01-C&quot;      
+## [207] &quot;LRV-ST-ISS-XXX-02-A&quot;       &quot;LRV-ST-ISS-XXX-02-B&quot;      
+## [209] &quot;LRV-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-01-A&quot;      
+## [211] &quot;PUC-ST-ISS-XXX-01-B&quot;       &quot;PUC-ST-ISS-XXX-01-C&quot;      
+## [213] &quot;PUC-ST-ISS-XXX-02-A&quot;       &quot;PUC-ST-ISS-XXX-02-B&quot;      
+## [215] &quot;PUC-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-03-A&quot;      
+## [217] &quot;PUC-ST-ISS-XXX-03-B&quot;       &quot;PUC-ST-ISS-XXX-03-C&quot;      
+## [219] &quot;PUC-ST-ISS-XXX-04-A&quot;       &quot;PUC-ST-ISS-XXX-04-B&quot;      
+## [221] &quot;PUC-ST-ISS-XXX-04-C&quot;       &quot;PUC-ST-ISS-XXX-05-A&quot;      
+## [223] &quot;PUC-ST-ISS-XXX-05-B&quot;       &quot;PUC-ST-ISS-XXX-05-C&quot;      
+## [225] &quot;PUC-ST-ISS-XXX-06-A&quot;       &quot;PUC-ST-ISS-XXX-06-B&quot;      
+## [227] &quot;PUC-ST-ISS-XXX-06-C&quot;       &quot;PUC-ST-ISS-XXX-07-A&quot;      
+## [229] &quot;PUC-ST-ISS-XXX-07-B&quot;       &quot;PUC-ST-ISS-XXX-07-C&quot;      
+## [231] &quot;PUC-ST-ISS-XXX-08-A&quot;       &quot;PUC-ST-ISS-XXX-08-B&quot;      
+## [233] &quot;PUC-ST-ISS-XXX-08-C&quot;       &quot;PUC-ST-ISS-XXX-09-A&quot;      
+## [235] &quot;PUC-ST-ISS-XXX-09-B&quot;       &quot;PUC-ST-ISS-XXX-09-C&quot;      
+## [237] &quot;PUC-ST-ISS-XXX-10-A&quot;       &quot;PUC-ST-ISS-XXX-10-B&quot;      
+## [239] &quot;PUC-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-01-A&quot;      
+## [241] &quot;PUP-ST-ISS-XXX-01-B&quot;       &quot;PUP-ST-ISS-XXX-01-C&quot;      
+## [243] &quot;PUP-ST-ISS-XXX-02-A&quot;       &quot;PUP-ST-ISS-XXX-02-B&quot;      
+## [245] &quot;PUP-ST-ISS-XXX-02-C&quot;       &quot;PUP-ST-ISS-XXX-03-A&quot;      
+## [247] &quot;PUP-ST-ISS-XXX-03-B&quot;       &quot;PUP-ST-ISS-XXX-03-C&quot;      
+## [249] &quot;PUP-ST-ISS-XXX-04-A&quot;       &quot;PUP-ST-ISS-XXX-04-B&quot;      
+## [251] &quot;PUP-ST-ISS-XXX-04-C&quot;       &quot;PUP-ST-ISS-XXX-05-A&quot;      
+## [253] &quot;PUP-ST-ISS-XXX-05-B&quot;       &quot;PUP-ST-ISS-XXX-05-C&quot;      
+## [255] &quot;PUP-ST-ISS-XXX-06-A&quot;       &quot;PUP-ST-ISS-XXX-06-B&quot;      
+## [257] &quot;PUP-ST-ISS-XXX-06-C&quot;       &quot;PUP-ST-ISS-XXX-07-A&quot;      
+## [259] &quot;PUP-ST-ISS-XXX-07-B&quot;       &quot;PUP-ST-ISS-XXX-07-C&quot;      
+## [261] &quot;PUP-ST-ISS-XXX-08-A&quot;       &quot;PUP-ST-ISS-XXX-08-B&quot;      
+## [263] &quot;PUP-ST-ISS-XXX-08-C&quot;       &quot;PUP-ST-ISS-XXX-09-A&quot;      
+## [265] &quot;PUP-ST-ISS-XXX-09-B&quot;       &quot;PUP-ST-ISS-XXX-09-C&quot;      
+## [267] &quot;PUP-ST-ISS-XXX-10-A&quot;       &quot;PUP-ST-ISS-XXX-10-B&quot;      
+## [269] &quot;PUP-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-11-A&quot;      
+## [271] &quot;PUP-ST-ISS-XXX-11-B&quot;       &quot;PUP-ST-ISS-XXX-11-C&quot;      
+## [273] &quot;PUP-ST-ISS-XXX-12-A&quot;       &quot;PUP-ST-ISS-XXX-12-B&quot;      
+## [275] &quot;PUP-ST-ISS-XXX-12-C&quot;       &quot;ST-AEST01156-A&quot;           
+## [277] &quot;ST-AEST01156-B&quot;            &quot;ST-AEST01156-C&quot;           
+## [279] &quot;ST-AEST01190-A&quot;            &quot;ST-AEST01190-B&quot;           
+## [281] &quot;ST-AEST01190-C&quot;            &quot;ST-AEST01285-A&quot;           
+## [283] &quot;ST-AEST01285-B&quot;            &quot;ST-AEST01285-C&quot;           
+## [285] &quot;ST-AEST01307-A&quot;            &quot;ST-AEST01307-B&quot;           
+## [287] &quot;ST-AEST01307-C&quot;            &quot;ST-AEST01403-A&quot;           
+## [289] &quot;ST-AEST01403-B&quot;            &quot;ST-AEST01403-C&quot;           
+## [291] &quot;ST-AEST01474-A&quot;            &quot;ST-AEST01474-B&quot;           
+## [293] &quot;ST-AEST01474-C&quot;            &quot;ST-PUREE0001-A&quot;           
+## [295] &quot;ST-PUREE0001-B&quot;            &quot;ST-PUREE0001-C&quot;           
+## [297] &quot;ST-PUREE0002-A&quot;            &quot;ST-PUREE0002-B&quot;           
+## [299] &quot;ST-PUREE0002-C&quot;            &quot;Undetermined&quot;             
+## [1] &quot;data to find chimeras:&quot;
+##   [1] &quot;#comment&quot;                  &quot;rdp_tax_and_bootstrap&quot;    
+##   [3] &quot;blast_taxonomy&quot;            &quot;blast_subject&quot;            
+##   [5] &quot;blast_perc_identity&quot;       &quot;blast_perc_query_coverage&quot;
+##   [7] &quot;blast_evalue&quot;              &quot;blast_aln_length&quot;         
+##   [9] &quot;seed_id&quot;                   &quot;observation_name&quot;         
+##  [11] &quot;seed_sequence&quot;             &quot;observation_sum&quot;          
+##  [13] &quot;ADT-ST-ISS-XXX-01-A&quot;       &quot;ADT-ST-ISS-XXX-01-B&quot;      
+##  [15] &quot;ADT-ST-ISS-XXX-01-C&quot;       &quot;ADT-ST-ISS-XXX-02-A&quot;      
+##  [17] &quot;ADT-ST-ISS-XXX-02-B&quot;       &quot;ADT-ST-ISS-XXX-02-C&quot;      
+##  [19] &quot;ADT-ST-ISS-XXX-03-A&quot;       &quot;ADT-ST-ISS-XXX-03-B&quot;      
+##  [21] &quot;ADT-ST-ISS-XXX-03-C&quot;       &quot;ADT-ST-ISS-XXX-04-A&quot;      
+##  [23] &quot;ADT-ST-ISS-XXX-04-B&quot;       &quot;ADT-ST-ISS-XXX-04-C&quot;      
+##  [25] &quot;ADT-ST-ISS-XXX-05-A&quot;       &quot;ADT-ST-ISS-XXX-05-B&quot;      
+##  [27] &quot;ADT-ST-ISS-XXX-05-C&quot;       &quot;ADT-ST-ISS-XXX-06-A&quot;      
+##  [29] &quot;ADT-ST-ISS-XXX-06-B&quot;       &quot;ADT-ST-ISS-XXX-06-C&quot;      
+##  [31] &quot;ADT-ST-ISS-XXX-07-A&quot;       &quot;ADT-ST-ISS-XXX-07-B&quot;      
+##  [33] &quot;ADT-ST-ISS-XXX-07-C&quot;       &quot;ADT-ST-ISS-XXX-08-A&quot;      
+##  [35] &quot;ADT-ST-ISS-XXX-08-B&quot;       &quot;ADT-ST-ISS-XXX-08-C&quot;      
+##  [37] &quot;ADT-ST-ISS-XXX-09-A&quot;       &quot;ADT-ST-ISS-XXX-09-B&quot;      
+##  [39] &quot;ADT-ST-ISS-XXX-09-C&quot;       &quot;ADT-ST-ISS-XXX-10-A&quot;      
+##  [41] &quot;ADT-ST-ISS-XXX-10-B&quot;       &quot;ADT-ST-ISS-XXX-10-C&quot;      
+##  [43] &quot;BL-AEST01157-A&quot;            &quot;BL-AEST01157-B&quot;           
+##  [45] &quot;BL-AEST01157-C&quot;            &quot;BL-AEST01191-A&quot;           
+##  [47] &quot;BL-AEST01191-B&quot;            &quot;BL-AEST01191-C&quot;           
+##  [49] &quot;BL-AEST01286-A&quot;            &quot;BL-AEST01286-B&quot;           
+##  [51] &quot;BL-AEST01286-C&quot;            &quot;BL-AEST01308-A&quot;           
+##  [53] &quot;BL-AEST01308-B&quot;            &quot;BL-AEST01308-C&quot;           
+##  [55] &quot;BL-AEST01404-A&quot;            &quot;BL-AEST01404-B&quot;           
+##  [57] &quot;BL-AEST01404-C&quot;            &quot;BL-AEST01475-A&quot;           
+##  [59] &quot;BL-AEST01475-B&quot;            &quot;BL-AEST01475-C&quot;           
+##  [61] &quot;BL-PUREE0001-A&quot;            &quot;BL-PUREE0001-B&quot;           
+##  [63] &quot;BL-PUREE0001-C&quot;            &quot;BL-PUREE0002-A&quot;           
+##  [65] &quot;BL-PUREE0002-B&quot;            &quot;BL-PUREE0002-C&quot;           
+##  [67] &quot;CH-AEST01155-A&quot;            &quot;CH-AEST01155-B&quot;           
+##  [69] &quot;CH-AEST01155-C&quot;            &quot;CH-AEST01189-A&quot;           
+##  [71] &quot;CH-AEST01189-B&quot;            &quot;CH-AEST01189-C&quot;           
+##  [73] &quot;CH-AEST01284-A&quot;            &quot;CH-AEST01284-B&quot;           
+##  [75] &quot;CH-AEST01284-C&quot;            &quot;CH-AEST01306-A&quot;           
+##  [77] &quot;CH-AEST01306-B&quot;            &quot;CH-AEST01306-C&quot;           
+##  [79] &quot;CH-AEST01402-A&quot;            &quot;CH-AEST01402-B&quot;           
+##  [81] &quot;CH-AEST01402-C&quot;            &quot;CH-AEST01473-A&quot;           
+##  [83] &quot;CH-AEST01473-B&quot;            &quot;CH-AEST01473-C&quot;           
+##  [85] &quot;CH-PUREE0001-A&quot;            &quot;CH-PUREE0001-B&quot;           
+##  [87] &quot;CH-PUREE0001-C&quot;            &quot;CH-PUREE0002-A&quot;           
+##  [89] &quot;CH-PUREE0002-B&quot;            &quot;CH-PUREE0002-C&quot;           
+##  [91] &quot;CTL-DN-MOC-COM-01-A&quot;       &quot;CTL-DN-MOC-COM-01-B&quot;      
+##  [93] &quot;CTL-DN-MOC-COM-01-C&quot;       &quot;CTL-DN-MOC-COM-02-A&quot;      
+##  [95] &quot;CTL-DN-MOC-COM-02-B&quot;       &quot;CTL-DN-MOC-COM-02-C&quot;      
+##  [97] &quot;CTL-NO-DNA-PCR-XX-A&quot;       &quot;CTL-NO-DNA-PCR-XX-B&quot;      
+##  [99] &quot;CTL-NO-DNA-PCR-XX-C&quot;       &quot;CTL-XX-DNA-EXT-01-A&quot;      
+## [101] &quot;CTL-XX-DNA-EXT-01-B&quot;       &quot;CTL-XX-DNA-EXT-01-C&quot;      
+## [103] &quot;CTL-XX-LRV-COI-01-A&quot;       &quot;CTL-XX-LRV-COI-01-B&quot;      
+## [105] &quot;CTL-XX-LRV-COI-01-C&quot;       &quot;CTL-XX-LRV-COI-02-A&quot;      
+## [107] &quot;CTL-XX-LRV-COI-02-B&quot;       &quot;CTL-XX-LRV-COI-02-C&quot;      
+## [109] &quot;CTL-XX-WAT-LRV-01-A&quot;       &quot;CTL-XX-WAT-LRV-01-B&quot;      
+## [111] &quot;CTL-XX-WAT-LRV-01-C&quot;       &quot;CTL-XX-WAT-LRV-02-A&quot;      
+## [113] &quot;CTL-XX-WAT-LRV-02-B&quot;       &quot;CTL-XX-WAT-LRV-02-C&quot;      
+## [115] &quot;CTM-ST-ISS-XXX-02-A&quot;       &quot;CTM-ST-ISS-XXX-02-B&quot;      
+## [117] &quot;CTM-ST-ISS-XXX-02-C&quot;       &quot;CTM-ST-ISS-XXX-04-A&quot;      
+## [119] &quot;CTM-ST-ISS-XXX-04-B&quot;       &quot;CTM-ST-ISS-XXX-04-C&quot;      
+## [121] &quot;FRT-BL-CAR-UNF-XX-A&quot;       &quot;FRT-BL-CAR-UNF-XX-B&quot;      
+## [123] &quot;FRT-BL-CAR-UNF-XX-C&quot;       &quot;FRT-BL-CAR-UNO-XX-A&quot;      
+## [125] &quot;FRT-BL-CAR-UNO-XX-B&quot;       &quot;FRT-BL-CAR-UNO-XX-C&quot;      
+## [127] &quot;FRT-BL-ISL-UNF-XX-A&quot;       &quot;FRT-BL-ISL-UNF-XX-B&quot;      
+## [129] &quot;FRT-BL-ISL-UNF-XX-C&quot;       &quot;FRT-BL-ISL-UNO-XX-A&quot;      
+## [131] &quot;FRT-BL-ISL-UNO-XX-B&quot;       &quot;FRT-BL-ISL-UNO-XX-C&quot;      
+## [133] &quot;FRT-BL-MAZ-INF-01-A&quot;       &quot;FRT-BL-MAZ-INF-01-B&quot;      
+## [135] &quot;FRT-BL-MAZ-INF-01-C&quot;       &quot;FRT-BL-MAZ-INF-02-A&quot;      
+## [137] &quot;FRT-BL-MAZ-INF-02-B&quot;       &quot;FRT-BL-MAZ-INF-02-C&quot;      
+## [139] &quot;FRT-BL-MAZ-UNF-01-A&quot;       &quot;FRT-BL-MAZ-UNF-01-B&quot;      
+## [141] &quot;FRT-BL-MAZ-UNF-01-C&quot;       &quot;FRT-BL-MAZ-UNF-02-A&quot;      
+## [143] &quot;FRT-BL-MAZ-UNF-02-B&quot;       &quot;FRT-BL-MAZ-UNF-02-C&quot;      
+## [145] &quot;FRT-BL-MAZ-UNF-03-A&quot;       &quot;FRT-BL-MAZ-UNF-03-B&quot;      
+## [147] &quot;FRT-BL-MAZ-UNF-03-C&quot;       &quot;FRT-BL-MAZ-UNF-04-A&quot;      
+## [149] &quot;FRT-BL-MAZ-UNF-04-B&quot;       &quot;FRT-BL-MAZ-UNF-04-C&quot;      
+## [151] &quot;FRT-ST-ISS-IND-XX-A&quot;       &quot;FRT-ST-ISS-IND-XX-B&quot;      
+## [153] &quot;FRT-ST-ISS-IND-XX-C&quot;       &quot;FRT-ST-ISS-INM-XX-A&quot;      
+## [155] &quot;FRT-ST-ISS-INM-XX-B&quot;       &quot;FRT-ST-ISS-INM-XX-C&quot;      
+## [157] &quot;FRT-ST-ISS-UNF-01-A&quot;       &quot;FRT-ST-ISS-UNF-01-B&quot;      
+## [159] &quot;FRT-ST-ISS-UNF-01-C&quot;       &quot;FRT-ST-ISS-UNF-02-A&quot;      
+## [161] &quot;FRT-ST-ISS-UNF-02-B&quot;       &quot;FRT-ST-ISS-UNF-02-C&quot;      
+## [163] &quot;FRT-ST-ISS-UNF-03-A&quot;       &quot;FRT-ST-ISS-UNF-03-B&quot;      
+## [165] &quot;FRT-ST-ISS-UNF-03-C&quot;       &quot;FRT-ST-ISS-UNF-04-A&quot;      
+## [167] &quot;FRT-ST-ISS-UNF-04-B&quot;       &quot;FRT-ST-ISS-UNF-04-C&quot;      
+## [169] &quot;FRT-ST-ISS-UNF-05-A&quot;       &quot;FRT-ST-ISS-UNF-05-B&quot;      
+## [171] &quot;FRT-ST-ISS-UNF-05-C&quot;       &quot;FRT-ST-ISS-UNF-06-A&quot;      
+## [173] &quot;FRT-ST-ISS-UNF-06-B&quot;       &quot;FRT-ST-ISS-UNF-XX-A&quot;      
+## [175] &quot;FRT-ST-ISS-UNF-XX-B&quot;       &quot;FRT-ST-ISS-UNF-XX-C&quot;      
+## [177] &quot;FRT-ST-ISS-UNO-XX-A&quot;       &quot;FRT-ST-ISS-UNO-XX-B&quot;      
+## [179] &quot;FRT-ST-ISS-UNO-XX-C&quot;       &quot;FRT-ST-MAZ-UNF-01-A&quot;      
+## [181] &quot;FRT-ST-MAZ-UNF-01-B&quot;       &quot;FRT-ST-MAZ-UNF-01-C&quot;      
+## [183] &quot;FRT-ST-MAZ-UNF-02-A&quot;       &quot;FRT-ST-MAZ-UNF-02-B&quot;      
+## [185] &quot;FRT-ST-MAZ-UNF-02-C&quot;       &quot;FRT-ST-MAZ-UNF-03-A&quot;      
+## [187] &quot;FRT-ST-MAZ-UNF-03-B&quot;       &quot;FRT-ST-MAZ-UNF-03-C&quot;      
+## [189] &quot;FRT-ST-MAZ-UNF-04-A&quot;       &quot;FRT-ST-MAZ-UNF-04-B&quot;      
+## [191] &quot;FRT-ST-MAZ-UNF-04-C&quot;       &quot;FRT-ST-MAZ-UNF-05-A&quot;      
+## [193] &quot;FRT-ST-MAZ-UNF-05-B&quot;       &quot;FRT-ST-MAZ-UNF-05-C&quot;      
+## [195] &quot;LRV-BB-MAZ-XXX-01-A&quot;       &quot;LRV-BB-MAZ-XXX-01-B&quot;      
+## [197] &quot;LRV-BB-MAZ-XXX-01-C&quot;       &quot;LRV-BB-MAZ-XXX-02-A&quot;      
+## [199] &quot;LRV-BB-MAZ-XXX-02-B&quot;       &quot;LRV-BB-MAZ-XXX-02-C&quot;      
+## [201] &quot;LRV-BB-MAZ-XXX-03-A&quot;       &quot;LRV-BB-MAZ-XXX-03-B&quot;      
+## [203] &quot;LRV-BB-MAZ-XXX-03-C&quot;       &quot;LRV-ST-ISS-XXX-01-A&quot;      
+## [205] &quot;LRV-ST-ISS-XXX-01-B&quot;       &quot;LRV-ST-ISS-XXX-01-C&quot;      
+## [207] &quot;LRV-ST-ISS-XXX-02-A&quot;       &quot;LRV-ST-ISS-XXX-02-B&quot;      
+## [209] &quot;LRV-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-01-A&quot;      
+## [211] &quot;PUC-ST-ISS-XXX-01-B&quot;       &quot;PUC-ST-ISS-XXX-01-C&quot;      
+## [213] &quot;PUC-ST-ISS-XXX-02-A&quot;       &quot;PUC-ST-ISS-XXX-02-B&quot;      
+## [215] &quot;PUC-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-03-A&quot;      
+## [217] &quot;PUC-ST-ISS-XXX-03-B&quot;       &quot;PUC-ST-ISS-XXX-03-C&quot;      
+## [219] &quot;PUC-ST-ISS-XXX-04-A&quot;       &quot;PUC-ST-ISS-XXX-04-B&quot;      
+## [221] &quot;PUC-ST-ISS-XXX-04-C&quot;       &quot;PUC-ST-ISS-XXX-05-A&quot;      
+## [223] &quot;PUC-ST-ISS-XXX-05-B&quot;       &quot;PUC-ST-ISS-XXX-05-C&quot;      
+## [225] &quot;PUC-ST-ISS-XXX-06-A&quot;       &quot;PUC-ST-ISS-XXX-06-B&quot;      
+## [227] &quot;PUC-ST-ISS-XXX-06-C&quot;       &quot;PUC-ST-ISS-XXX-07-A&quot;      
+## [229] &quot;PUC-ST-ISS-XXX-07-B&quot;       &quot;PUC-ST-ISS-XXX-07-C&quot;      
+## [231] &quot;PUC-ST-ISS-XXX-08-A&quot;       &quot;PUC-ST-ISS-XXX-08-B&quot;      
+## [233] &quot;PUC-ST-ISS-XXX-08-C&quot;       &quot;PUC-ST-ISS-XXX-09-A&quot;      
+## [235] &quot;PUC-ST-ISS-XXX-09-B&quot;       &quot;PUC-ST-ISS-XXX-09-C&quot;      
+## [237] &quot;PUC-ST-ISS-XXX-10-A&quot;       &quot;PUC-ST-ISS-XXX-10-B&quot;      
+## [239] &quot;PUC-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-01-A&quot;      
+## [241] &quot;PUP-ST-ISS-XXX-01-B&quot;       &quot;PUP-ST-ISS-XXX-01-C&quot;      
+## [243] &quot;PUP-ST-ISS-XXX-02-A&quot;       &quot;PUP-ST-ISS-XXX-02-B&quot;      
+## [245] &quot;PUP-ST-ISS-XXX-02-C&quot;       &quot;PUP-ST-ISS-XXX-03-A&quot;      
+## [247] &quot;PUP-ST-ISS-XXX-03-B&quot;       &quot;PUP-ST-ISS-XXX-03-C&quot;      
+## [249] &quot;PUP-ST-ISS-XXX-04-A&quot;       &quot;PUP-ST-ISS-XXX-04-B&quot;      
+## [251] &quot;PUP-ST-ISS-XXX-04-C&quot;       &quot;PUP-ST-ISS-XXX-05-A&quot;      
+## [253] &quot;PUP-ST-ISS-XXX-05-B&quot;       &quot;PUP-ST-ISS-XXX-05-C&quot;      
+## [255] &quot;PUP-ST-ISS-XXX-06-A&quot;       &quot;PUP-ST-ISS-XXX-06-B&quot;      
+## [257] &quot;PUP-ST-ISS-XXX-06-C&quot;       &quot;PUP-ST-ISS-XXX-07-A&quot;      
+## [259] &quot;PUP-ST-ISS-XXX-07-B&quot;       &quot;PUP-ST-ISS-XXX-07-C&quot;      
+## [261] &quot;PUP-ST-ISS-XXX-08-A&quot;       &quot;PUP-ST-ISS-XXX-08-B&quot;      
+## [263] &quot;PUP-ST-ISS-XXX-08-C&quot;       &quot;PUP-ST-ISS-XXX-09-A&quot;      
+## [265] &quot;PUP-ST-ISS-XXX-09-B&quot;       &quot;PUP-ST-ISS-XXX-09-C&quot;      
+## [267] &quot;PUP-ST-ISS-XXX-10-A&quot;       &quot;PUP-ST-ISS-XXX-10-B&quot;      
+## [269] &quot;PUP-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-11-A&quot;      
+## [271] &quot;PUP-ST-ISS-XXX-11-B&quot;       &quot;PUP-ST-ISS-XXX-11-C&quot;      
+## [273] &quot;PUP-ST-ISS-XXX-12-A&quot;       &quot;PUP-ST-ISS-XXX-12-B&quot;      
+## [275] &quot;PUP-ST-ISS-XXX-12-C&quot;       &quot;ST-AEST01156-A&quot;           
+## [277] &quot;ST-AEST01156-B&quot;            &quot;ST-AEST01156-C&quot;           
+## [279] &quot;ST-AEST01190-A&quot;            &quot;ST-AEST01190-B&quot;           
+## [281] &quot;ST-AEST01190-C&quot;            &quot;ST-AEST01285-A&quot;           
+## [283] &quot;ST-AEST01285-B&quot;            &quot;ST-AEST01285-C&quot;           
+## [285] &quot;ST-AEST01307-A&quot;            &quot;ST-AEST01307-B&quot;           
+## [287] &quot;ST-AEST01307-C&quot;            &quot;ST-AEST01403-A&quot;           
+## [289] &quot;ST-AEST01403-B&quot;            &quot;ST-AEST01403-C&quot;           
+## [291] &quot;ST-AEST01474-A&quot;            &quot;ST-AEST01474-B&quot;           
+## [293] &quot;ST-AEST01474-C&quot;            &quot;ST-PUREE0001-A&quot;           
+## [295] &quot;ST-PUREE0001-B&quot;            &quot;ST-PUREE0001-C&quot;           
+## [297] &quot;ST-PUREE0002-A&quot;            &quot;ST-PUREE0002-B&quot;           
+## [299] &quot;ST-PUREE0002-C&quot;            &quot;Undetermined&quot;             
+## [1] &quot;find_chimeras&quot;
+##   [1] &quot;#comment&quot;                  &quot;rdp_tax_and_bootstrap&quot;    
+##   [3] &quot;blast_taxonomy&quot;            &quot;blast_subject&quot;            
+##   [5] &quot;blast_perc_identity&quot;       &quot;blast_perc_query_coverage&quot;
+##   [7] &quot;blast_evalue&quot;              &quot;blast_aln_length&quot;         
+##   [9] &quot;seed_id&quot;                   &quot;observation_name&quot;         
+##  [11] &quot;seed_sequence&quot;             &quot;observation_sum&quot;          
+##  [13] &quot;ADT-ST-ISS-XXX-01-A&quot;       &quot;ADT-ST-ISS-XXX-01-B&quot;      
+##  [15] &quot;ADT-ST-ISS-XXX-01-C&quot;       &quot;ADT-ST-ISS-XXX-02-A&quot;      
+##  [17] &quot;ADT-ST-ISS-XXX-02-B&quot;       &quot;ADT-ST-ISS-XXX-02-C&quot;      
+##  [19] &quot;ADT-ST-ISS-XXX-03-A&quot;       &quot;ADT-ST-ISS-XXX-03-B&quot;      
+##  [21] &quot;ADT-ST-ISS-XXX-03-C&quot;       &quot;ADT-ST-ISS-XXX-04-A&quot;      
+##  [23] &quot;ADT-ST-ISS-XXX-04-B&quot;       &quot;ADT-ST-ISS-XXX-04-C&quot;      
+##  [25] &quot;ADT-ST-ISS-XXX-05-A&quot;       &quot;ADT-ST-ISS-XXX-05-B&quot;      
+##  [27] &quot;ADT-ST-ISS-XXX-05-C&quot;       &quot;ADT-ST-ISS-XXX-06-A&quot;      
+##  [29] &quot;ADT-ST-ISS-XXX-06-B&quot;       &quot;ADT-ST-ISS-XXX-06-C&quot;      
+##  [31] &quot;ADT-ST-ISS-XXX-07-A&quot;       &quot;ADT-ST-ISS-XXX-07-B&quot;      
+##  [33] &quot;ADT-ST-ISS-XXX-07-C&quot;       &quot;ADT-ST-ISS-XXX-08-A&quot;      
+##  [35] &quot;ADT-ST-ISS-XXX-08-B&quot;       &quot;ADT-ST-ISS-XXX-08-C&quot;      
+##  [37] &quot;ADT-ST-ISS-XXX-09-A&quot;       &quot;ADT-ST-ISS-XXX-09-B&quot;      
+##  [39] &quot;ADT-ST-ISS-XXX-09-C&quot;       &quot;ADT-ST-ISS-XXX-10-A&quot;      
+##  [41] &quot;ADT-ST-ISS-XXX-10-B&quot;       &quot;ADT-ST-ISS-XXX-10-C&quot;      
+##  [43] &quot;BL-AEST01157-A&quot;            &quot;BL-AEST01157-B&quot;           
+##  [45] &quot;BL-AEST01157-C&quot;            &quot;BL-AEST01191-A&quot;           
+##  [47] &quot;BL-AEST01191-B&quot;            &quot;BL-AEST01191-C&quot;           
+##  [49] &quot;BL-AEST01286-A&quot;            &quot;BL-AEST01286-B&quot;           
+##  [51] &quot;BL-AEST01286-C&quot;            &quot;BL-AEST01308-A&quot;           
+##  [53] &quot;BL-AEST01308-B&quot;            &quot;BL-AEST01308-C&quot;           
+##  [55] &quot;BL-AEST01404-A&quot;            &quot;BL-AEST01404-B&quot;           
+##  [57] &quot;BL-AEST01404-C&quot;            &quot;BL-AEST01475-A&quot;           
+##  [59] &quot;BL-AEST01475-B&quot;            &quot;BL-AEST01475-C&quot;           
+##  [61] &quot;BL-PUREE0001-A&quot;            &quot;BL-PUREE0001-B&quot;           
+##  [63] &quot;BL-PUREE0001-C&quot;            &quot;BL-PUREE0002-A&quot;           
+##  [65] &quot;BL-PUREE0002-B&quot;            &quot;BL-PUREE0002-C&quot;           
+##  [67] &quot;CH-AEST01155-A&quot;            &quot;CH-AEST01155-B&quot;           
+##  [69] &quot;CH-AEST01155-C&quot;            &quot;CH-AEST01189-A&quot;           
+##  [71] &quot;CH-AEST01189-B&quot;            &quot;CH-AEST01189-C&quot;           
+##  [73] &quot;CH-AEST01284-A&quot;            &quot;CH-AEST01284-B&quot;           
+##  [75] &quot;CH-AEST01284-C&quot;            &quot;CH-AEST01306-A&quot;           
+##  [77] &quot;CH-AEST01306-B&quot;            &quot;CH-AEST01306-C&quot;           
+##  [79] &quot;CH-AEST01402-A&quot;            &quot;CH-AEST01402-B&quot;           
+##  [81] &quot;CH-AEST01402-C&quot;            &quot;CH-AEST01473-A&quot;           
+##  [83] &quot;CH-AEST01473-B&quot;            &quot;CH-AEST01473-C&quot;           
+##  [85] &quot;CH-PUREE0001-A&quot;            &quot;CH-PUREE0001-B&quot;           
+##  [87] &quot;CH-PUREE0001-C&quot;            &quot;CH-PUREE0002-A&quot;           
+##  [89] &quot;CH-PUREE0002-B&quot;            &quot;CH-PUREE0002-C&quot;           
+##  [91] &quot;CTL-DN-MOC-COM-01-A&quot;       &quot;CTL-DN-MOC-COM-01-B&quot;      
+##  [93] &quot;CTL-DN-MOC-COM-01-C&quot;       &quot;CTL-DN-MOC-COM-02-A&quot;      
+##  [95] &quot;CTL-DN-MOC-COM-02-B&quot;       &quot;CTL-DN-MOC-COM-02-C&quot;      
+##  [97] &quot;CTL-NO-DNA-PCR-XX-A&quot;       &quot;CTL-NO-DNA-PCR-XX-B&quot;      
+##  [99] &quot;CTL-NO-DNA-PCR-XX-C&quot;       &quot;CTL-XX-DNA-EXT-01-A&quot;      
+## [101] &quot;CTL-XX-DNA-EXT-01-B&quot;       &quot;CTL-XX-DNA-EXT-01-C&quot;      
+## [103] &quot;CTL-XX-LRV-COI-01-A&quot;       &quot;CTL-XX-LRV-COI-01-B&quot;      
+## [105] &quot;CTL-XX-LRV-COI-01-C&quot;       &quot;CTL-XX-LRV-COI-02-A&quot;      
+## [107] &quot;CTL-XX-LRV-COI-02-B&quot;       &quot;CTL-XX-LRV-COI-02-C&quot;      
+## [109] &quot;CTL-XX-WAT-LRV-01-A&quot;       &quot;CTL-XX-WAT-LRV-01-B&quot;      
+## [111] &quot;CTL-XX-WAT-LRV-01-C&quot;       &quot;CTL-XX-WAT-LRV-02-A&quot;      
+## [113] &quot;CTL-XX-WAT-LRV-02-B&quot;       &quot;CTL-XX-WAT-LRV-02-C&quot;      
+## [115] &quot;CTM-ST-ISS-XXX-02-A&quot;       &quot;CTM-ST-ISS-XXX-02-B&quot;      
+## [117] &quot;CTM-ST-ISS-XXX-02-C&quot;       &quot;CTM-ST-ISS-XXX-04-A&quot;      
+## [119] &quot;CTM-ST-ISS-XXX-04-B&quot;       &quot;CTM-ST-ISS-XXX-04-C&quot;      
+## [121] &quot;FRT-BL-CAR-UNF-XX-A&quot;       &quot;FRT-BL-CAR-UNF-XX-B&quot;      
+## [123] &quot;FRT-BL-CAR-UNF-XX-C&quot;       &quot;FRT-BL-CAR-UNO-XX-A&quot;      
+## [125] &quot;FRT-BL-CAR-UNO-XX-B&quot;       &quot;FRT-BL-CAR-UNO-XX-C&quot;      
+## [127] &quot;FRT-BL-ISL-UNF-XX-A&quot;       &quot;FRT-BL-ISL-UNF-XX-B&quot;      
+## [129] &quot;FRT-BL-ISL-UNF-XX-C&quot;       &quot;FRT-BL-ISL-UNO-XX-A&quot;      
+## [131] &quot;FRT-BL-ISL-UNO-XX-B&quot;       &quot;FRT-BL-ISL-UNO-XX-C&quot;      
+## [133] &quot;FRT-BL-MAZ-INF-01-A&quot;       &quot;FRT-BL-MAZ-INF-01-B&quot;      
+## [135] &quot;FRT-BL-MAZ-INF-01-C&quot;       &quot;FRT-BL-MAZ-INF-02-A&quot;      
+## [137] &quot;FRT-BL-MAZ-INF-02-B&quot;       &quot;FRT-BL-MAZ-INF-02-C&quot;      
+## [139] &quot;FRT-BL-MAZ-UNF-01-A&quot;       &quot;FRT-BL-MAZ-UNF-01-B&quot;      
+## [141] &quot;FRT-BL-MAZ-UNF-01-C&quot;       &quot;FRT-BL-MAZ-UNF-02-A&quot;      
+## [143] &quot;FRT-BL-MAZ-UNF-02-B&quot;       &quot;FRT-BL-MAZ-UNF-02-C&quot;      
+## [145] &quot;FRT-BL-MAZ-UNF-03-A&quot;       &quot;FRT-BL-MAZ-UNF-03-B&quot;      
+## [147] &quot;FRT-BL-MAZ-UNF-03-C&quot;       &quot;FRT-BL-MAZ-UNF-04-A&quot;      
+## [149] &quot;FRT-BL-MAZ-UNF-04-B&quot;       &quot;FRT-BL-MAZ-UNF-04-C&quot;      
+## [151] &quot;FRT-ST-ISS-IND-XX-A&quot;       &quot;FRT-ST-ISS-IND-XX-B&quot;      
+## [153] &quot;FRT-ST-ISS-IND-XX-C&quot;       &quot;FRT-ST-ISS-INM-XX-A&quot;      
+## [155] &quot;FRT-ST-ISS-INM-XX-B&quot;       &quot;FRT-ST-ISS-INM-XX-C&quot;      
+## [157] &quot;FRT-ST-ISS-UNF-01-A&quot;       &quot;FRT-ST-ISS-UNF-01-B&quot;      
+## [159] &quot;FRT-ST-ISS-UNF-01-C&quot;       &quot;FRT-ST-ISS-UNF-02-A&quot;      
+## [161] &quot;FRT-ST-ISS-UNF-02-B&quot;       &quot;FRT-ST-ISS-UNF-02-C&quot;      
+## [163] &quot;FRT-ST-ISS-UNF-03-A&quot;       &quot;FRT-ST-ISS-UNF-03-B&quot;      
+## [165] &quot;FRT-ST-ISS-UNF-03-C&quot;       &quot;FRT-ST-ISS-UNF-04-A&quot;      
+## [167] &quot;FRT-ST-ISS-UNF-04-B&quot;       &quot;FRT-ST-ISS-UNF-04-C&quot;      
+## [169] &quot;FRT-ST-ISS-UNF-05-A&quot;       &quot;FRT-ST-ISS-UNF-05-B&quot;      
+## [171] &quot;FRT-ST-ISS-UNF-05-C&quot;       &quot;FRT-ST-ISS-UNF-06-A&quot;      
+## [173] &quot;FRT-ST-ISS-UNF-06-B&quot;       &quot;FRT-ST-ISS-UNF-XX-A&quot;      
+## [175] &quot;FRT-ST-ISS-UNF-XX-B&quot;       &quot;FRT-ST-ISS-UNF-XX-C&quot;      
+## [177] &quot;FRT-ST-ISS-UNO-XX-A&quot;       &quot;FRT-ST-ISS-UNO-XX-B&quot;      
+## [179] &quot;FRT-ST-ISS-UNO-XX-C&quot;       &quot;FRT-ST-MAZ-UNF-01-A&quot;      
+## [181] &quot;FRT-ST-MAZ-UNF-01-B&quot;       &quot;FRT-ST-MAZ-UNF-01-C&quot;      
+## [183] &quot;FRT-ST-MAZ-UNF-02-A&quot;       &quot;FRT-ST-MAZ-UNF-02-B&quot;      
+## [185] &quot;FRT-ST-MAZ-UNF-02-C&quot;       &quot;FRT-ST-MAZ-UNF-03-A&quot;      
+## [187] &quot;FRT-ST-MAZ-UNF-03-B&quot;       &quot;FRT-ST-MAZ-UNF-03-C&quot;      
+## [189] &quot;FRT-ST-MAZ-UNF-04-A&quot;       &quot;FRT-ST-MAZ-UNF-04-B&quot;      
+## [191] &quot;FRT-ST-MAZ-UNF-04-C&quot;       &quot;FRT-ST-MAZ-UNF-05-A&quot;      
+## [193] &quot;FRT-ST-MAZ-UNF-05-B&quot;       &quot;FRT-ST-MAZ-UNF-05-C&quot;      
+## [195] &quot;LRV-BB-MAZ-XXX-01-A&quot;       &quot;LRV-BB-MAZ-XXX-01-B&quot;      
+## [197] &quot;LRV-BB-MAZ-XXX-01-C&quot;       &quot;LRV-BB-MAZ-XXX-02-A&quot;      
+## [199] &quot;LRV-BB-MAZ-XXX-02-B&quot;       &quot;LRV-BB-MAZ-XXX-02-C&quot;      
+## [201] &quot;LRV-BB-MAZ-XXX-03-A&quot;       &quot;LRV-BB-MAZ-XXX-03-B&quot;      
+## [203] &quot;LRV-BB-MAZ-XXX-03-C&quot;       &quot;LRV-ST-ISS-XXX-01-A&quot;      
+## [205] &quot;LRV-ST-ISS-XXX-01-B&quot;       &quot;LRV-ST-ISS-XXX-01-C&quot;      
+## [207] &quot;LRV-ST-ISS-XXX-02-A&quot;       &quot;LRV-ST-ISS-XXX-02-B&quot;      
+## [209] &quot;LRV-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-01-A&quot;      
+## [211] &quot;PUC-ST-ISS-XXX-01-B&quot;       &quot;PUC-ST-ISS-XXX-01-C&quot;      
+## [213] &quot;PUC-ST-ISS-XXX-02-A&quot;       &quot;PUC-ST-ISS-XXX-02-B&quot;      
+## [215] &quot;PUC-ST-ISS-XXX-02-C&quot;       &quot;PUC-ST-ISS-XXX-03-A&quot;      
+## [217] &quot;PUC-ST-ISS-XXX-03-B&quot;       &quot;PUC-ST-ISS-XXX-03-C&quot;      
+## [219] &quot;PUC-ST-ISS-XXX-04-A&quot;       &quot;PUC-ST-ISS-XXX-04-B&quot;      
+## [221] &quot;PUC-ST-ISS-XXX-04-C&quot;       &quot;PUC-ST-ISS-XXX-05-A&quot;      
+## [223] &quot;PUC-ST-ISS-XXX-05-B&quot;       &quot;PUC-ST-ISS-XXX-05-C&quot;      
+## [225] &quot;PUC-ST-ISS-XXX-06-A&quot;       &quot;PUC-ST-ISS-XXX-06-B&quot;      
+## [227] &quot;PUC-ST-ISS-XXX-06-C&quot;       &quot;PUC-ST-ISS-XXX-07-A&quot;      
+## [229] &quot;PUC-ST-ISS-XXX-07-B&quot;       &quot;PUC-ST-ISS-XXX-07-C&quot;      
+## [231] &quot;PUC-ST-ISS-XXX-08-A&quot;       &quot;PUC-ST-ISS-XXX-08-B&quot;      
+## [233] &quot;PUC-ST-ISS-XXX-08-C&quot;       &quot;PUC-ST-ISS-XXX-09-A&quot;      
+## [235] &quot;PUC-ST-ISS-XXX-09-B&quot;       &quot;PUC-ST-ISS-XXX-09-C&quot;      
+## [237] &quot;PUC-ST-ISS-XXX-10-A&quot;       &quot;PUC-ST-ISS-XXX-10-B&quot;      
+## [239] &quot;PUC-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-01-A&quot;      
+## [241] &quot;PUP-ST-ISS-XXX-01-B&quot;       &quot;PUP-ST-ISS-XXX-01-C&quot;      
+## [243] &quot;PUP-ST-ISS-XXX-02-A&quot;       &quot;PUP-ST-ISS-XXX-02-B&quot;      
+## [245] &quot;PUP-ST-ISS-XXX-02-C&quot;       &quot;PUP-ST-ISS-XXX-03-A&quot;      
+## [247] &quot;PUP-ST-ISS-XXX-03-B&quot;       &quot;PUP-ST-ISS-XXX-03-C&quot;      
+## [249] &quot;PUP-ST-ISS-XXX-04-A&quot;       &quot;PUP-ST-ISS-XXX-04-B&quot;      
+## [251] &quot;PUP-ST-ISS-XXX-04-C&quot;       &quot;PUP-ST-ISS-XXX-05-A&quot;      
+## [253] &quot;PUP-ST-ISS-XXX-05-B&quot;       &quot;PUP-ST-ISS-XXX-05-C&quot;      
+## [255] &quot;PUP-ST-ISS-XXX-06-A&quot;       &quot;PUP-ST-ISS-XXX-06-B&quot;      
+## [257] &quot;PUP-ST-ISS-XXX-06-C&quot;       &quot;PUP-ST-ISS-XXX-07-A&quot;      
+## [259] &quot;PUP-ST-ISS-XXX-07-B&quot;       &quot;PUP-ST-ISS-XXX-07-C&quot;      
+## [261] &quot;PUP-ST-ISS-XXX-08-A&quot;       &quot;PUP-ST-ISS-XXX-08-B&quot;      
+## [263] &quot;PUP-ST-ISS-XXX-08-C&quot;       &quot;PUP-ST-ISS-XXX-09-A&quot;      
+## [265] &quot;PUP-ST-ISS-XXX-09-B&quot;       &quot;PUP-ST-ISS-XXX-09-C&quot;      
+## [267] &quot;PUP-ST-ISS-XXX-10-A&quot;       &quot;PUP-ST-ISS-XXX-10-B&quot;      
+## [269] &quot;PUP-ST-ISS-XXX-10-C&quot;       &quot;PUP-ST-ISS-XXX-11-A&quot;      
+## [271] &quot;PUP-ST-ISS-XXX-11-B&quot;       &quot;PUP-ST-ISS-XXX-11-C&quot;      
+## [273] &quot;PUP-ST-ISS-XXX-12-A&quot;       &quot;PUP-ST-ISS-XXX-12-B&quot;      
+## [275] &quot;PUP-ST-ISS-XXX-12-C&quot;       &quot;ST-AEST01156-A&quot;           
+## [277] &quot;ST-AEST01156-B&quot;            &quot;ST-AEST01156-C&quot;           
+## [279] &quot;ST-AEST01190-A&quot;            &quot;ST-AEST01190-B&quot;           
+## [281] &quot;ST-AEST01190-C&quot;            &quot;ST-AEST01285-A&quot;           
+## [283] &quot;ST-AEST01285-B&quot;            &quot;ST-AEST01285-C&quot;           
+## [285] &quot;ST-AEST01307-A&quot;            &quot;ST-AEST01307-B&quot;           
+## [287] &quot;ST-AEST01307-C&quot;            &quot;ST-AEST01403-A&quot;           
+## [289] &quot;ST-AEST01403-B&quot;            &quot;ST-AEST01403-C&quot;           
+## [291] &quot;ST-AEST01474-A&quot;            &quot;ST-AEST01474-B&quot;           
+## [293] &quot;ST-AEST01474-C&quot;            &quot;ST-PUREE0001-A&quot;           
+## [295] &quot;ST-PUREE0001-B&quot;            &quot;ST-PUREE0001-C&quot;           
+## [297] &quot;ST-PUREE0002-A&quot;            &quot;ST-PUREE0002-B&quot;           
+## [299] &quot;ST-PUREE0002-C&quot;            &quot;Undetermined&quot;             
+## [1] &quot;samples:&quot;
+##   [1] &quot;ADT-ST-ISS-XXX-01-A&quot; &quot;ADT-ST-ISS-XXX-01-B&quot; &quot;ADT-ST-ISS-XXX-01-C&quot;
+##   [4] &quot;ADT-ST-ISS-XXX-02-A&quot; &quot;ADT-ST-ISS-XXX-02-B&quot; &quot;ADT-ST-ISS-XXX-02-C&quot;
+##   [7] &quot;ADT-ST-ISS-XXX-03-A&quot; &quot;ADT-ST-ISS-XXX-03-B&quot; &quot;ADT-ST-ISS-XXX-03-C&quot;
+##  [10] &quot;ADT-ST-ISS-XXX-04-A&quot; &quot;ADT-ST-ISS-XXX-04-B&quot; &quot;ADT-ST-ISS-XXX-04-C&quot;
+##  [13] &quot;ADT-ST-ISS-XXX-05-A&quot; &quot;ADT-ST-ISS-XXX-05-B&quot; &quot;ADT-ST-ISS-XXX-05-C&quot;
+##  [16] &quot;ADT-ST-ISS-XXX-06-A&quot; &quot;ADT-ST-ISS-XXX-06-B&quot; &quot;ADT-ST-ISS-XXX-06-C&quot;
+##  [19] &quot;ADT-ST-ISS-XXX-07-A&quot; &quot;ADT-ST-ISS-XXX-07-B&quot; &quot;ADT-ST-ISS-XXX-07-C&quot;
+##  [22] &quot;ADT-ST-ISS-XXX-08-A&quot; &quot;ADT-ST-ISS-XXX-08-B&quot; &quot;ADT-ST-ISS-XXX-08-C&quot;
+##  [25] &quot;ADT-ST-ISS-XXX-09-A&quot; &quot;ADT-ST-ISS-XXX-09-B&quot; &quot;ADT-ST-ISS-XXX-09-C&quot;
+##  [28] &quot;ADT-ST-ISS-XXX-10-A&quot; &quot;ADT-ST-ISS-XXX-10-B&quot; &quot;ADT-ST-ISS-XXX-10-C&quot;
+##  [31] &quot;BL-AEST01157-A&quot;      &quot;BL-AEST01157-B&quot;      &quot;BL-AEST01157-C&quot;     
+##  [34] &quot;BL-AEST01191-A&quot;      &quot;BL-AEST01191-B&quot;      &quot;BL-AEST01191-C&quot;     
+##  [37] &quot;BL-AEST01286-A&quot;      &quot;BL-AEST01286-B&quot;      &quot;BL-AEST01286-C&quot;     
+##  [40] &quot;BL-AEST01308-A&quot;      &quot;BL-AEST01308-B&quot;      &quot;BL-AEST01308-C&quot;     
+##  [43] &quot;BL-AEST01404-A&quot;      &quot;BL-AEST01404-B&quot;      &quot;BL-AEST01404-C&quot;     
+##  [46] &quot;BL-AEST01475-A&quot;      &quot;BL-AEST01475-B&quot;      &quot;BL-AEST01475-C&quot;     
+##  [49] &quot;BL-PUREE0001-A&quot;      &quot;BL-PUREE0001-B&quot;      &quot;BL-PUREE0001-C&quot;     
+##  [52] &quot;BL-PUREE0002-A&quot;      &quot;BL-PUREE0002-B&quot;      &quot;BL-PUREE0002-C&quot;     
+##  [55] &quot;CH-AEST01155-A&quot;      &quot;CH-AEST01155-B&quot;      &quot;CH-AEST01155-C&quot;     
+##  [58] &quot;CH-AEST01189-A&quot;      &quot;CH-AEST01189-B&quot;      &quot;CH-AEST01189-C&quot;     
+##  [61] &quot;CH-AEST01284-A&quot;      &quot;CH-AEST01284-B&quot;      &quot;CH-AEST01284-C&quot;     
+##  [64] &quot;CH-AEST01306-A&quot;      &quot;CH-AEST01306-B&quot;      &quot;CH-AEST01306-C&quot;     
+##  [67] &quot;CH-AEST01402-A&quot;      &quot;CH-AEST01402-B&quot;      &quot;CH-AEST01402-C&quot;     
+##  [70] &quot;CH-AEST01473-A&quot;      &quot;CH-AEST01473-B&quot;      &quot;CH-AEST01473-C&quot;     
+##  [73] &quot;CH-PUREE0001-A&quot;      &quot;CH-PUREE0001-B&quot;      &quot;CH-PUREE0001-C&quot;     
+##  [76] &quot;CH-PUREE0002-A&quot;      &quot;CH-PUREE0002-B&quot;      &quot;CH-PUREE0002-C&quot;     
+##  [79] &quot;CTL-DN-MOC-COM-01-A&quot; &quot;CTL-DN-MOC-COM-01-B&quot; &quot;CTL-DN-MOC-COM-01-C&quot;
+##  [82] &quot;CTL-DN-MOC-COM-02-A&quot; &quot;CTL-DN-MOC-COM-02-B&quot; &quot;CTL-DN-MOC-COM-02-C&quot;
+##  [85] &quot;CTL-NO-DNA-PCR-XX-A&quot; &quot;CTL-NO-DNA-PCR-XX-B&quot; &quot;CTL-NO-DNA-PCR-XX-C&quot;
+##  [88] &quot;CTL-XX-DNA-EXT-01-A&quot; &quot;CTL-XX-DNA-EXT-01-B&quot; &quot;CTL-XX-DNA-EXT-01-C&quot;
+##  [91] &quot;CTL-XX-LRV-COI-01-A&quot; &quot;CTL-XX-LRV-COI-01-B&quot; &quot;CTL-XX-LRV-COI-01-C&quot;
+##  [94] &quot;CTL-XX-LRV-COI-02-A&quot; &quot;CTL-XX-LRV-COI-02-B&quot; &quot;CTL-XX-LRV-COI-02-C&quot;
+##  [97] &quot;CTL-XX-WAT-LRV-01-A&quot; &quot;CTL-XX-WAT-LRV-01-B&quot; &quot;CTL-XX-WAT-LRV-01-C&quot;
+## [100] &quot;CTL-XX-WAT-LRV-02-A&quot; &quot;CTL-XX-WAT-LRV-02-B&quot; &quot;CTL-XX-WAT-LRV-02-C&quot;
+## [103] &quot;CTM-ST-ISS-XXX-02-A&quot; &quot;CTM-ST-ISS-XXX-02-B&quot; &quot;CTM-ST-ISS-XXX-02-C&quot;
+## [106] &quot;CTM-ST-ISS-XXX-04-A&quot; &quot;CTM-ST-ISS-XXX-04-B&quot; &quot;CTM-ST-ISS-XXX-04-C&quot;
+## [109] &quot;FRT-BL-CAR-UNF-XX-A&quot; &quot;FRT-BL-CAR-UNF-XX-B&quot; &quot;FRT-BL-CAR-UNF-XX-C&quot;
+## [112] &quot;FRT-BL-CAR-UNO-XX-A&quot; &quot;FRT-BL-CAR-UNO-XX-B&quot; &quot;FRT-BL-CAR-UNO-XX-C&quot;
+## [115] &quot;FRT-BL-ISL-UNF-XX-A&quot; &quot;FRT-BL-ISL-UNF-XX-B&quot; &quot;FRT-BL-ISL-UNF-XX-C&quot;
+## [118] &quot;FRT-BL-ISL-UNO-XX-A&quot; &quot;FRT-BL-ISL-UNO-XX-B&quot; &quot;FRT-BL-ISL-UNO-XX-C&quot;
+## [121] &quot;FRT-BL-MAZ-INF-01-A&quot; &quot;FRT-BL-MAZ-INF-01-B&quot; &quot;FRT-BL-MAZ-INF-01-C&quot;
+## [124] &quot;FRT-BL-MAZ-INF-02-A&quot; &quot;FRT-BL-MAZ-INF-02-B&quot; &quot;FRT-BL-MAZ-INF-02-C&quot;
+## [127] &quot;FRT-BL-MAZ-UNF-01-A&quot; &quot;FRT-BL-MAZ-UNF-01-B&quot; &quot;FRT-BL-MAZ-UNF-01-C&quot;
+## [130] &quot;FRT-BL-MAZ-UNF-02-A&quot; &quot;FRT-BL-MAZ-UNF-02-B&quot; &quot;FRT-BL-MAZ-UNF-02-C&quot;
+## [133] &quot;FRT-BL-MAZ-UNF-03-A&quot; &quot;FRT-BL-MAZ-UNF-03-B&quot; &quot;FRT-BL-MAZ-UNF-03-C&quot;
+## [136] &quot;FRT-BL-MAZ-UNF-04-A&quot; &quot;FRT-BL-MAZ-UNF-04-B&quot; &quot;FRT-BL-MAZ-UNF-04-C&quot;
+## [139] &quot;FRT-ST-ISS-IND-XX-A&quot; &quot;FRT-ST-ISS-IND-XX-B&quot; &quot;FRT-ST-ISS-IND-XX-C&quot;
+## [142] &quot;FRT-ST-ISS-INM-XX-A&quot; &quot;FRT-ST-ISS-INM-XX-B&quot; &quot;FRT-ST-ISS-INM-XX-C&quot;
+## [145] &quot;FRT-ST-ISS-UNF-01-A&quot; &quot;FRT-ST-ISS-UNF-01-B&quot; &quot;FRT-ST-ISS-UNF-01-C&quot;
+## [148] &quot;FRT-ST-ISS-UNF-02-A&quot; &quot;FRT-ST-ISS-UNF-02-B&quot; &quot;FRT-ST-ISS-UNF-02-C&quot;
+## [151] &quot;FRT-ST-ISS-UNF-03-A&quot; &quot;FRT-ST-ISS-UNF-03-B&quot; &quot;FRT-ST-ISS-UNF-03-C&quot;
+## [154] &quot;FRT-ST-ISS-UNF-04-A&quot; &quot;FRT-ST-ISS-UNF-04-B&quot; &quot;FRT-ST-ISS-UNF-04-C&quot;
+## [157] &quot;FRT-ST-ISS-UNF-05-A&quot; &quot;FRT-ST-ISS-UNF-05-B&quot; &quot;FRT-ST-ISS-UNF-05-C&quot;
+## [160] &quot;FRT-ST-ISS-UNF-06-A&quot; &quot;FRT-ST-ISS-UNF-06-B&quot; &quot;FRT-ST-ISS-UNF-XX-A&quot;
+## [163] &quot;FRT-ST-ISS-UNF-XX-B&quot; &quot;FRT-ST-ISS-UNF-XX-C&quot; &quot;FRT-ST-ISS-UNO-XX-A&quot;
+## [166] &quot;FRT-ST-ISS-UNO-XX-B&quot; &quot;FRT-ST-ISS-UNO-XX-C&quot; &quot;FRT-ST-MAZ-UNF-01-A&quot;
+## [169] &quot;FRT-ST-MAZ-UNF-01-B&quot; &quot;FRT-ST-MAZ-UNF-01-C&quot; &quot;FRT-ST-MAZ-UNF-02-A&quot;
+## [172] &quot;FRT-ST-MAZ-UNF-02-B&quot; &quot;FRT-ST-MAZ-UNF-02-C&quot; &quot;FRT-ST-MAZ-UNF-03-A&quot;
+## [175] &quot;FRT-ST-MAZ-UNF-03-B&quot; &quot;FRT-ST-MAZ-UNF-03-C&quot; &quot;FRT-ST-MAZ-UNF-04-A&quot;
+## [178] &quot;FRT-ST-MAZ-UNF-04-B&quot; &quot;FRT-ST-MAZ-UNF-04-C&quot; &quot;FRT-ST-MAZ-UNF-05-A&quot;
+## [181] &quot;FRT-ST-MAZ-UNF-05-B&quot; &quot;FRT-ST-MAZ-UNF-05-C&quot; &quot;LRV-BB-MAZ-XXX-01-A&quot;
+## [184] &quot;LRV-BB-MAZ-XXX-01-B&quot; &quot;LRV-BB-MAZ-XXX-01-C&quot; &quot;LRV-BB-MAZ-XXX-02-A&quot;
+## [187] &quot;LRV-BB-MAZ-XXX-02-B&quot; &quot;LRV-BB-MAZ-XXX-02-C&quot; &quot;LRV-BB-MAZ-XXX-03-A&quot;
+## [190] &quot;LRV-BB-MAZ-XXX-03-B&quot; &quot;LRV-BB-MAZ-XXX-03-C&quot; &quot;LRV-ST-ISS-XXX-01-A&quot;
+## [193] &quot;LRV-ST-ISS-XXX-01-B&quot; &quot;LRV-ST-ISS-XXX-01-C&quot; &quot;LRV-ST-ISS-XXX-02-A&quot;
+## [196] &quot;LRV-ST-ISS-XXX-02-B&quot; &quot;LRV-ST-ISS-XXX-02-C&quot; &quot;PUC-ST-ISS-XXX-01-A&quot;
+## [199] &quot;PUC-ST-ISS-XXX-01-B&quot; &quot;PUC-ST-ISS-XXX-01-C&quot; &quot;PUC-ST-ISS-XXX-02-A&quot;
+## [202] &quot;PUC-ST-ISS-XXX-02-B&quot; &quot;PUC-ST-ISS-XXX-02-C&quot; &quot;PUC-ST-ISS-XXX-03-A&quot;
+## [205] &quot;PUC-ST-ISS-XXX-03-B&quot; &quot;PUC-ST-ISS-XXX-03-C&quot; &quot;PUC-ST-ISS-XXX-04-A&quot;
+## [208] &quot;PUC-ST-ISS-XXX-04-B&quot; &quot;PUC-ST-ISS-XXX-04-C&quot; &quot;PUC-ST-ISS-XXX-05-A&quot;
+## [211] &quot;PUC-ST-ISS-XXX-05-B&quot; &quot;PUC-ST-ISS-XXX-05-C&quot; &quot;PUC-ST-ISS-XXX-06-A&quot;
+## [214] &quot;PUC-ST-ISS-XXX-06-B&quot; &quot;PUC-ST-ISS-XXX-06-C&quot; &quot;PUC-ST-ISS-XXX-07-A&quot;
+## [217] &quot;PUC-ST-ISS-XXX-07-B&quot; &quot;PUC-ST-ISS-XXX-07-C&quot; &quot;PUC-ST-ISS-XXX-08-A&quot;
+## [220] &quot;PUC-ST-ISS-XXX-08-B&quot; &quot;PUC-ST-ISS-XXX-08-C&quot; &quot;PUC-ST-ISS-XXX-09-A&quot;
+## [223] &quot;PUC-ST-ISS-XXX-09-B&quot; &quot;PUC-ST-ISS-XXX-09-C&quot; &quot;PUC-ST-ISS-XXX-10-A&quot;
+## [226] &quot;PUC-ST-ISS-XXX-10-B&quot; &quot;PUC-ST-ISS-XXX-10-C&quot; &quot;PUP-ST-ISS-XXX-01-A&quot;
+## [229] &quot;PUP-ST-ISS-XXX-01-B&quot; &quot;PUP-ST-ISS-XXX-01-C&quot; &quot;PUP-ST-ISS-XXX-02-A&quot;
+## [232] &quot;PUP-ST-ISS-XXX-02-B&quot; &quot;PUP-ST-ISS-XXX-02-C&quot; &quot;PUP-ST-ISS-XXX-03-A&quot;
+## [235] &quot;PUP-ST-ISS-XXX-03-B&quot; &quot;PUP-ST-ISS-XXX-03-C&quot; &quot;PUP-ST-ISS-XXX-04-A&quot;
+## [238] &quot;PUP-ST-ISS-XXX-04-B&quot; &quot;PUP-ST-ISS-XXX-04-C&quot; &quot;PUP-ST-ISS-XXX-05-A&quot;
+## [241] &quot;PUP-ST-ISS-XXX-05-B&quot; &quot;PUP-ST-ISS-XXX-05-C&quot; &quot;PUP-ST-ISS-XXX-06-A&quot;
+## [244] &quot;PUP-ST-ISS-XXX-06-B&quot; &quot;PUP-ST-ISS-XXX-06-C&quot; &quot;PUP-ST-ISS-XXX-07-A&quot;
+## [247] &quot;PUP-ST-ISS-XXX-07-B&quot; &quot;PUP-ST-ISS-XXX-07-C&quot; &quot;PUP-ST-ISS-XXX-08-A&quot;
+## [250] &quot;PUP-ST-ISS-XXX-08-B&quot; &quot;PUP-ST-ISS-XXX-08-C&quot; &quot;PUP-ST-ISS-XXX-09-A&quot;
+## [253] &quot;PUP-ST-ISS-XXX-09-B&quot; &quot;PUP-ST-ISS-XXX-09-C&quot; &quot;PUP-ST-ISS-XXX-10-A&quot;
+## [256] &quot;PUP-ST-ISS-XXX-10-B&quot; &quot;PUP-ST-ISS-XXX-10-C&quot; &quot;PUP-ST-ISS-XXX-11-A&quot;
+## [259] &quot;PUP-ST-ISS-XXX-11-B&quot; &quot;PUP-ST-ISS-XXX-11-C&quot; &quot;PUP-ST-ISS-XXX-12-A&quot;
+## [262] &quot;PUP-ST-ISS-XXX-12-B&quot; &quot;PUP-ST-ISS-XXX-12-C&quot; &quot;ST-AEST01156-A&quot;     
+## [265] &quot;ST-AEST01156-B&quot;      &quot;ST-AEST01156-C&quot;      &quot;ST-AEST01190-A&quot;     
+## [268] &quot;ST-AEST01190-B&quot;      &quot;ST-AEST01190-C&quot;      &quot;ST-AEST01285-A&quot;     
+## [271] &quot;ST-AEST01285-B&quot;      &quot;ST-AEST01285-C&quot;      &quot;ST-AEST01307-A&quot;     
+## [274] &quot;ST-AEST01307-B&quot;      &quot;ST-AEST01307-C&quot;      &quot;ST-AEST01403-A&quot;     
+## [277] &quot;ST-AEST01403-B&quot;      &quot;ST-AEST01403-C&quot;      &quot;ST-AEST01474-A&quot;     
+## [280] &quot;ST-AEST01474-B&quot;      &quot;ST-AEST01474-C&quot;      &quot;ST-PUREE0001-A&quot;     
+## [283] &quot;ST-PUREE0001-B&quot;      &quot;ST-PUREE0001-C&quot;      &quot;ST-PUREE0002-A&quot;     
+## [286] &quot;ST-PUREE0002-B&quot;      &quot;ST-PUREE0002-C&quot;      &quot;Undetermined&quot;</code></pre>
 </div>
-<div id="old-stuff" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Old stuff</h1>
-<pre class="r"><code>name &lt;-&quot;2022JRLAT-16S&quot; #name will be used to import files and write names before extension of the different output tables. to modify
-
-## Import multi-affiliation data
-mt &lt;- data.table::fread(file=file.path(here::here(), &quot;data&quot;, &quot;raw_data&quot;, &quot;Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv&quot;), sep=&quot;\t&quot;, header=TRUE) # to modify (name of the multihits tsv file)
-dim(mt)</code></pre>
-<pre><code>## [1] 11139     7</code></pre>
-<pre class="r"><code>mh &lt;- data.table::data.table(bidouille=mt$blast_taxonomy, blast_taxonomy=mt$blast_taxonomy, observation_name=mt$`#observation_name`)
-head(mh)</code></pre>
-<pre><code>##                                                                                                   bidouille
-## 1:     Bacteria;Cyanobacteria;Cyanobacteriia;Chloroplast;unknown family;unknown genus;Cistanche deserticola
-## 2:        Bacteria;Cyanobacteria;Cyanobacteriia;Chloroplast;unknown family;unknown genus;Neottia nidus-avis
-## 3: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 4: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 5: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 6: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-##                                                                                              blast_taxonomy
-## 1:     Bacteria;Cyanobacteria;Cyanobacteriia;Chloroplast;unknown family;unknown genus;Cistanche deserticola
-## 2:        Bacteria;Cyanobacteria;Cyanobacteriia;Chloroplast;unknown family;unknown genus;Neottia nidus-avis
-## 3: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 4: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 5: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-## 6: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Acetobacter sp.
-##    observation_name
-## 1:        Cluster_1
-## 2:        Cluster_1
-## 3:        Cluster_2
-## 4:        Cluster_2
-## 5:        Cluster_2
-## 6:        Cluster_2</code></pre>
-<pre class="r"><code>## Remove file
-rm(mt)
-
-## Import abundance table
-at &lt;- data.table::fread(file=file.path(here::here(), &quot;data&quot;, &quot;raw_data&quot;, &quot;Galaxy21-[FROGS_BIOM_to_TSV__abundance.tsv].tsv&quot;),sep=&quot;\t&quot;,header=TRUE)# to modify (name of the abundance file)
-ab &lt;- data.table::data.table(bidouille=at$`blast_taxonomy`, blast_taxonomy=at$`blast_taxonomy`, observation_name=at$observation_name)</code></pre>
-</div>
-<div id="cleaning-of-multihits-file" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Cleaning of multihits
-file</h1>
-<pre class="r"><code>## Cleaning for the special characters []()_&quot;0123456789.
-mh$bidouille &lt;- gsub(&quot;[\\[\\]()_\&quot;0-9\\.]&quot;, &quot;&quot;, mh$bidouille, perl=TRUE)
-mh$bidouille &lt;- gsub(&quot; +;&quot;, &quot;;&quot;, mh$bidouille, perl=TRUE)
-
-## Deconstruction of the taxonomic column (&#39;blast_taxonomy&#39;) in 7 taxonomic fields
-toto &lt;- mh[ , &quot;bidouille&quot;] %&gt;% tidyr::separate(bidouille, c(&quot;tx1&quot;,&quot;tx2&quot;,&quot;tx3&quot;,&quot;tx4&quot;,&quot;tx5&quot;,&quot;tx6&quot;,&quot;tx7&quot;), &quot;;&quot;)
-head(toto)</code></pre>
-<pre><code>##         tx1            tx2                 tx3             tx4              tx5
-## 1: Bacteria  Cyanobacteria      Cyanobacteriia     Chloroplast   unknown family
-## 2: Bacteria  Cyanobacteria      Cyanobacteriia     Chloroplast   unknown family
-## 3: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 4: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 5: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 6: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-##              tx6                   tx7
-## 1: unknown genus Cistanche deserticola
-## 2: unknown genus    Neottia nidus-avis
-## 3:   Acetobacter        Acetobacter sp
-## 4:   Acetobacter        Acetobacter sp
-## 5:   Acetobacter        Acetobacter sp
-## 6:   Acetobacter        Acetobacter sp</code></pre>
-<pre class="r"><code>mh &lt;- cbind(toto, mh[, c(&quot;observation_name&quot; ,&quot;blast_taxonomy&quot;)]) # observation name is the cluster ID and useful to link with the abundance tsv file
-rm(toto)
-
-## Replacement of &#39;chloroplast&#39; and &#39;mitochondria&#39; by &#39;plantae&#39; in all 7 taxonomic fields
-## Remove one &quot;grepl(&quot;Chloroplast&quot;, mh$tx4, ignore.case=TRUE)&quot;
-mh[grepl(&quot;Chloroplast&quot;, mh$tx4, ignore.case=TRUE)|grepl(&quot;Chloroplast&quot;, mh$tx4, ignore.case=TRUE)|grepl(&quot;Mitochondria&quot;, mh$tx5, ignore.case=TRUE), 1:7] &lt;- c(&quot;Plantae&quot;)
-
-## Overwriting of the species field with &#39;unknown species&#39; if presence of &#39;incertae sedis&#39; in any of upper taxonomic fields 
-## Overwriting of the genus field with &#39;unknown genus&#39;  if presence of &#39;incertae sedis&#39; in any of upper taxonomic fields
-## NB: no incertae sedis in JRL-AT dataset
-mh[!(grepl(&quot;incertae sedis&quot;, mh$tx2, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx3,ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx4, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx5, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx6, ignore.case=TRUE))&amp;grepl(&quot;incertae sedis&quot;, mh$tx7, ignore.case=TRUE), 7]&lt;-c(&quot;unknown species&quot;)
-mh[grepl(&quot;incertae sedis&quot;, mh$tx2, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx3, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx4, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx5, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, mh$tx6, ignore.case=TRUE), 6:7]&lt;-list(&quot;unknown genus&quot;,&quot;unknown species&quot;)
-
-## Cleaning for more than 1 word in the 6 first taxonomic fields (except if &#39;unknown&#39; is found)
-### Prior: removal of &#39;Candidatus&#39; in each field
-mh &lt;- as.data.frame(mh)
-for(j in 1:6) {
-  mh[, j] &lt;- gsub(&quot;^Candidatus &quot;, &quot;&quot;, mh[,j ])
-  my.stuff &lt;- as.data.frame(mh[, j])
-  tf &lt;- !grepl(&quot;unknown&quot;, my.stuff[, 1], ignore.case=TRUE)
-  mh[which(tf),j] &lt;- gsub(&quot; +.*$&quot;, &quot;&quot;, mh[which(tf), j], perl=TRUE)
-}
-mh &lt;-  data.table::as.data.table(mh)
-
-## Cleaning for more than 2 words in the 7th taxonomic field
-## Prior: removal of &#39;Candidatus&#39; in the species field
-mh$tx7 &lt;- gsub(&quot;^Candidatus &quot;,&quot;&quot;, mh$tx7, perl=TRUE)
-mh$tx7 &lt;- gsub(&quot; +$&quot;, &quot;&quot;, gsub(&quot;^(([^ ]+ ?){1,2}).*$&quot;,&quot;\\1&quot;,mh$tx7,perl=TRUE),perl=TRUE)
-
-## Replacement in the species field of &#39;unidentified&#39; or &#39;metagenome&#39; anywhere in the field by &#39;unknown species&#39; 
-## Replacement in the species field of &#39;sp&#39; at the end of the field by &#39;unknown species&#39;
-## Replacement in the species field of &#39;bacterium&#39; or &#39;uncultured&#39; at the beginning of the field by &#39;unknown species&#39;
-## Replacement of the species field by &#39;unknown species&#39; if empty
-mh$tx7 &lt;- gsub(&quot;^.*(unidentified|metagenome).*$&quot;,&quot;unknown species&quot;,mh$tx7,perl=TRUE)
-mh$tx7 &lt;- gsub(&quot;^.*(sp|eae bacterium|ales bacterium)$&quot;,&quot;unknown species&quot;,mh$tx7,perl=TRUE)
-mh$tx7 &lt;- gsub(&quot;^(uncultured|bacterium).*$&quot;,&quot;unknown species&quot;, mh$tx7, perl=TRUE)
-mh$tx7[grepl(&quot;^ *$&quot;, mh$tx7)] &lt;-&quot;unknown species&quot;
-
-## Overwriting of the species field with &#39;unknown species&#39; if it begins by a lower case 
-todo &lt;- grepl(&quot;^[a-z]&quot;, mh$tx7) &amp; !grepl(&quot;unknown species&quot;, mh$tx7)
-mh$tx7[which(todo)] &lt;- &quot;unknown species&quot;
-
-## Overwriting of the genus field  (if unknown) with the first word of the species field (if not unknown) if empty 
-todo &lt;- mh$tx6==&quot;unknown genus&quot; &amp; grepl(&quot; &quot;, mh$tx7) &amp; !grepl(&quot;unknown species&quot;, mh$tx7)
-mh$tx6[which(todo)] &lt;- gsub(&quot; .*$&quot;, &quot;&quot;, mh$tx7[which(todo)])
-
-## Ignoring of &#39;unknown species&#39; or &#39;unknown genus&#39; under a threshold
-thresh=0.5 # to modify % threshold below which &#39;unknown&#39; are ignored
-mh$clus &lt;- as.integer(gsub(&quot;Cluster_&quot;, &quot;&quot;, mh$observation_name))
-mh$blast_taxonomy &lt;- NULL
-
-## Add a column with the number of rows per cluster in affiliation table
-my.genus.result &lt;- data.table::as.data.table(unique(mh %&gt;% dplyr::add_count(clus, tx1, tx2, tx3, tx4, tx5, tx6, observation_name)))
-head(my.genus.result)</code></pre>
-<pre><code>##         tx1            tx2                 tx3             tx4              tx5
-## 1:  Plantae        Plantae             Plantae         Plantae          Plantae
-## 2: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 3: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 4: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 5: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 6: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-##            tx6                         tx7 observation_name clus   n
-## 1:     Plantae                     Plantae        Cluster_1    1   2
-## 2: Acetobacter             unknown species        Cluster_2    2 130
-## 3: Acetobacter    Acetobacter pasteurianus        Cluster_2    2 130
-## 4: Acetobacter Acetobacter oryzifermentans        Cluster_2    2 130
-## 5: Acetobacter         Acetobacter pomorum        Cluster_2    2 130
-## 6: Acetobacter       Acetobacter ascendens        Cluster_2    2 130</code></pre>
-<pre class="r"><code>my.genus.result$ntot &lt;-  data.table::as.data.table(unique(mh %&gt;% dplyr::add_count(observation_name)))$n
-head(my.genus.result)</code></pre>
-<pre><code>##         tx1            tx2                 tx3             tx4              tx5
-## 1:  Plantae        Plantae             Plantae         Plantae          Plantae
-## 2: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 3: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 4: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 5: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-## 6: Bacteria Proteobacteria Alphaproteobacteria Acetobacterales Acetobacteraceae
-##            tx6                         tx7 observation_name clus   n ntot
-## 1:     Plantae                     Plantae        Cluster_1    1   2    2
-## 2: Acetobacter             unknown species        Cluster_2    2 130  130
-## 3: Acetobacter    Acetobacter pasteurianus        Cluster_2    2 130  130
-## 4: Acetobacter Acetobacter oryzifermentans        Cluster_2    2 130  130
-## 5: Acetobacter         Acetobacter pomorum        Cluster_2    2 130  130
-## 6: Acetobacter       Acetobacter ascendens        Cluster_2    2 130  130</code></pre>
-<pre class="r"><code>data.table::setkey(my.genus.result, clus, n)
-my.genus.result$prop.genus &lt;- my.genus.result$n/my.genus.result$ntot
-my.genus.result$ignore.genus &lt;-FALSE
-my.genus.result$ignore.genus &lt;- my.genus.result$ignore.genus | (grepl(&quot;unknown&quot;, my.genus.result$tx6, perl=TRUE, ignore.case=TRUE) &amp; my.genus.result$prop.genus &lt; thresh)
-#nrow(my.genus.result)
-#names(my.genus.result)
-
-my.species.result &lt;- data.table::as.data.table(unique(mh %&gt;% dplyr::add_count(clus, tx1, tx2, tx3, tx4, tx5, tx6, tx7, observation_name)))
-my.species.result$ntot &lt;- data.table::as.data.table(unique(mh %&gt;% dplyr::add_count(observation_name)))$n
-data.table::setkey(my.species.result, clus, n)
-my.species.result$prop.species &lt;- my.species.result$n/my.species.result$ntot
-my.species.result$ignore.species &lt;- FALSE
-my.species.result$ignore.species &lt;- my.species.result$ignore.species | (grepl(&quot;unknown&quot;, my.species.result$tx7, perl=TRUE,ignore.case=TRUE) &amp; my.species.result$prop.species &lt; thresh)
-#nrow(my.species.result)
-#names(my.species.result)
-
-## Merge datasets together
-my.first.result &lt;- merge(my.genus.result, my.species.result, by = names(my.species.result)[1:8])[, c(1:8,13,18)]
-
-my.second.result &lt;- data.table::data.table(observation_name=unique(my.first.result$observation_name))
-for(j in 1:7) {
-  tx &lt;- as.character(as.data.frame(my.first.result)[,j])
-  tmp &lt;- apply(my.second.result, 1, function(r){
-    v &lt;- unique(tx[(j==6 | !my.first.result$ignore.genus) &amp; my.first.result$observation_name==r[1]])
-    v &lt;- unique(tx[(j==7 | !my.first.result$ignore.species) &amp; my.first.result$observation_name==r[1]])
-    if (length(v)==1) {v[1]} 
-    else if ((length(v)==2)) {
-      unk &lt;- grepl(&quot;unknown&quot;,v)
-      unkV &lt;- unique(v[unk])
-      if (length(unkV) == 0) {
-        &quot;Multi-affiliation&quot;
-      } else {
-        unkV[1]
-      }
-    } else {
-      &quot;Multi-affiliation&quot;
-    }
-  })
-  my.second.result &lt;- cbind(my.second.result, tmp)
-}
-#nrow(my.second.result)
-
-## Reconstruction of the new full taxonomy from each taxonomic field for each cluster
-my.mh.result &lt;- data.table::data.table(observation_name=my.second.result$observation_name,  blast_taxonomy= apply(my.second.result, 1, function(r) {
-  paste(r[2:8], sep=&quot;;&quot;, collapse=&quot;;&quot;)
-}))
-#nrow(my.mh.result)
-dim(my.mh.result)</code></pre>
-<pre><code>## [1] 168   2</code></pre>
-</div>
-<div id="cleaning-of-abundance-file" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Cleaning of abundance
-file</h1>
-<pre class="r"><code>## Cleaning for some special characters
-ab$bidouille &lt;- gsub(&quot;[\\[\\]()_\&quot;0-9\\.]&quot;,&quot;&quot;, ab$bidouille, perl=TRUE)
-ab$bidouille &lt;- gsub(&quot; +;&quot;, &quot;;&quot;, ab$bidouille, perl=TRUE)
-
-## Deconstruction of the taxonomic column in 7 taxonomic fields
-toto &lt;- ab[ , &quot;bidouille&quot;] %&gt;% tidyr::separate(bidouille,c(&quot;tx1&quot;,&quot;tx2&quot;,&quot;tx3&quot;,&quot;tx4&quot;,&quot;tx5&quot;,&quot;tx6&quot;,&quot;tx7&quot;),&quot;;&quot;)
-ab &lt;- cbind(toto ,ab[, c(&quot;observation_name&quot; ,&quot;blast_taxonomy&quot;)])
-rm(toto)
-
-## Replacement of &#39;chloroplast&#39; and &#39;mitochondria&#39; by &#39;plantae&#39; in all 7 taxonomic fields
-ab[grepl(&quot;Chloroplast&quot;, ab$tx4,ignore.case=TRUE)|grepl(&quot;Mitochondria&quot;,ab$tx5,ignore.case=TRUE),1:7]&lt;-c(&quot;Plantae&quot;)
-
-## Overwriting of the species field with &#39;unknown species&#39; if presence of &#39;incertae sedis&#39; in any of upper taxonomic fields 
-## Overwriting of the genus field with &#39;unknown genus&#39;  if presence of &#39;incertae sedis&#39; in any of upper taxonomic fields
-ab[!(grepl(&quot;incertae sedis&quot;, ab$tx2, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx3, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx4, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx5, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx6,ignore.case=TRUE))&amp;grepl(&quot;incertae sedis&quot;, ab$tx7,ignore.case=TRUE), 7]&lt;-c(&quot;unknown species&quot;)
-ab[grepl(&quot;incertae sedis&quot;, ab$tx2, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;,ab$tx3, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx4, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx5, ignore.case=TRUE)|grepl(&quot;incertae sedis&quot;, ab$tx6, ignore.case=TRUE), 6:7] &lt;- list(&quot;unknown genus&quot;, &quot;unknown species&quot;)
-
-## Cleaning for more than 1 word in the 6 first taxonomic fields (except if &#39;unknown&#39; is found)
-### Prior: removal of &#39;Candidatus&#39; in each field
-ab &lt;- as.data.frame(ab)
-for(j in 1:6) {
-  ab[,j] &lt;- gsub(&quot;^Candidatus &quot;, &quot;&quot;, ab[,j])
-  my.stuff &lt;- as.data.frame(ab[,j])
-  tf &lt;- !grepl(&quot;unknown&quot;,my.stuff[,1],ignore.case=TRUE)
-  ab[which(tf),j] &lt;- gsub(&quot; +.*$&quot;,&quot;&quot;, ab[which(tf),j], perl=TRUE)
-}
-ab &lt;-  data.table::as.data.table(ab)
-
-## Cleaning for more than 2 words in the 7th taxonomic field
-## Prior: removal of &#39;Candidatus&#39; in the species field
-ab$tx7&lt;-gsub(&quot;^Candidatus &quot;,&quot;&quot;,ab$tx7,perl=TRUE)
-ab$tx7&lt;-gsub(&quot; +$&quot;, &quot;&quot;, gsub(&quot;^(([^ ]+ ?){1,2}).*$&quot;,&quot;\\1&quot;,ab$tx7,perl=TRUE),perl=TRUE)
-
-## Replacement in the species field of &#39;unidentified&#39; or &#39;metagenome&#39; anywhere in the field by &#39;unknown species&#39; 
-## Replacement in the species field of &#39;sp&#39; at the end of the field by &#39;unknown species&#39;
-## Replacement in the species field of &#39;bacterium&#39; or &#39;uncultured&#39; at the beginning of the field by &#39;unknown species&#39;
-## Replacement of the species field by &#39;unknown species&#39; if empty
-ab$tx7&lt;-gsub(&quot;^.*(unidentified|metagenome).*$&quot;,&quot;unknown species&quot;,ab$tx7,perl=TRUE)
-ab$tx7&lt;-gsub(&quot;^.*(sp|eae bacterium|ales bacterium)$&quot;,&quot;unknown species&quot;,ab$tx7,perl=TRUE)
-ab$tx7&lt;-gsub(&quot;^(uncultured|bacterium).*$&quot;,&quot;unknown species&quot;,ab$tx7,perl=TRUE)
-ab$tx7[grepl(&quot;^ *$&quot;,ab$tx7)]&lt;-&quot;unknown species&quot;
-
-## Overwriting of the species field with &#39;unknown species&#39; if it begins by a lower case 
-todo &lt;- grepl(&quot;^[a-z]&quot;, ab$tx7) &amp; !grepl(&quot;unknown species&quot;, ab$tx7)
-ab$tx7[which(todo)] &lt;- &quot;unknown species&quot;
-
-## Overwriting of the genus field (if unknown) with the first word of the species field (if not unknown) if empty 
-todo &lt;- ab$tx6==&quot;unknown genus&quot; &amp; grepl(&quot; &quot;, ab$tx7) &amp; !grepl(&quot;unknown species&quot;, ab$tx7)
-ab$tx6[which(todo)] &lt;- gsub(&quot; .*$&quot;, &quot;&quot;, ab$tx7[which(todo)])
-
-# reconstruction of the new full taxonomy from each taxonomic field
-my.ab.result &lt;- data.table::data.table(observation_name=ab$observation_name,  blast_taxonomy= apply(ab, 1, function(r) {
-  paste(r[1:7], sep=&quot;;&quot;, collapse=&quot;;&quot;)
-}))
-head(my.ab.result)</code></pre>
-<pre><code>##    observation_name
-## 1:        Cluster_1
-## 2:        Cluster_2
-## 3:        Cluster_3
-## 4:        Cluster_4
-## 5:        Cluster_5
-## 6:        Cluster_6
-##                                                                                                  blast_taxonomy
-## 1:                                                      Plantae;Plantae;Plantae;Plantae;Plantae;Plantae;Plantae
-## 2:   Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Multi-affiliation
-## 3:                                                      Plantae;Plantae;Plantae;Plantae;Plantae;Plantae;Plantae
-## 4:        Bacteria;Proteobacteria;Alphaproteobacteria;Rickettsiales;Anaplasmataceae;Wolbachia;Multi-affiliation
-## 5: Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Gluconobacter;Multi-affiliation
-## 6:             Bacteria;Firmicutes;Bacilli;Lactobacillales;Lactobacillaceae;Levilactobacillus;Multi-affiliation</code></pre>
-<pre class="r"><code>dim(my.ab.result)</code></pre>
-<pre><code>## [1] 265   2</code></pre>
-</div>
-<div id="export-of-a-new-taxonomy-and-a-new-abundance-file" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Export of a new
-taxonomy and a new abundance file</h1>
-<pre class="r"><code>my.result &lt;- merge(my.mh.result, my.ab.result,by=&quot;observation_name&quot;,all.y=TRUE)
-final &lt;- merge(my.result, at,by=&quot;observation_name&quot;,all.y=TRUE)
-final$blast_taxonomy &lt;- apply(final, 1, function(r){
-  if (! is.na(r[&quot;blast_taxonomy.x&quot;])) {r[&quot;blast_taxonomy.x&quot;]} else {r[&quot;blast_taxonomy.y&quot;]}
-})
-final$blast_taxonomy.x&lt;-NULL
-final$blast_taxonomy.y&lt;-NULL
-data.table::setcolorder(final,c(2,3,4,5,6,7,8,9,10,1,11:(ncol(final))))
-fordada &lt;- final[order(as.integer(gsub(&quot;Cluster_&quot;, &quot;&quot;, final$observation_name)))]
-fordada &lt;- as.data.frame(fordada)
-head(fordada)</code></pre>
-<pre><code>##   #comment
-## 1  no data
-## 2  no data
-## 3  no data
-## 4  no data
-## 5  no data
-## 6  no data
-##                                                                                                                                               rdp_tax_and_bootstrap
-## 1             Bacteria;(1.0);Cyanobacteria;(1.0);Cyanobacteriia;(1.0);Chloroplast;(1.0);unknown family;(1.0);unknown genus;(1.0);Cucumis sativus (cucumber);(0.64);
-## 2     Bacteria;(1.0);Proteobacteria;(1.0);Alphaproteobacteria;(1.0);Acetobacterales;(1.0);Acetobacteraceae;(1.0);Acetobacter;(1.0);Acetobacter pasteurianus;(0.75);
-## 3 Bacteria;(1.0);Proteobacteria;(1.0);Alphaproteobacteria;(1.0);Rickettsiales;(1.0);Mitochondria;(1.0);unknown genus;(1.0);Fragaria x ananassa (strawberry);(0.53);
-## 4                   Bacteria;(1.0);Proteobacteria;(1.0);Alphaproteobacteria;(1.0);Rickettsiales;(1.0);Anaplasmataceae;(1.0);Wolbachia;(1.0);unknown species;(0.86);
-## 5      Bacteria;(1.0);Proteobacteria;(1.0);Alphaproteobacteria;(1.0);Acetobacterales;(1.0);Acetobacteraceae;(1.0);Gluconobacter;(1.0);Gluconobacter cerinus;(0.97);
-## 6                    Bacteria;(1.0);Firmicutes;(1.0);Bacilli;(1.0);Lactobacillales;(1.0);Lactobacillaceae;(1.0);Levilactobacillus;(1.0);Lactobacillus brevis;(1.0);
-##                                                                                                 blast_taxonomy
-## 1                                                      Plantae;Plantae;Plantae;Plantae;Plantae;Plantae;Plantae
-## 2   Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Acetobacter;Multi-affiliation
-## 3                                                      Plantae;Plantae;Plantae;Plantae;Plantae;Plantae;Plantae
-## 4        Bacteria;Proteobacteria;Alphaproteobacteria;Rickettsiales;Anaplasmataceae;Wolbachia;Multi-affiliation
-## 5 Bacteria;Proteobacteria;Alphaproteobacteria;Acetobacterales;Acetobacteraceae;Gluconobacter;Multi-affiliation
-## 6               Bacteria;Firmicutes;Bacilli;Lactobacillales;Lactobacillaceae;Levilactobacillus;unknown species
-##                blast_subject blast_perc_identity blast_perc_query_coverage
-## 1              multi-subject               100.0         99.60159362549801
-## 2              multi-subject               100.0                     100.0
-## 3 BATS01000001.128226.129950              99.598                     100.0
-## 4              multi-subject               100.0                     100.0
-## 5              multi-subject               100.0                     100.0
-## 6              multi-subject               100.0                     100.0
-##   blast_evalue blast_aln_length                                       seed_id
-## 1    4.89e-129              250 M03930:300:000000000-KGPN3:1:1105:26198:17463
-## 2    1.36e-129              251  M03930:300:000000000-KGPN3:1:1101:25730:7606
-## 3    2.92e-126              249 M03930:300:000000000-KGPN3:1:2114:12535:20879
-## 4    1.36e-129              251  M03930:300:000000000-KGPN3:1:1101:14782:1975
-## 5    1.36e-129              251  M03930:300:000000000-KGPN3:1:1101:20824:6209
-## 6    1.36e-129              251  M03930:300:000000000-KGPN3:1:1101:17763:5992
-##   observation_name
-## 1        Cluster_1
-## 2        Cluster_2
-## 3        Cluster_3
-## 4        Cluster_4
-## 5        Cluster_5
-## 6        Cluster_6
-##                                                                                                                                                                                                                                                 seed_sequence
-## 1 TACAGAGGATGCAAGCGTTATCCGGAATGATTGGGCGTAAAGCGTCTGTAGGTGGCTTTTTAAGTCCGCCGTCAAATCCCAGGGCTCAACCCTGGACAGGCGGTGGAAACTACCAAGCTGGAGTACGGTAGGGGCAGAGGGAATTTCCGGTGGAGCGGTGAAATGCGTAGAGATCGGAAAGAACACCAACGGCGAAAGCACTCTGCTGGGCCGACACTGACACTGAGAGACGAAAGCTAGGGGAGCAAATG
-## 2 TACGAAGGGGGCTAGCGTTGCTCGGAATGACTGGGCGTAAAGGGCGTGTAGGCGGTTTGTACAGTCAGATGTGAAATCCCCGGGCTTAACCTGGGAGCTGCATTTGATACGTGCAGACTAGAGTGTGAGAGAGGGTTGTGGAATTCCCAGTGTAGAGGTGAAATTCGTAGATATTGGGAAGAACACCGGTGGCGAAGGCGGCAACCTGGCTCATTACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
-## 3   GACGGGGGGGGCAAGTGTTCTTCGGAATGACTGGGCGTAAAGGGCACGTAGGCGGTGAATCGGGTTGAAAGTGAAAGTCGCCAAAAAGTGGTGGAATGCTCTCGAAACCAATTCACTTGAGTGAGACAGAGGAGAGTGGAATTTCGTGTGTAGGGGTGAAATCCGAAGATCTACGAAGGAAGGCCAAAAGCGAAGGCAGCTCTCTGGGTCCCTACCGACGCTGGAGTGCGAAAGCATGGGGAGCGAACG
-## 4 TACGGAGAGGGCTAGCGTTATTCGGAATTATTGGGCGTAAAGGGCGCGTAGGCGGATTAGTAAGTTAAAAGTGAAATCCCAAGGCTCAACCTTGGAATTGCTTTTAAAACTGCTAATCTAGAGATTGAAAGAGGATAGAGGAATTCCTAGTGTAGAGGTGAAATTCGTAAATATTAGGAGGAACACCAGTGGCGAAGGCGTCTATCTGGTTCAAATCTGACGCTGAGGCGCGAAGGCGTGGGGAGCAAACA
-## 5 TACGAAGGGGGCTAGCGTTGCTCGGAATGACTGGGCGTAAAGGGCGCGTAGGCGGTTTATGCAGTCAGATGTGAAATCCCCGGGCTTAACCTGGGAACTGCATTTGAGACGCATAGACTAGAGGTCGAGAGAGGGTTGTGGAATTCCCAGTGTAGAGGTGAAATTCGTAGATATTGGGAAGAACACCGGTGGCGAAGGCGGCAACCTGGCTCGATACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
-## 6 TACGTAGGTGGCAAGCGTTGTCCGGATTTATTGGGCGTAAAGCGAGCGCAGGCGGTTTTTTAAGTCTGATGTGAAAGCCTTCGGCTTAACCGGAGAAGTGCATCGGAAACTGGGAGACTTGAGTGCAGAAGAGGACAGTGGAACTCCATGTGTAGCGGTGGAATGCGTAGATATATGGAAGAACACCAGTGGCGAAGGCGGCTGTCTAGTCTGTAACTGACGCTGAGGCTCGAAAGCATGGGTAGCGAACA
-##   observation_sum ADT-ST-ISS-XXX-01-A ADT-ST-ISS-XXX-01-B ADT-ST-ISS-XXX-01-C
-## 1          731640                   2                  23                  19
-## 2          864428                 338                 275                 184
-## 3          393272                   1                   0                   0
-## 4          289586                6718                6298                7462
-## 5          181819                1246                1342                1471
-## 6          159148                 292                 328                   0
-##   ADT-ST-ISS-XXX-02-A ADT-ST-ISS-XXX-02-B ADT-ST-ISS-XXX-02-C
-## 1                  30                  11                   0
-## 2                 161                 156                 130
-## 3                   1                   6                   0
-## 4                8580                8286                7631
-## 5                2101                2062                1672
-## 6                   0                   1                   4
-##   ADT-ST-ISS-XXX-03-A ADT-ST-ISS-XXX-03-B ADT-ST-ISS-XXX-03-C
-## 1                  13                   3                  10
-## 2                 168                 208                 169
-## 3                   5                   0                   0
-## 4                9343                7084                8283
-## 5                 673                 485                 543
-## 6                  11                   1                   0
-##   ADT-ST-ISS-XXX-04-A ADT-ST-ISS-XXX-04-B ADT-ST-ISS-XXX-04-C
-## 1                  97                 103                  86
-## 2                 636                 723                 687
-## 3                  16                   2                   1
-## 4                4171                4551                4849
-## 5                1080                1004                1370
-## 6                   0                  24                   0
-##   ADT-ST-ISS-XXX-05-A ADT-ST-ISS-XXX-05-B ADT-ST-ISS-XXX-05-C
-## 1                   1                   0                   0
-## 2                 216                 169                 208
-## 3                   0                   1                   1
-## 4                8086                8061                9597
-## 5                1421                1286                1475
-## 6                   0                   1                   0
-##   ADT-ST-ISS-XXX-06-A ADT-ST-ISS-XXX-06-B ADT-ST-ISS-XXX-06-C
-## 1                  27                  19                  32
-## 2                4014                3450                4607
-## 3                   0                   3                  21
-## 4                5058                4558                5328
-## 5                 751                 630                 893
-## 6                   0                   0                   0
-##   ADT-ST-ISS-XXX-07-A ADT-ST-ISS-XXX-07-B ADT-ST-ISS-XXX-07-C
-## 1                  29                  42                  11
-## 2                 591                 745                 702
-## 3                  13                   2                   4
-## 4                7223                7948                8098
-## 5                2231                2297                2457
-## 6                   0                   0                   0
-##   ADT-ST-ISS-XXX-08-A ADT-ST-ISS-XXX-08-B ADT-ST-ISS-XXX-08-C
-## 1                 188                 178                 350
-## 2                4334                4714                5748
-## 3                  10                  11                  54
-## 4                4759                4693                6608
-## 5                1585                1486                1969
-## 6                   0                   0                   0
-##   ADT-ST-ISS-XXX-09-A ADT-ST-ISS-XXX-09-B ADT-ST-ISS-XXX-09-C
-## 1                   2                  18                  55
-## 2                2943                2925                3283
-## 3                   0                   6                   2
-## 4                5168                4841                5627
-## 5                1842                1592                2040
-## 6                   1                   0                   0
-##   ADT-ST-ISS-XXX-10-A ADT-ST-ISS-XXX-10-B ADT-ST-ISS-XXX-10-C BL-AEST01157-A
-## 1                   1                   0                   5             19
-## 2                4112                4460                3821          12288
-## 3                   0                   0                   3              0
-## 4                3992                4450                3995              0
-## 5                2237                2229                2085              0
-## 6                   0                   0                   0            957
-##   BL-AEST01157-B BL-AEST01157-C BL-AEST01191-A BL-AEST01191-B BL-AEST01191-C
-## 1             20             32              0              3              1
-## 2          12936          13454           3909           3738           3886
-## 3              6              9              1              1              1
-## 4              0              0              0              0              0
-## 5              0              0              0              1              0
-## 6            960           1139           2468           2385           2431
-##   BL-AEST01286-A BL-AEST01286-B BL-AEST01286-C BL-AEST01308-A BL-AEST01308-B
-## 1              3             11             10            148             75
-## 2          11298          11085          11188           5007           5253
-## 3              4              3              1             11              5
-## 4              0              2              0              0              0
-## 5              0              0              0              0              1
-## 6           1158           1245           1254           9424          10453
-##   BL-AEST01308-C BL-AEST01404-A BL-AEST01404-B BL-AEST01404-C BL-AEST01475-A
-## 1             59            126             82             75            137
-## 2           5473           9550           8146           6289           5002
-## 3             21              3              5             14              5
-## 4              0              0              0              0              0
-## 5              0              1              1              0              0
-## 6          10066           1553           1352           1040            645
-##   BL-AEST01475-B BL-AEST01475-C BL-PUREE0001-A BL-PUREE0001-B BL-PUREE0001-C
-## 1            149             32           7186           8405           5235
-## 2           4886           5216              2              0              0
-## 3              0              0           4265           4782           2983
-## 4              0              0              0              0              0
-## 5              0              0              0              0              0
-## 6            678            847              0              0              0
-##   BL-PUREE0002-A BL-PUREE0002-B BL-PUREE0002-C CH-AEST01155-A CH-AEST01155-B
-## 1           5584           6080           4546              3             12
-## 2             17             23              0          11893          12404
-## 3           3417           3749           2238              1              0
-## 4              0              0              0              0              0
-## 5              0              1              0              0              0
-## 6              0              3              0           1466           1496
-##   CH-AEST01155-C CH-AEST01189-A CH-AEST01189-B CH-AEST01189-C CH-AEST01284-A
-## 1              6             34             18             24              1
-## 2          11277           8604           7772           6410          15477
-## 3              0              0              0              0              1
-## 4              1              0              0              1              1
-## 5              0              0              0              0              0
-## 6           1441            884            830            597           1532
-##   CH-AEST01284-B CH-AEST01284-C CH-AEST01306-A CH-AEST01306-B CH-AEST01306-C
-## 1              3              0             18              9             42
-## 2          16699          14335           9928           8779          10882
-## 3              0              1              1              0              1
-## 4              0              0              0              0              1
-## 5              0              0              1              1              0
-## 6           2087           1448           6564           6242           7623
-##   CH-AEST01402-A CH-AEST01402-B CH-AEST01402-C CH-AEST01473-A CH-AEST01473-B
-## 1             12             15              8              8              4
-## 2          14633          13276          12007          16603          15268
-## 3              0              4              4              1              0
-## 4              0              0              0              0              0
-## 5              0              0              0              0              0
-## 6           2355           2385           2017           1446           1267
-##   CH-AEST01473-C CH-PUREE0001-A CH-PUREE0001-B CH-PUREE0001-C CH-PUREE0002-A
-## 1              6              0              0           2452              0
-## 2          12981              1              1              0              3
-## 3              3              0              0              0              0
-## 4              0              1              0              0              0
-## 5              0              1              0              4              0
-## 6           1375              0              0              0              0
-##   CH-PUREE0002-B CH-PUREE0002-C CTL-DN-MOC-COM-01-A CTL-DN-MOC-COM-01-B
-## 1              1            881                   2                   1
-## 2              1              2                   0                   0
-## 3              2              1                   0                   0
-## 4              0              0                   0                   0
-## 5              0             24                   0                   0
-## 6              0              0                   0                   0
-##   CTL-DN-MOC-COM-01-C CTL-DN-MOC-COM-02-A CTL-DN-MOC-COM-02-B
-## 1                   2                   1                   2
-## 2                   0                   0                   1
-## 3                   0                   0                   0
-## 4                   0                   0                   0
-## 5                   0                   0                   1
-## 6                   0                   0                   0
-##   CTL-DN-MOC-COM-02-C CTL-NO-DNA-PCR-XX-A CTL-NO-DNA-PCR-XX-B
-## 1                   1                   0                   2
-## 2                   0                   0                   0
-## 3                   1                   1                   1
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   CTL-NO-DNA-PCR-XX-C CTL-XX-DNA-EXT-01-A CTL-XX-DNA-EXT-01-B
-## 1                   1                1142                1669
-## 2                   2                   0                  45
-## 3                   0                 171                 441
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   CTL-XX-DNA-EXT-01-C CTL-XX-LRV-COI-01-A CTL-XX-LRV-COI-01-B
-## 1                  38                   2                   0
-## 2                   0                3316                3051
-## 3                  47                   4                   0
-## 4                   0                6533                5716
-## 5                   0                   0                   0
-## 6                   0                1499                1221
-##   CTL-XX-LRV-COI-01-C CTL-XX-LRV-COI-02-A CTL-XX-LRV-COI-02-B
-## 1                   0                   2                   1
-## 2                3815                1719                1854
-## 3                   0                   1                   0
-## 4                7257                8827                9259
-## 5                   0                   0                   0
-## 6                1590                 890                1057
-##   CTL-XX-LRV-COI-02-C CTL-XX-WAT-LRV-01-A CTL-XX-WAT-LRV-01-B
-## 1                   1                 127                  61
-## 2                2127                  54                 148
-## 3                   0                  82                  27
-## 4               10899                   0                   0
-## 5                   0                   0                  30
-## 6                 989                   0                   1
-##   CTL-XX-WAT-LRV-01-C CTL-XX-WAT-LRV-02-A CTL-XX-WAT-LRV-02-B
-## 1                  86                   0                  48
-## 2                   3                  89                  78
-## 3                  11                   1                  26
-## 4                   1                 187                  78
-## 5                   0                   0                  13
-## 6                  30                  35                  57
-##   CTL-XX-WAT-LRV-02-C CTM-ST-ISS-XXX-02-A CTM-ST-ISS-XXX-02-B
-## 1                  23                   2                   1
-## 2                 135                   1                   3
-## 3                  15                   0                   0
-## 4                   0                   0                   0
-## 5                   0                   1                   0
-## 6                  32                   0                   0
-##   CTM-ST-ISS-XXX-02-C CTM-ST-ISS-XXX-04-A CTM-ST-ISS-XXX-04-B
-## 1                   5                   2                   1
-## 2               12226                   0                   0
-## 3                   1                   3                   0
-## 4                   0                   0                   0
-## 5                  53                   0                   0
-## 6                   0                   0                   0
-##   CTM-ST-ISS-XXX-04-C FRT-BL-CAR-UNF-XX-A FRT-BL-CAR-UNF-XX-B
-## 1                   0                9916               11116
-## 2                6342                   0                   0
-## 3                   2                6557                7869
-## 4                   0                   0                   0
-## 5                2916                   0                   2
-## 6                   0                   0                   0
-##   FRT-BL-CAR-UNF-XX-C FRT-BL-CAR-UNO-XX-A FRT-BL-CAR-UNO-XX-B
-## 1                4291               11072               11363
-## 2                   1                   3                   5
-## 3                2645                6577                7899
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-CAR-UNO-XX-C FRT-BL-ISL-UNF-XX-A FRT-BL-ISL-UNF-XX-B
-## 1                9997                5208                6475
-## 2                   0                   1                   1
-## 3                5749                3587                4937
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-ISL-UNF-XX-C FRT-BL-ISL-UNO-XX-A FRT-BL-ISL-UNO-XX-B
-## 1                 897                7055                6584
-## 2                   0                   1                   0
-## 3                 370                4770                4811
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-ISL-UNO-XX-C FRT-BL-MAZ-INF-XX-A FRT-BL-MAZ-INF-XX-B
-## 1                6678                1823                1517
-## 2                   1                   0                   0
-## 3                4365                1502                 942
-## 4                   1                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-MAZ-INF-XX-C FRT-BL-MAZ-UNF-01-A FRT-BL-MAZ-UNF-01-B
-## 1                2218                6778                9225
-## 2                   0                   0                   2
-## 3                1378                6255                7904
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-MAZ-UNF-01-C FRT-BL-MAZ-UNF-02-A FRT-BL-MAZ-UNF-02-B
-## 1                7180                5816                6318
-## 2                   0                   0                   1
-## 3                5910                3813                4218
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-MAZ-UNF-02-C FRT-BL-MAZ-UNF-03-A FRT-BL-MAZ-UNF-03-B
-## 1                4720                7523                9007
-## 2                   0                   1                   0
-## 3                2928                5139                6336
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-MAZ-UNF-03-C FRT-BL-MAZ-UNF-04-A FRT-BL-MAZ-UNF-04-B
-## 1                5357                3910                3507
-## 2                   0                   0                   0
-## 3                3127                2361                1793
-## 4                   0                   0                   1
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-BL-MAZ-UNF-04-C FRT-ST-ISS-IND-XX-A FRT-ST-ISS-IND-XX-B
-## 1                2804                9292                8883
-## 2                   0                  24                  28
-## 3                1208                5377                4733
-## 4                   0                   2                   6
-## 5                   0                   8                  21
-## 6                   0                   0                   0
-##   FRT-ST-ISS-IND-XX-C FRT-ST-ISS-INM-XX-A FRT-ST-ISS-INM-XX-B
-## 1                9886                9089                8989
-## 2                  14                   1                   1
-## 3                5292                5069                4218
-## 4                   1                   0                   0
-## 5                  12                   5                   5
-## 6                   0                   0                   0
-##   FRT-ST-ISS-INM-XX-C FRT-ST-ISS-UNF-01-A FRT-ST-ISS-UNF-01-B
-## 1               12013                7591                8767
-## 2                   2                   1                   4
-## 3                5654                4200                4216
-## 4                   0                   1                   0
-## 5                  18                   1                   2
-## 6                   0                   0                   0
-##   FRT-ST-ISS-UNF-01-C FRT-ST-ISS-UNF-02-A FRT-ST-ISS-UNF-02-B
-## 1                2388                7981                8591
-## 2                   0                   1                   1
-## 3                 599                4847                4254
-## 4                   0                   0                   0
-## 5                   0                   2                   0
-## 6                   0                   0                   0
-##   FRT-ST-ISS-UNF-02-C FRT-ST-ISS-UNF-03-A FRT-ST-ISS-UNF-03-B
-## 1               10751                7793                8984
-## 2                   0                   0                   0
-## 3                5419                4760                4675
-## 4                   0                   0                   0
-## 5                   4                   0                   3
-## 6                   0                   0                   0
-##   FRT-ST-ISS-UNF-03-C FRT-ST-ISS-UNF-XX-A FRT-ST-ISS-UNF-XX-B
-## 1                7859               10721               11187
-## 2                   0                   0                   0
-## 3                4073                5398                5966
-## 4                   0                   0                   0
-## 5                   0                   0                   1
-## 6                   0                   0                   1
-##   FRT-ST-ISS-UNF-XX-C FRT-ST-ISS-UNO-XX-A FRT-ST-ISS-UNO-XX-B
-## 1               10448               11269               10990
-## 2                   0                  52                  44
-## 3                5772                5816                5366
-## 4                   1                   0                   0
-## 5                   4                   7                   9
-## 6                   0                   0                   0
-##   FRT-ST-ISS-UNO-XX-C FRT-ST-MAZ-UNF-01-A FRT-ST-MAZ-UNF-01-B
-## 1               10160               10199               13147
-## 2                  37                   1                   2
-## 3                5076                6248                7682
-## 4                   1                   0                   0
-## 5                   1                   0                   0
-## 6                   0                   0                   0
-##   FRT-ST-MAZ-UNF-01-C FRT-ST-MAZ-UNF-02-A FRT-ST-MAZ-UNF-02-B
-## 1               12550                9554               11159
-## 2                   0                   0                   0
-## 3                7010                5582                6458
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-ST-MAZ-UNF-02-C FRT-ST-MAZ-UNF-03-A FRT-ST-MAZ-UNF-03-B
-## 1                7731               12585                9759
-## 2                   0                   0                   4
-## 3                3949                6494                5247
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   3                   0
-##   FRT-ST-MAZ-UNF-03-C FRT-ST-MAZ-UNF-04-A FRT-ST-MAZ-UNF-04-B
-## 1               10007                9365               10083
-## 2                   1                  10                   2
-## 3                4589                4718                5574
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   4
-##   FRT-ST-MAZ-UNF-04-C FRT-ST-MAZ-UNF-05-A FRT-ST-MAZ-UNF-05-B
-## 1                8264               12388               11154
-## 2                   0                   0                   0
-## 3                4622                6558                6210
-## 4                   0                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   FRT-ST-MAZ-UNF-05-C LRV-BB-MAZ-XXX-01-A LRV-BB-MAZ-XXX-01-B
-## 1                9767                 425                 610
-## 2                   0                  10                  47
-## 3                4744                  77                  48
-## 4                   0                  24                   0
-## 5                   0                   2                   1
-## 6                   0                   0                   0
-##   LRV-BB-MAZ-XXX-01-C LRV-BB-MAZ-XXX-02-A LRV-BB-MAZ-XXX-02-B
-## 1                 409                3239                4120
-## 2                   1                   1                   0
-## 3                  95                1852                2404
-## 4                   1                   0                   0
-## 5                   0                   0                   0
-## 6                   0                   0                   0
-##   LRV-BB-MAZ-XXX-02-C LRV-BB-MAZ-XXX-03-A LRV-BB-MAZ-XXX-03-B
-## 1                6079                3015                3659
-## 2                   0                 230                 223
-## 3                4216                1434                2084
-## 4                   0                 351                 460
-## 5                   1                 111                  68
-## 6                   0                  18                   0
-##   LRV-BB-MAZ-XXX-03-C LRV-ST-ISS-XXX-01-A LRV-ST-ISS-XXX-01-B
-## 1                3863                 517                1020
-## 2                 103                 402                 454
-## 3                2366                 365                 490
-## 4                 831                 117                  74
-## 5                   1                 435                 369
-## 6                   0                   0                   0
-##   LRV-ST-ISS-XXX-01-C LRV-ST-ISS-XXX-02-A LRV-ST-ISS-XXX-02-B
-## 1                1747                 891                 671
-## 2                  73                   0                   0
-## 3                1409                 385                 269
-## 4                   0                   0                   0
-## 5                  38                  74                  42
-## 6                   0                   0                   0
-##   LRV-ST-ISS-XXX-02-C NC-Index1009 NC-Index1010 NC-Index1011 NC-Index1012
-## 1                2167            0            0            0            0
-## 2                  57            0            0            0            0
-## 3                1009            0            0            0            0
-## 4                   0            0            0            0            0
-## 5                  61            0            0            0            0
-## 6                   0            0            0            0            0
-##   NC-Index1013 NC-Index1014 NC-Index1015 NC-Index1016 NC-Index1017 NC-Index1018
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1019 NC-Index1020 NC-Index1024 NC-Index1033 NC-Index1034 NC-Index1035
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1036 NC-Index1037 NC-Index1038 NC-Index1039 NC-Index1040 NC-Index1041
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1042 NC-Index1044 NC-Index1045 NC-Index1046 NC-Index1047 NC-Index1048
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1049 NC-Index1050 NC-Index1051 NC-Index1052 NC-Index1053 NC-Index1054
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1055 NC-Index1056 NC-Index1133 NC-Index1189 NC-Index1190 NC-Index1191
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1192 NC-Index1193 NC-Index1194 NC-Index1195 NC-Index1196 NC-Index1197
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1198 NC-Index1199 NC-Index1200 NC-Index1285 NC-Index1286 NC-Index1287
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1288 NC-Index1289 NC-Index1290 NC-Index1291 NC-Index1292 NC-Index1293
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1294 NC-Index1296 NC-Index1324 NC-Index1381 NC-Index1382 NC-Index1383
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1384 NC-Index1385 NC-Index1386 NC-Index1387 NC-Index1388 NC-Index1389
-## 1            0            0            0            0            0            0
-## 2            0            0            0            0            0            0
-## 3            0            0            0            0            0            0
-## 4            0            0            0            0            0            0
-## 5            0            0            0            0            0            0
-## 6            0            0            0            0            0            0
-##   NC-Index1390 NC-Index1391 NC-Index1392 NC-Index1427 NC-Index289 NC-Index290
-## 1            0            0            0            0           0           0
-## 2            0            0            0            0           0           0
-## 3            0            0            0            0           0           0
-## 4            0            0            0            0           0           0
-## 5            0            0            0            0           0           0
-## 6            0            0            0            0           0           0
-##   NC-Index291 NC-Index292 NC-Index293 NC-Index294 NC-Index301 NC-Index302
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index303 NC-Index304 NC-Index305 NC-Index306 NC-Index308 NC-Index311
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index313 NC-Index314 NC-Index315 NC-Index317 NC-Index318 NC-Index321
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index323 NC-Index325 NC-Index326 NC-Index327 NC-Index328 NC-Index329
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index330 NC-Index333 NC-Index335 NC-Index337 NC-Index338 NC-Index339
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index340 NC-Index341 NC-Index342 NC-Index345 NC-Index347 NC-Index349
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index350 NC-Index351 NC-Index353 NC-Index354 NC-Index355 NC-Index357
-## 1           0           0           0           0           0           1
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index360 NC-Index361 NC-Index362 NC-Index363 NC-Index364 NC-Index365
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index366 NC-Index373 NC-Index374 NC-Index375 NC-Index376 NC-Index377
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index378 NC-Index409 NC-Index410 NC-Index411 NC-Index412 NC-Index413
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index414 NC-Index415 NC-Index416 NC-Index417 NC-Index418 NC-Index419
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index420 NC-Index438 NC-Index469 NC-Index471 NC-Index472 NC-Index473
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index474 NC-Index476 NC-Index477 NC-Index478 NC-Index505 NC-Index506
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index507 NC-Index508 NC-Index509 NC-Index510 NC-Index511 NC-Index512
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index513 NC-Index514 NC-Index515 NC-Index516 NC-Index534 NC-Index565
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index566 NC-Index567 NC-Index570 NC-Index571 NC-Index572 NC-Index574
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index575 NC-Index593 NC-Index601 NC-Index602 NC-Index603 NC-Index604
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           2           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index605 NC-Index606 NC-Index607 NC-Index608 NC-Index609 NC-Index610
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index612 NC-Index633 NC-Index656 NC-Index661 NC-Index662 NC-Index663
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index664 NC-Index665 NC-Index667 NC-Index668 NC-Index669 NC-Index670
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index672 NC-Index769 NC-Index770 NC-Index771 NC-Index772 NC-Index773
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index774 NC-Index775 NC-Index776 NC-Index778 NC-Index780 NC-Index787
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index817 NC-Index818 NC-Index819 NC-Index820 NC-Index821 NC-Index822
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index823 NC-Index824 NC-Index825 NC-Index826 NC-Index827 NC-Index828
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index841 NC-Index842 NC-Index843 NC-Index844 NC-Index845 NC-Index846
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index847 NC-Index848 NC-Index849 NC-Index850 NC-Index851 NC-Index852
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index853 NC-Index854 NC-Index855 NC-Index856 NC-Index857 NC-Index858
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index859 NC-Index860 NC-Index861 NC-Index862 NC-Index863 NC-Index864
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index865 NC-Index867 NC-Index868 NC-Index869 NC-Index871 NC-Index872
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index874 NC-Index876 NC-Index913 NC-Index914 NC-Index915 NC-Index916
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index917 NC-Index918 NC-Index919 NC-Index920 NC-Index921 NC-Index922
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index923 NC-Index924 NC-Index937 NC-Index938 NC-Index939 NC-Index940
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index941 NC-Index942 NC-Index943 NC-Index944 NC-Index945 NC-Index946
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index947 NC-Index948 NC-Index949 NC-Index950 NC-Index951 NC-Index952
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index953 NC-Index954 NC-Index955 NC-Index956 NC-Index957 NC-Index958
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index959 NC-Index960 NC-Index961 NC-Index962 NC-Index963 NC-Index964
-## 1           0           0           0           0           0           0
-## 2           0           0           0           0           0           0
-## 3           0           0           0           0           0           0
-## 4           0           0           0           0           0           0
-## 5           0           0           0           0           0           0
-## 6           0           0           0           0           0           0
-##   NC-Index965 NC-Index968 NC-Index970 NC-Index972 PUC-ST-ISS-XXX-01-A
-## 1           0           0           0           0                 543
-## 2           0           0           0           0                2256
-## 3           0           0           0           0                  55
-## 4           0           0           0           0                  49
-## 5           0           0           0           0                2488
-## 6           0           0           0           0                   0
-##   PUC-ST-ISS-XXX-01-B PUC-ST-ISS-XXX-01-C PUC-ST-ISS-XXX-02-A
-## 1                 449                 466                 231
-## 2                2135                2489                1632
-## 3                  86                  69                  18
-## 4                  84                  31                 151
-## 5                2451                2781                2383
-## 6                   0                   1                   0
-##   PUC-ST-ISS-XXX-02-B PUC-ST-ISS-XXX-02-C PUC-ST-ISS-XXX-03-A
-## 1                 200                 212                1395
-## 2                1638                1907                1996
-## 3                  19                   9                 212
-## 4                 176                 171                  39
-## 5                2239                2628                2088
-## 6                   0                   0                   1
-##   PUC-ST-ISS-XXX-03-B PUC-ST-ISS-XXX-03-C PUC-ST-ISS-XXX-04-A
-## 1                1403                2054                   0
-## 2                2055                2643                3398
-## 3                 217                 437                   0
-## 4                  49                  43                 126
-## 5                2174                2503                2212
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-04-B PUC-ST-ISS-XXX-04-C PUC-ST-ISS-XXX-05-A
-## 1                   0                   1                   4
-## 2                3507                3556                1632
-## 3                   0                   0                   1
-## 4                  70                 132                  21
-## 5                2182                2216                3921
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-05-B PUC-ST-ISS-XXX-05-C PUC-ST-ISS-XXX-06-A
-## 1                   5                   2                  33
-## 2                1616                1645                6395
-## 3                   0                   0                   5
-## 4                  24                  10                  41
-## 5                3464                3652                1983
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-06-B PUC-ST-ISS-XXX-06-C PUC-ST-ISS-XXX-07-A
-## 1                  34                  18                   1
-## 2                6233                5638                3881
-## 3                   1                   0                   0
-## 4                  51                  41                  83
-## 5                1919                1617                1661
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-07-B PUC-ST-ISS-XXX-07-C PUC-ST-ISS-XXX-08-A
-## 1                   5                  13                  18
-## 2                3474                4258                7493
-## 3                   0                   1                   0
-## 4                  63                  85                 126
-## 5                1435                1638                1484
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-08-B PUC-ST-ISS-XXX-08-C PUC-ST-ISS-XXX-09-A
-## 1                   5                   4                2616
-## 2                7201                5183                2550
-## 3                   0                   1                 447
-## 4                 106                  76                  30
-## 5                1357                 817                1745
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-09-B PUC-ST-ISS-XXX-09-C PUC-ST-ISS-XXX-10-A
-## 1                1896                2522                1277
-## 2                1815                2593                3495
-## 3                 416                 449                 310
-## 4                  35                  24                  17
-## 5                1366                1520                1420
-## 6                   0                   0                   0
-##   PUC-ST-ISS-XXX-10-B PUC-ST-ISS-XXX-10-C PUP-ST-ISS-XXX-01-A
-## 1                1326                1426                3841
-## 2                3806                4571                 908
-## 3                 339                 340                1042
-## 4                  24                  28                   9
-## 5                1391                1797                 723
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-01-B PUP-ST-ISS-XXX-01-C PUP-ST-ISS-XXX-02-A
-## 1                3538                3811                3633
-## 2                 873                 847                1505
-## 3                1117                1433                 804
-## 4                  14                  38                  80
-## 5                 679                 817                1784
-## 6                   1                   0                   0
-##   PUP-ST-ISS-XXX-02-B PUP-ST-ISS-XXX-02-C PUP-ST-ISS-XXX-03-A
-## 1                3318                3914                5192
-## 2                1470                1623                1589
-## 3                 853                 893                1526
-## 4                  81                 118                  75
-## 5                1484                1846                 807
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-03-B PUP-ST-ISS-XXX-03-C PUP-ST-ISS-XXX-04-A
-## 1                4258                5478                 506
-## 2                1285                1546                1533
-## 3                1344                1802                  63
-## 4                  59                  85                 720
-## 5                 663                 864                1558
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-04-B PUP-ST-ISS-XXX-04-C PUP-ST-ISS-XXX-05-A
-## 1                 401                 569                2105
-## 2                1228                1251                1766
-## 3                  60                  51                 454
-## 4                 578                 792                 626
-## 5                1156                1251                1337
-## 6                   0                   0                   1
-##   PUP-ST-ISS-XXX-05-B PUP-ST-ISS-XXX-05-C PUP-ST-ISS-XXX-06-A
-## 1                1866                2423                 154
-## 2                1568                1749                 865
-## 3                 387                 547                  13
-## 4                 494                 781                1645
-## 5                1020                1371                2340
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-06-B PUP-ST-ISS-XXX-06-C PUP-ST-ISS-XXX-07-A
-## 1                  81                  17                  82
-## 2                 786                 953                1100
-## 3                   6                   1                   7
-## 4                1363                2053                2384
-## 5                1825                2543                2194
-## 6                   2                   0                   0
-##   PUP-ST-ISS-XXX-07-B PUP-ST-ISS-XXX-07-C PUP-ST-ISS-XXX-08-A
-## 1                  62                  76                   0
-## 2                 940                1030                1317
-## 3                   4                   8                   0
-## 4                1817                2378                1945
-## 5                1599                2194                3214
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-08-B PUP-ST-ISS-XXX-08-C PUP-ST-ISS-XXX-09-A
-## 1                   3                   3                  22
-## 2                1341                 962                1416
-## 3                   3                   2                   8
-## 4                1743                1526                2337
-## 5                2621                2191                3015
-## 6                   0                   0                   2
-##   PUP-ST-ISS-XXX-09-B PUP-ST-ISS-XXX-09-C PUP-ST-ISS-XXX-10-A
-## 1                  21                   6                 488
-## 2                1579                1461                 196
-## 3                   4                   0                 223
-## 4                2025                2157                 320
-## 5                3086                2762                1342
-## 6                   1                   0                   0
-##   PUP-ST-ISS-XXX-10-B PUP-ST-ISS-XXX-10-C PUP-ST-ISS-XXX-11-A
-## 1                 597                 530                  37
-## 2                 239                 212                 887
-## 3                 217                 236                  31
-## 4                 375                 332                 493
-## 5                1516                1341                1491
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-11-B PUP-ST-ISS-XXX-11-C PUP-ST-ISS-XXX-12-A
-## 1                  27                  73                   3
-## 2                 911                1192                2065
-## 3                  36                  82                   0
-## 4                 509                 797                1239
-## 5                1589                2288                1444
-## 6                   0                   0                   0
-##   PUP-ST-ISS-XXX-12-B PUP-ST-ISS-XXX-12-C ST-AEST01156-A ST-AEST01156-B
-## 1                   0                   1              0              1
-## 2                1981                2245          10083           9893
-## 3                   0                   2              2              0
-## 4                1135                1166              0              0
-## 5                1333                1590              1              1
-## 6                   0                   0           3185           2952
-##   ST-AEST01156-C ST-AEST01190-A ST-AEST01190-B ST-AEST01190-C ST-AEST01285-A
-## 1              1              0              0              4              4
-## 2          10436           6578           6958           6912          11521
-## 3              0              0              0              1              0
-## 4              0              0              0              0              1
-## 5              0              0              1              0              0
-## 6           2978            162            193            134           2614
-##   ST-AEST01285-B ST-AEST01285-C ST-AEST01307-A ST-AEST01307-B ST-AEST01307-C
-## 1              0              5              3              2              7
-## 2          10234           8382          10208          10160          11540
-## 3              0              1              0              2              3
-## 4              0              0              0              0              0
-## 5              0              0              0              0              0
-## 6           2354           1957           7339           7111           7549
-##   ST-AEST01403-A ST-AEST01403-B ST-AEST01403-C ST-AEST01474-A ST-AEST01474-B
-## 1            104             78             11             23             24
-## 2          16457          15855          15290          18960          19843
-## 3              4             10              0              1              1
-## 4              0              1              0              0              0
-## 5              0              0              0              0              1
-## 6           1142           1115           1132           2903           3112
-##   ST-AEST01474-C ST-PUREE0001-A ST-PUREE0001-B ST-PUREE0001-C ST-PUREE0002-A
-## 1             30              4              0           9365           8277
-## 2          19945              1              1              1              2
-## 3              1              4              1           4541           4402
-## 4              0              0              0              0              0
-## 5              0              0              0              4              7
-## 6           3937              0              0              0              0
-##   ST-PUREE0002-B ST-PUREE0002-C Undetermined
-## 1           9072           5574        35471
-## 2              3              3        48436
-## 3           4717           2505        17925
-## 4              0              0        11307
-## 5              4              0         8475
-## 6              0              0         6067</code></pre>
-</div>
-<div id="remove-chimeras" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Remove chimeras</h1>
-<pre class="r"><code>## Tune data structure
-samples &lt;- colnames(fordada)[seq(1+which(colnames(fordada)==&quot;observation_sum&quot;), ncol(fordada))]
-
-fordada.m &lt;- data.matrix(fordada[ , seq(1+which(colnames(fordada)==&quot;observation_sum&quot;), ncol(fordada))])
-rownames(fordada.m) &lt;- fordada$seed_sequence
-fordada.t &lt;- t(fordada.m)
-
-## Remove chimeras with isBimeraDenovo
-bimeras.v &lt;- dada2::isBimeraDenovo(dada2::getUniques(fordada.t), minFoldParentOverAbundance=4, verbose=TRUE)
-bimeras.df &lt;- data.frame(x=as.logical(bimeras.v), seq=names(bimeras.v))
-head(bimeras.df)</code></pre>
-<pre><code>##       x
-## 1 FALSE
-## 2 FALSE
-## 3 FALSE
-## 4 FALSE
-## 5 FALSE
-## 6 FALSE
-##                                                                                                                                                                                                                                                           seq
-## 1 TACAGAGGATGCAAGCGTTATCCGGAATGATTGGGCGTAAAGCGTCTGTAGGTGGCTTTTTAAGTCCGCCGTCAAATCCCAGGGCTCAACCCTGGACAGGCGGTGGAAACTACCAAGCTGGAGTACGGTAGGGGCAGAGGGAATTTCCGGTGGAGCGGTGAAATGCGTAGAGATCGGAAAGAACACCAACGGCGAAAGCACTCTGCTGGGCCGACACTGACACTGAGAGACGAAAGCTAGGGGAGCAAATG
-## 2 TACGAAGGGGGCTAGCGTTGCTCGGAATGACTGGGCGTAAAGGGCGTGTAGGCGGTTTGTACAGTCAGATGTGAAATCCCCGGGCTTAACCTGGGAGCTGCATTTGATACGTGCAGACTAGAGTGTGAGAGAGGGTTGTGGAATTCCCAGTGTAGAGGTGAAATTCGTAGATATTGGGAAGAACACCGGTGGCGAAGGCGGCAACCTGGCTCATTACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
-## 3   GACGGGGGGGGCAAGTGTTCTTCGGAATGACTGGGCGTAAAGGGCACGTAGGCGGTGAATCGGGTTGAAAGTGAAAGTCGCCAAAAAGTGGTGGAATGCTCTCGAAACCAATTCACTTGAGTGAGACAGAGGAGAGTGGAATTTCGTGTGTAGGGGTGAAATCCGAAGATCTACGAAGGAAGGCCAAAAGCGAAGGCAGCTCTCTGGGTCCCTACCGACGCTGGAGTGCGAAAGCATGGGGAGCGAACG
-## 4 TACGGAGAGGGCTAGCGTTATTCGGAATTATTGGGCGTAAAGGGCGCGTAGGCGGATTAGTAAGTTAAAAGTGAAATCCCAAGGCTCAACCTTGGAATTGCTTTTAAAACTGCTAATCTAGAGATTGAAAGAGGATAGAGGAATTCCTAGTGTAGAGGTGAAATTCGTAAATATTAGGAGGAACACCAGTGGCGAAGGCGTCTATCTGGTTCAAATCTGACGCTGAGGCGCGAAGGCGTGGGGAGCAAACA
-## 5 TACGAAGGGGGCTAGCGTTGCTCGGAATGACTGGGCGTAAAGGGCGCGTAGGCGGTTTATGCAGTCAGATGTGAAATCCCCGGGCTTAACCTGGGAACTGCATTTGAGACGCATAGACTAGAGGTCGAGAGAGGGTTGTGGAATTCCCAGTGTAGAGGTGAAATTCGTAGATATTGGGAAGAACACCGGTGGCGAAGGCGGCAACCTGGCTCGATACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
-## 6 TACGTAGGTGGCAAGCGTTGTCCGGATTTATTGGGCGTAAAGCGAGCGCAGGCGGTTTTTTAAGTCTGATGTGAAAGCCTTCGGCTTAACCGGAGAAGTGCATCGGAAACTGGGAGACTTGAGTGCAGAAGAGGACAGTGGAACTCCATGTGTAGCGGTGGAATGCGTAGATATATGGAAGAACACCAGTGGCGAAGGCGGCTGTCTAGTCTGTAACTGACGCTGAGGCTCGAAAGCATGGGTAGCGAACA</code></pre>
-<pre class="r"><code>## Export sequences that are not chimeras
-write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, paste(name,&quot;_cleaned_abundance.txt&quot;,sep=&quot;&quot;)), sep=&quot;\t&quot;, row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
-
-## Export sequences that are chimeras
-write.table(fordada[bimeras.df$x==TRUE,], file = file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, paste(name,&quot;_chimeras_list.txt&quot;, sep=&quot;&quot;)), sep=&quot;\t&quot;,row.names=FALSE,col.names=TRUE,quote=FALSE)#downloading of identified chimeras
-
-## Summary file
-number_of_total_clusters = nrow(fordada)
-number_of_bimeras = nrow(fordada[bimeras.df$x==TRUE,])
-number_of_nobimeras = nrow(fordada[bimeras.df$x==FALSE,])
-summary.df = data.frame(number_of_total_clusters, number_of_bimeras, number_of_nobimeras)
-write.table(summary.df,file=file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, paste(name,&quot;_chimeras_summary.txt&quot;,sep=&quot;&quot;)),sep=&quot;\t&quot;,row.names=FALSE,col.names=TRUE,quote=FALSE)</code></pre>
+<div id="clean-coi" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Clean COI</h1>
+<pre class="r"><code>## Import abundance table
+abundance_table &lt;- data.table::fread(file=file.path(here::here(), &quot;data&quot;, &quot;raw_data&quot;, &quot;COI_Galaxy22-[FROGS_BIOM_to_TSV__abundance.tsv].tsv&quot;),sep=&quot;\t&quot;,header=TRUE)# to modify (name of the abundance file)
+  
+find_chimeras(fordada=abundance_table, name = &quot;2022_COI_JRLAT&quot;)</code></pre>
+<pre><code>## [1] &quot;find_chimeras&quot;
+##   [1] &quot;#comment&quot;                  &quot;rdp_tax_and_bootstrap&quot;    
+##   [3] &quot;blast_taxonomy&quot;            &quot;blast_subject&quot;            
+##   [5] &quot;blast_perc_identity&quot;       &quot;blast_perc_query_coverage&quot;
+##   [7] &quot;blast_evalue&quot;              &quot;blast_aln_length&quot;         
+##   [9] &quot;seed_id&quot;                   &quot;seed_sequence&quot;            
+##  [11] &quot;observation_name&quot;          &quot;observation_sum&quot;          
+##  [13] &quot;ADT-ST-ISS-XXX-01-A&quot;       &quot;ADT-ST-ISS-XXX-01-B&quot;      
+##  [15] &quot;ADT-ST-ISS-XXX-01-C&quot;       &quot;ADT-ST-ISS-XXX-02-A&quot;      
+##  [17] &quot;ADT-ST-ISS-XXX-02-B&quot;       &quot;ADT-ST-ISS-XXX-02-C&quot;      
+##  [19] &quot;ADT-ST-ISS-XXX-03-A&quot;       &quot;ADT-ST-ISS-XXX-03-B&quot;      
+##  [21] &quot;ADT-ST-ISS-XXX-03-C&quot;       &quot;ADT-ST-ISS-XXX-04-A&quot;      
+##  [23] &quot;ADT-ST-ISS-XXX-04-B&quot;       &quot;ADT-ST-ISS-XXX-04-C&quot;      
+##  [25] &quot;ADT-ST-ISS-XXX-05-A&quot;       &quot;ADT-ST-ISS-XXX-05-B&quot;      
+##  [27] &quot;ADT-ST-ISS-XXX-05-C&quot;       &quot;ADT-ST-ISS-XXX-06-A&quot;      
+##  [29] &quot;ADT-ST-ISS-XXX-06-B&quot;       &quot;ADT-ST-ISS-XXX-06-C&quot;      
+##  [31] &quot;ADT-ST-ISS-XXX-07-A&quot;       &quot;ADT-ST-ISS-XXX-07-B&quot;      
+##  [33] &quot;ADT-ST-ISS-XXX-07-C&quot;       &quot;ADT-ST-ISS-XXX-08-A&quot;      
+##  [35] &quot;ADT-ST-ISS-XXX-08-B&quot;       &quot;ADT-ST-ISS-XXX-08-C&quot;      
+##  [37] &quot;ADT-ST-ISS-XXX-09-A&quot;       &quot;ADT-ST-ISS-XXX-09-B&quot;      
+##  [39] &quot;ADT-ST-ISS-XXX-09-C&quot;       &quot;ADT-ST-ISS-XXX-10-A&quot;      
+##  [41] &quot;ADT-ST-ISS-XXX-10-B&quot;       &quot;ADT-ST-ISS-XXX-10-C&quot;      
+##  [43] &quot;BL-AEST01157-A&quot;            &quot;BL-AEST01157-B&quot;           
+##  [45] &quot;BL-AEST01157-C&quot;            &quot;BL-AEST01191-A&quot;           
+##  [47] &quot;BL-AEST01191-B&quot;            &quot;BL-AEST01191-C&quot;           
+##  [49] &quot;BL-AEST01286-A&quot;            &quot;BL-AEST01286-B&quot;           
+##  [51] &quot;BL-AEST01286-C&quot;            &quot;BL-AEST01308-A&quot;           
+##  [53] &quot;BL-AEST01308-B&quot;            &quot;BL-AEST01308-C&quot;           
+##  [55] &quot;BL-AEST01404-A&quot;            &quot;BL-AEST01404-B&quot;           
+##  [57] &quot;BL-AEST01404-C&quot;            &quot;BL-AEST01475-A&quot;           
+##  [59] &quot;BL-AEST01475-B&quot;            &quot;BL-AEST01475-C&quot;           
+##  [61] &quot;BL-PUREE0001-A&quot;            &quot;BL-PUREE0001-B&quot;           
+##  [63] &quot;BL-PUREE0001-C&quot;            &quot;BL-PUREE0002-A&quot;           
+##  [65] &quot;BL-PUREE0002-B&quot;            &quot;BL-PUREE0002-C&quot;           
+##  [67] &quot;CH-AEST01155-A&quot;            &quot;CH-AEST01155-B&quot;           
+##  [69] &quot;CH-AEST01155-C&quot;            &quot;CH-AEST01189-A&quot;           
+##  [71] &quot;CH-AEST01189-B&quot;            &quot;CH-AEST01189-C&quot;           
+##  [73] &quot;CH-AEST01284-A&quot;            &quot;CH-AEST01284-B&quot;           
+##  [75] &quot;CH-AEST01284-C&quot;            &quot;CH-AEST01306-A&quot;           
+##  [77] &quot;CH-AEST01306-B&quot;            &quot;CH-AEST01306-C&quot;           
+##  [79] &quot;CH-AEST01402-A&quot;            &quot;CH-AEST01402-B&quot;           
+##  [81] &quot;CH-AEST01402-C&quot;            &quot;CH-AEST01473-A&quot;           
+##  [83] &quot;CH-AEST01473-B&quot;            &quot;CH-AEST01473-C&quot;           
+##  [85] &quot;CH-PUREE0001-A&quot;            &quot;CH-PUREE0001-B&quot;           
+##  [87] &quot;CH-PUREE0001-C&quot;            &quot;CH-PUREE0002-A&quot;           
+##  [89] &quot;CH-PUREE0002-B&quot;            &quot;CH-PUREE0002-C&quot;           
+##  [91] &quot;CTL-DN-MOC-COM-01-A&quot;       &quot;CTL-DN-MOC-COM-01-B&quot;      
+##  [93] &quot;CTL-DN-MOC-COM-01-C&quot;       &quot;CTL-DN-MOC-COM-02-A&quot;      
+##  [95] &quot;CTL-DN-MOC-COM-02-B&quot;       &quot;CTL-DN-MOC-COM-02-C&quot;      
+##  [97] &quot;CTL-NO-DNA-PCR-XX-A&quot;       &quot;CTL-NO-DNA-PCR-XX-B&quot;      
+##  [99] &quot;CTL-NO-DNA-PCR-XX-C&quot;       &quot;CTL-XX-DNA-EXT-01-A&quot;      
+## [101] &quot;CTL-XX-DNA-EXT-01-B&quot;       &quot;CTL-XX-DNA-EXT-01-C&quot;      
+## [103] &quot;CTL-XX-LRV-COI-01-A&quot;       &quot;CTL-XX-LRV-COI-01-B&quot;      
+## [105] &quot;CTL-XX-LRV-COI-01-C&quot;       &quot;CTL-XX-LRV-COI-02-A&quot;      
+## [107] &quot;CTL-XX-LRV-COI-02-B&quot;       &quot;CTL-XX-LRV-COI-02-C&quot;      
+## [109] &quot;CTL-XX-WAT-LRV-01-A&quot;       &quot;CTL-XX-WAT-LRV-01-B&quot;      
+## [111] &quot;CTL-XX-WAT-LRV-01-C&quot;       &quot;CTL-XX-WAT-LRV-02-A&quot;      
+## [113] &quot;CTL-XX-WAT-LRV-02-B&quot;       &quot;CTL-XX-WAT-LRV-02-C&quot;      
+## [115] &quot;CTM-ST-ISS-XXX-02-A&quot;       &quot;CTM-ST-ISS-XXX-02-B&quot;      
+## [117] &quot;CTM-ST-ISS-XXX-02-C&quot;       &quot;CTM-ST-ISS-XXX-04-A&quot;      
+## [119] &quot;CTM-ST-ISS-XXX-04-B&quot;       &quot;CTM-ST-ISS-XXX-04-C&quot;      
+## [121] &quot;FRT-BL-CAR-UNF-XX-A&quot;       &quot;FRT-BL-CAR-UNF-XX-B&quot;      
+## [123] &quot;FRT-BL-CAR-UNF-XX-C&quot;       &quot;FRT-BL-CAR-UNO-XX-A&quot;      
+## [125] &quot;FRT-BL-CAR-UNO-XX-B&quot;       &quot;FRT-BL-CAR-UNO-XX-C&quot;      
+## [127] &quot;FRT-BL-ISL-UNF-XX-A&quot;       &quot;FRT-BL-ISL-UNF-XX-B&quot;      
+## [129] &quot;FRT-BL-ISL-UNF-XX-C&quot;       &quot;FRT-BL-ISL-UNO-XX-A&quot;      
+## [131] &quot;FRT-BL-MAZ-INF-01-A&quot;       &quot;FRT-BL-MAZ-INF-01-B&quot;      
+## [133] &quot;FRT-BL-MAZ-INF-02-A&quot;       &quot;FRT-BL-MAZ-UNF-01-A&quot;      
+## [135] &quot;FRT-BL-MAZ-UNF-02-A&quot;       &quot;FRT-BL-MAZ-UNF-03-A&quot;      
+## [137] &quot;FRT-BL-MAZ-UNF-03-B&quot;       &quot;FRT-BL-MAZ-UNF-04-A&quot;      
+## [139] &quot;FRT-BL-MAZ-UNF-04-B&quot;       &quot;FRT-ST-ISS-IND-XX-A&quot;      
+## [141] &quot;FRT-ST-ISS-IND-XX-B&quot;       &quot;FRT-ST-ISS-IND-XX-C&quot;      
+## [143] &quot;FRT-ST-ISS-INM-XX-A&quot;       &quot;FRT-ST-ISS-UNF-01-A&quot;      
+## [145] &quot;FRT-ST-ISS-UNF-01-C&quot;       &quot;FRT-ST-ISS-UNF-02-A&quot;      
+## [147] &quot;FRT-ST-ISS-UNF-02-C&quot;       &quot;FRT-ST-ISS-UNF-03-A&quot;      
+## [149] &quot;FRT-ST-ISS-UNF-04-A&quot;       &quot;FRT-ST-ISS-UNF-05-A&quot;      
+## [151] &quot;FRT-ST-ISS-UNF-06-A&quot;       &quot;FRT-ST-ISS-UNF-XX-A&quot;      
+## [153] &quot;FRT-ST-ISS-UNO-XX-A&quot;       &quot;FRT-ST-ISS-UNO-XX-C&quot;      
+## [155] &quot;FRT-ST-MAZ-UNF-01-A&quot;       &quot;FRT-ST-MAZ-UNF-02-A&quot;      
+## [157] &quot;FRT-ST-MAZ-UNF-02-B&quot;       &quot;FRT-ST-MAZ-UNF-03-A&quot;      
+## [159] &quot;FRT-ST-MAZ-UNF-04-A&quot;       &quot;FRT-ST-MAZ-UNF-04-C&quot;      
+## [161] &quot;FRT-ST-MAZ-UNF-05-A&quot;       &quot;FRT-ST-MAZ-UNF-05-C&quot;      
+## [163] &quot;LRV-BB-MAZ-XXX-01-A&quot;       &quot;LRV-BB-MAZ-XXX-01-C&quot;      
+## [165] &quot;LRV-BB-MAZ-XXX-02-A&quot;       &quot;LRV-BB-MAZ-XXX-02-C&quot;      
+## [167] &quot;LRV-BB-MAZ-XXX-03-A&quot;       &quot;LRV-BB-MAZ-XXX-03-C&quot;      
+## [169] &quot;LRV-ST-ISS-XXX-01-A&quot;       &quot;LRV-ST-ISS-XXX-02-A&quot;      
+## [171] &quot;LRV-ST-ISS-XXX-02-C&quot;       &quot;NC-Index1189&quot;             
+## [173] &quot;NC-Index1191&quot;              &quot;NC-Index1195&quot;             
+## [175] &quot;NC-Index1198&quot;              &quot;NC-Index1199&quot;             
+## [177] &quot;NC-Index1200&quot;              &quot;NC-Index290&quot;              
+## [179] &quot;NC-Index302&quot;               &quot;NC-Index314&quot;              
+## [181] &quot;NC-Index326&quot;               &quot;NC-Index338&quot;              
+## [183] &quot;NC-Index350&quot;               &quot;NC-Index362&quot;              
+## [185] &quot;NC-Index410&quot;               &quot;NC-Index411&quot;              
+## [187] &quot;NC-Index415&quot;               &quot;NC-Index419&quot;              
+## [189] &quot;NC-Index608&quot;               &quot;NC-Index771&quot;              
+## [191] &quot;NC-Index817&quot;               &quot;NC-Index819&quot;              
+## [193] &quot;NC-Index820&quot;               &quot;NC-Index822&quot;              
+## [195] &quot;NC-Index823&quot;               &quot;NC-Index827&quot;              
+## [197] &quot;NC-Index828&quot;               &quot;NC-Index841&quot;              
+## [199] &quot;NC-Index842&quot;               &quot;NC-Index843&quot;              
+## [201] &quot;NC-Index844&quot;               &quot;NC-Index846&quot;              
+## [203] &quot;NC-Index848&quot;               &quot;NC-Index850&quot;              
+## [205] &quot;NC-Index851&quot;               &quot;NC-Index852&quot;              
+## [207] &quot;NC-Index853&quot;               &quot;NC-Index854&quot;              
+## [209] &quot;NC-Index855&quot;               &quot;NC-Index856&quot;              
+## [211] &quot;NC-Index859&quot;               &quot;NC-Index860&quot;              
+## [213] &quot;NC-Index862&quot;               &quot;NC-Index863&quot;              
+## [215] &quot;PUC-ST-ISS-XXX-01-A&quot;       &quot;PUC-ST-ISS-XXX-01-C&quot;      
+## [217] &quot;PUC-ST-ISS-XXX-02-A&quot;       &quot;PUC-ST-ISS-XXX-02-C&quot;      
+## [219] &quot;PUC-ST-ISS-XXX-03-A&quot;       &quot;PUC-ST-ISS-XXX-03-C&quot;      
+## [221] &quot;PUC-ST-ISS-XXX-04-A&quot;       &quot;PUC-ST-ISS-XXX-04-B&quot;      
+## [223] &quot;PUC-ST-ISS-XXX-05-A&quot;       &quot;PUC-ST-ISS-XXX-05-C&quot;      
+## [225] &quot;PUC-ST-ISS-XXX-06-A&quot;       &quot;PUC-ST-ISS-XXX-07-A&quot;      
+## [227] &quot;PUC-ST-ISS-XXX-08-A&quot;       &quot;PUC-ST-ISS-XXX-08-C&quot;      
+## [229] &quot;PUC-ST-ISS-XXX-09-A&quot;       &quot;PUC-ST-ISS-XXX-09-C&quot;      
+## [231] &quot;PUC-ST-ISS-XXX-10-A&quot;       &quot;PUC-ST-ISS-XXX-10-C&quot;      
+## [233] &quot;PUP-ST-ISS-XXX-01-A&quot;       &quot;PUP-ST-ISS-XXX-01-C&quot;      
+## [235] &quot;PUP-ST-ISS-XXX-02-A&quot;       &quot;PUP-ST-ISS-XXX-03-A&quot;      
+## [237] &quot;PUP-ST-ISS-XXX-03-B&quot;       &quot;PUP-ST-ISS-XXX-04-A&quot;      
+## [239] &quot;PUP-ST-ISS-XXX-04-C&quot;       &quot;PUP-ST-ISS-XXX-05-A&quot;      
+## [241] &quot;PUP-ST-ISS-XXX-06-A&quot;       &quot;PUP-ST-ISS-XXX-07-A&quot;      
+## [243] &quot;PUP-ST-ISS-XXX-08-A&quot;       &quot;PUP-ST-ISS-XXX-08-C&quot;      
+## [245] &quot;PUP-ST-ISS-XXX-09-A&quot;       &quot;PUP-ST-ISS-XXX-09-B&quot;      
+## [247] &quot;PUP-ST-ISS-XXX-10-A&quot;       &quot;PUP-ST-ISS-XXX-10-B&quot;      
+## [249] &quot;PUP-ST-ISS-XXX-11-A&quot;       &quot;PUP-ST-ISS-XXX-11-B&quot;      
+## [251] &quot;PUP-ST-ISS-XXX-12-A&quot;       &quot;PUP-ST-ISS-XXX-12-B&quot;      
+## [253] &quot;ST-AEST01156-A&quot;            &quot;ST-AEST01156-B&quot;           
+## [255] &quot;ST-AEST01190-A&quot;            &quot;ST-AEST01285-A&quot;           
+## [257] &quot;ST-AEST01307-A&quot;            &quot;ST-AEST01403-A&quot;           
+## [259] &quot;ST-AEST01474-A&quot;            &quot;ST-AEST01474-B&quot;           
+## [261] &quot;ST-PUREE0001-A&quot;            &quot;ST-PUREE0001-C&quot;           
+## [263] &quot;ST-PUREE0002-A&quot;            &quot;Undetermined&quot;             
+## [1] &quot;samples:&quot;
+##   [1] &quot;ADT-ST-ISS-XXX-01-A&quot; &quot;ADT-ST-ISS-XXX-01-B&quot; &quot;ADT-ST-ISS-XXX-01-C&quot;
+##   [4] &quot;ADT-ST-ISS-XXX-02-A&quot; &quot;ADT-ST-ISS-XXX-02-B&quot; &quot;ADT-ST-ISS-XXX-02-C&quot;
+##   [7] &quot;ADT-ST-ISS-XXX-03-A&quot; &quot;ADT-ST-ISS-XXX-03-B&quot; &quot;ADT-ST-ISS-XXX-03-C&quot;
+##  [10] &quot;ADT-ST-ISS-XXX-04-A&quot; &quot;ADT-ST-ISS-XXX-04-B&quot; &quot;ADT-ST-ISS-XXX-04-C&quot;
+##  [13] &quot;ADT-ST-ISS-XXX-05-A&quot; &quot;ADT-ST-ISS-XXX-05-B&quot; &quot;ADT-ST-ISS-XXX-05-C&quot;
+##  [16] &quot;ADT-ST-ISS-XXX-06-A&quot; &quot;ADT-ST-ISS-XXX-06-B&quot; &quot;ADT-ST-ISS-XXX-06-C&quot;
+##  [19] &quot;ADT-ST-ISS-XXX-07-A&quot; &quot;ADT-ST-ISS-XXX-07-B&quot; &quot;ADT-ST-ISS-XXX-07-C&quot;
+##  [22] &quot;ADT-ST-ISS-XXX-08-A&quot; &quot;ADT-ST-ISS-XXX-08-B&quot; &quot;ADT-ST-ISS-XXX-08-C&quot;
+##  [25] &quot;ADT-ST-ISS-XXX-09-A&quot; &quot;ADT-ST-ISS-XXX-09-B&quot; &quot;ADT-ST-ISS-XXX-09-C&quot;
+##  [28] &quot;ADT-ST-ISS-XXX-10-A&quot; &quot;ADT-ST-ISS-XXX-10-B&quot; &quot;ADT-ST-ISS-XXX-10-C&quot;
+##  [31] &quot;BL-AEST01157-A&quot;      &quot;BL-AEST01157-B&quot;      &quot;BL-AEST01157-C&quot;     
+##  [34] &quot;BL-AEST01191-A&quot;      &quot;BL-AEST01191-B&quot;      &quot;BL-AEST01191-C&quot;     
+##  [37] &quot;BL-AEST01286-A&quot;      &quot;BL-AEST01286-B&quot;      &quot;BL-AEST01286-C&quot;     
+##  [40] &quot;BL-AEST01308-A&quot;      &quot;BL-AEST01308-B&quot;      &quot;BL-AEST01308-C&quot;     
+##  [43] &quot;BL-AEST01404-A&quot;      &quot;BL-AEST01404-B&quot;      &quot;BL-AEST01404-C&quot;     
+##  [46] &quot;BL-AEST01475-A&quot;      &quot;BL-AEST01475-B&quot;      &quot;BL-AEST01475-C&quot;     
+##  [49] &quot;BL-PUREE0001-A&quot;      &quot;BL-PUREE0001-B&quot;      &quot;BL-PUREE0001-C&quot;     
+##  [52] &quot;BL-PUREE0002-A&quot;      &quot;BL-PUREE0002-B&quot;      &quot;BL-PUREE0002-C&quot;     
+##  [55] &quot;CH-AEST01155-A&quot;      &quot;CH-AEST01155-B&quot;      &quot;CH-AEST01155-C&quot;     
+##  [58] &quot;CH-AEST01189-A&quot;      &quot;CH-AEST01189-B&quot;      &quot;CH-AEST01189-C&quot;     
+##  [61] &quot;CH-AEST01284-A&quot;      &quot;CH-AEST01284-B&quot;      &quot;CH-AEST01284-C&quot;     
+##  [64] &quot;CH-AEST01306-A&quot;      &quot;CH-AEST01306-B&quot;      &quot;CH-AEST01306-C&quot;     
+##  [67] &quot;CH-AEST01402-A&quot;      &quot;CH-AEST01402-B&quot;      &quot;CH-AEST01402-C&quot;     
+##  [70] &quot;CH-AEST01473-A&quot;      &quot;CH-AEST01473-B&quot;      &quot;CH-AEST01473-C&quot;     
+##  [73] &quot;CH-PUREE0001-A&quot;      &quot;CH-PUREE0001-B&quot;      &quot;CH-PUREE0001-C&quot;     
+##  [76] &quot;CH-PUREE0002-A&quot;      &quot;CH-PUREE0002-B&quot;      &quot;CH-PUREE0002-C&quot;     
+##  [79] &quot;CTL-DN-MOC-COM-01-A&quot; &quot;CTL-DN-MOC-COM-01-B&quot; &quot;CTL-DN-MOC-COM-01-C&quot;
+##  [82] &quot;CTL-DN-MOC-COM-02-A&quot; &quot;CTL-DN-MOC-COM-02-B&quot; &quot;CTL-DN-MOC-COM-02-C&quot;
+##  [85] &quot;CTL-NO-DNA-PCR-XX-A&quot; &quot;CTL-NO-DNA-PCR-XX-B&quot; &quot;CTL-NO-DNA-PCR-XX-C&quot;
+##  [88] &quot;CTL-XX-DNA-EXT-01-A&quot; &quot;CTL-XX-DNA-EXT-01-B&quot; &quot;CTL-XX-DNA-EXT-01-C&quot;
+##  [91] &quot;CTL-XX-LRV-COI-01-A&quot; &quot;CTL-XX-LRV-COI-01-B&quot; &quot;CTL-XX-LRV-COI-01-C&quot;
+##  [94] &quot;CTL-XX-LRV-COI-02-A&quot; &quot;CTL-XX-LRV-COI-02-B&quot; &quot;CTL-XX-LRV-COI-02-C&quot;
+##  [97] &quot;CTL-XX-WAT-LRV-01-A&quot; &quot;CTL-XX-WAT-LRV-01-B&quot; &quot;CTL-XX-WAT-LRV-01-C&quot;
+## [100] &quot;CTL-XX-WAT-LRV-02-A&quot; &quot;CTL-XX-WAT-LRV-02-B&quot; &quot;CTL-XX-WAT-LRV-02-C&quot;
+## [103] &quot;CTM-ST-ISS-XXX-02-A&quot; &quot;CTM-ST-ISS-XXX-02-B&quot; &quot;CTM-ST-ISS-XXX-02-C&quot;
+## [106] &quot;CTM-ST-ISS-XXX-04-A&quot; &quot;CTM-ST-ISS-XXX-04-B&quot; &quot;CTM-ST-ISS-XXX-04-C&quot;
+## [109] &quot;FRT-BL-CAR-UNF-XX-A&quot; &quot;FRT-BL-CAR-UNF-XX-B&quot; &quot;FRT-BL-CAR-UNF-XX-C&quot;
+## [112] &quot;FRT-BL-CAR-UNO-XX-A&quot; &quot;FRT-BL-CAR-UNO-XX-B&quot; &quot;FRT-BL-CAR-UNO-XX-C&quot;
+## [115] &quot;FRT-BL-ISL-UNF-XX-A&quot; &quot;FRT-BL-ISL-UNF-XX-B&quot; &quot;FRT-BL-ISL-UNF-XX-C&quot;
+## [118] &quot;FRT-BL-ISL-UNO-XX-A&quot; &quot;FRT-BL-MAZ-INF-01-A&quot; &quot;FRT-BL-MAZ-INF-01-B&quot;
+## [121] &quot;FRT-BL-MAZ-INF-02-A&quot; &quot;FRT-BL-MAZ-UNF-01-A&quot; &quot;FRT-BL-MAZ-UNF-02-A&quot;
+## [124] &quot;FRT-BL-MAZ-UNF-03-A&quot; &quot;FRT-BL-MAZ-UNF-03-B&quot; &quot;FRT-BL-MAZ-UNF-04-A&quot;
+## [127] &quot;FRT-BL-MAZ-UNF-04-B&quot; &quot;FRT-ST-ISS-IND-XX-A&quot; &quot;FRT-ST-ISS-IND-XX-B&quot;
+## [130] &quot;FRT-ST-ISS-IND-XX-C&quot; &quot;FRT-ST-ISS-INM-XX-A&quot; &quot;FRT-ST-ISS-UNF-01-A&quot;
+## [133] &quot;FRT-ST-ISS-UNF-01-C&quot; &quot;FRT-ST-ISS-UNF-02-A&quot; &quot;FRT-ST-ISS-UNF-02-C&quot;
+## [136] &quot;FRT-ST-ISS-UNF-03-A&quot; &quot;FRT-ST-ISS-UNF-04-A&quot; &quot;FRT-ST-ISS-UNF-05-A&quot;
+## [139] &quot;FRT-ST-ISS-UNF-06-A&quot; &quot;FRT-ST-ISS-UNF-XX-A&quot; &quot;FRT-ST-ISS-UNO-XX-A&quot;
+## [142] &quot;FRT-ST-ISS-UNO-XX-C&quot; &quot;FRT-ST-MAZ-UNF-01-A&quot; &quot;FRT-ST-MAZ-UNF-02-A&quot;
+## [145] &quot;FRT-ST-MAZ-UNF-02-B&quot; &quot;FRT-ST-MAZ-UNF-03-A&quot; &quot;FRT-ST-MAZ-UNF-04-A&quot;
+## [148] &quot;FRT-ST-MAZ-UNF-04-C&quot; &quot;FRT-ST-MAZ-UNF-05-A&quot; &quot;FRT-ST-MAZ-UNF-05-C&quot;
+## [151] &quot;LRV-BB-MAZ-XXX-01-A&quot; &quot;LRV-BB-MAZ-XXX-01-C&quot; &quot;LRV-BB-MAZ-XXX-02-A&quot;
+## [154] &quot;LRV-BB-MAZ-XXX-02-C&quot; &quot;LRV-BB-MAZ-XXX-03-A&quot; &quot;LRV-BB-MAZ-XXX-03-C&quot;
+## [157] &quot;LRV-ST-ISS-XXX-01-A&quot; &quot;LRV-ST-ISS-XXX-02-A&quot; &quot;LRV-ST-ISS-XXX-02-C&quot;
+## [160] &quot;NC-Index1189&quot;        &quot;NC-Index1191&quot;        &quot;NC-Index1195&quot;       
+## [163] &quot;NC-Index1198&quot;        &quot;NC-Index1199&quot;        &quot;NC-Index1200&quot;       
+## [166] &quot;NC-Index290&quot;         &quot;NC-Index302&quot;         &quot;NC-Index314&quot;        
+## [169] &quot;NC-Index326&quot;         &quot;NC-Index338&quot;         &quot;NC-Index350&quot;        
+## [172] &quot;NC-Index362&quot;         &quot;NC-Index410&quot;         &quot;NC-Index411&quot;        
+## [175] &quot;NC-Index415&quot;         &quot;NC-Index419&quot;         &quot;NC-Index608&quot;        
+## [178] &quot;NC-Index771&quot;         &quot;NC-Index817&quot;         &quot;NC-Index819&quot;        
+## [181] &quot;NC-Index820&quot;         &quot;NC-Index822&quot;         &quot;NC-Index823&quot;        
+## [184] &quot;NC-Index827&quot;         &quot;NC-Index828&quot;         &quot;NC-Index841&quot;        
+## [187] &quot;NC-Index842&quot;         &quot;NC-Index843&quot;         &quot;NC-Index844&quot;        
+## [190] &quot;NC-Index846&quot;         &quot;NC-Index848&quot;         &quot;NC-Index850&quot;        
+## [193] &quot;NC-Index851&quot;         &quot;NC-Index852&quot;         &quot;NC-Index853&quot;        
+## [196] &quot;NC-Index854&quot;         &quot;NC-Index855&quot;         &quot;NC-Index856&quot;        
+## [199] &quot;NC-Index859&quot;         &quot;NC-Index860&quot;         &quot;NC-Index862&quot;        
+## [202] &quot;NC-Index863&quot;         &quot;PUC-ST-ISS-XXX-01-A&quot; &quot;PUC-ST-ISS-XXX-01-C&quot;
+## [205] &quot;PUC-ST-ISS-XXX-02-A&quot; &quot;PUC-ST-ISS-XXX-02-C&quot; &quot;PUC-ST-ISS-XXX-03-A&quot;
+## [208] &quot;PUC-ST-ISS-XXX-03-C&quot; &quot;PUC-ST-ISS-XXX-04-A&quot; &quot;PUC-ST-ISS-XXX-04-B&quot;
+## [211] &quot;PUC-ST-ISS-XXX-05-A&quot; &quot;PUC-ST-ISS-XXX-05-C&quot; &quot;PUC-ST-ISS-XXX-06-A&quot;
+## [214] &quot;PUC-ST-ISS-XXX-07-A&quot; &quot;PUC-ST-ISS-XXX-08-A&quot; &quot;PUC-ST-ISS-XXX-08-C&quot;
+## [217] &quot;PUC-ST-ISS-XXX-09-A&quot; &quot;PUC-ST-ISS-XXX-09-C&quot; &quot;PUC-ST-ISS-XXX-10-A&quot;
+## [220] &quot;PUC-ST-ISS-XXX-10-C&quot; &quot;PUP-ST-ISS-XXX-01-A&quot; &quot;PUP-ST-ISS-XXX-01-C&quot;
+## [223] &quot;PUP-ST-ISS-XXX-02-A&quot; &quot;PUP-ST-ISS-XXX-03-A&quot; &quot;PUP-ST-ISS-XXX-03-B&quot;
+## [226] &quot;PUP-ST-ISS-XXX-04-A&quot; &quot;PUP-ST-ISS-XXX-04-C&quot; &quot;PUP-ST-ISS-XXX-05-A&quot;
+## [229] &quot;PUP-ST-ISS-XXX-06-A&quot; &quot;PUP-ST-ISS-XXX-07-A&quot; &quot;PUP-ST-ISS-XXX-08-A&quot;
+## [232] &quot;PUP-ST-ISS-XXX-08-C&quot; &quot;PUP-ST-ISS-XXX-09-A&quot; &quot;PUP-ST-ISS-XXX-09-B&quot;
+## [235] &quot;PUP-ST-ISS-XXX-10-A&quot; &quot;PUP-ST-ISS-XXX-10-B&quot; &quot;PUP-ST-ISS-XXX-11-A&quot;
+## [238] &quot;PUP-ST-ISS-XXX-11-B&quot; &quot;PUP-ST-ISS-XXX-12-A&quot; &quot;PUP-ST-ISS-XXX-12-B&quot;
+## [241] &quot;ST-AEST01156-A&quot;      &quot;ST-AEST01156-B&quot;      &quot;ST-AEST01190-A&quot;     
+## [244] &quot;ST-AEST01285-A&quot;      &quot;ST-AEST01307-A&quot;      &quot;ST-AEST01403-A&quot;     
+## [247] &quot;ST-AEST01474-A&quot;      &quot;ST-AEST01474-B&quot;      &quot;ST-PUREE0001-A&quot;     
+## [250] &quot;ST-PUREE0001-C&quot;      &quot;ST-PUREE0002-A&quot;      &quot;Undetermined&quot;</code></pre>
 </div>
 
 

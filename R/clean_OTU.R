@@ -3,6 +3,7 @@
 #' @param affiliation_table affiliation table
 #' @param thresh % threshold below which 'unknown' are ignored
 #' @param name name will be used to import files and write names before extension of the different output tables
+#' @param removecol remove columns containing this specific word
 #' @description Work on raw abundance and multihits text files from Frogs.
 #'
 #'Correct the taxonomy of each cluster of the abundance tsv file tagged 'multi-affiliation', from decision rules applied on the cleaned multihits tsv file:
@@ -21,7 +22,7 @@
 #' Export an abundance table tsv file cleaned for taxonomy and filtered for chimeras.
 #'
 #' @export
-clean_OTU <- function(abundance_table = "Galaxy21-[FROGS_BIOM_to_TSV__abundance.tsv].tsv", affiliation_table = "Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv",   thresh = 0.5, name = "2022JRLAT-16S"){
+clean_OTU <- function(abundance_table = "Galaxy21-[FROGS_BIOM_to_TSV__abundance.tsv].tsv", affiliation_table = "Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv",   thresh = 0.5, name = "2022JRLAT-16S", removecol=NULL){
   
   ## Import multi-affiliation data
   mt <- data.table::fread(file=file.path(here::here(), "data", "raw_data", affiliation_table), sep="\t", header=TRUE) # to modify (name of the multihits tsv file)
@@ -34,7 +35,13 @@ clean_OTU <- function(abundance_table = "Galaxy21-[FROGS_BIOM_to_TSV__abundance.
   
   ## Import abundance table
   at <- data.table::fread(file=file.path(here::here(), "data", "raw_data", abundance_table),sep="\t",header=TRUE)# to modify (name of the abundance file)
-  ab <- data.table::data.table(bidouille=at$`blast_taxonomy`, blast_taxonomy=at$`blast_taxonomy`, observation_name=at$observation_name)
+  if(!is.null(removecol)){
+    at <- at %>% 
+      dplyr::select(-contains(removecol))
+    print("Remaining colnames")
+    print(colnames(at))
+  }
+    ab <- data.table::data.table(bidouille=at$`blast_taxonomy`, blast_taxonomy=at$`blast_taxonomy`, observation_name=at$observation_name)
 
   # Cleaning of multihits file
   ## Cleaning for the special characters []()_"0123456789.
@@ -219,36 +226,13 @@ clean_OTU <- function(abundance_table = "Galaxy21-[FROGS_BIOM_to_TSV__abundance.
   })
   final$blast_taxonomy.x<-NULL
   final$blast_taxonomy.y<-NULL
-  data.table::setcolorder(final,c(2,3,4,5,6,7,8,9,10,1,11:(ncol(final))))
-  fordada <- final[order(as.integer(gsub("Cluster_", "", final$observation_name)))]
-  fordada <- as.data.frame(fordada)
-
-  find_chimeras(fordada=fordada, name=name)
+  data.table::setcolorder(final, c(2,3,4,5,6,7,8,9,10,1,11:(ncol(final))))
+  fordada <- as.data.frame(final)
+  fordada <- fordada[order(as.integer(gsub("Cluster_", "", fordada$observation_name))),]
+  print("data to find chimeras:")
+  print(colnames(fordada))
   # Remove chimeras
-  ## Tune data structure
-  #samples <- colnames(fordada)[seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))]
-  
-  #fordada.m <- data.matrix(fordada[ , seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))])
-  #rownames(fordada.m) <- fordada$seed_sequence
-  #fordada.t <- t(fordada.m)
-  
-  ## Remove chimeras with isBimeraDenovo
-  #bimeras.v <- dada2::isBimeraDenovo(dada2::getUniques(fordada.t), minFoldParentOverAbundance=4, verbose=TRUE)
-  #bimeras.df <- data.frame(x=as.logical(bimeras.v), seq=names(bimeras.v))
-  #head(bimeras.df)
-  
-  ## Export sequences that are not chimeras
-  #write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_cleaned_abundance.txt",sep="")), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
-  
-  ## Export sequences that are chimeras
-  #write.table(fordada[bimeras.df$x==TRUE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_list.txt", sep="")), sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)#downloading of identified chimeras
-  
-  ## Summary file
-  #number_of_total_clusters = nrow(fordada)
-  #number_of_bimeras = nrow(fordada[bimeras.df$x==TRUE,])
-  #number_of_nobimeras = nrow(fordada[bimeras.df$x==FALSE,])
-  #summary.df = data.frame(number_of_total_clusters, number_of_bimeras, number_of_nobimeras)
-  #write.table(summary.df,file=file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_summary.txt",sep="")),sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)
-  
+  find_chimeras(fordada=fordada, name=name)
+
   }
 #' @examples clean_OTU(abundance_table="Galaxy21-[FROGS_BIOM_to_TSV__abundance.tsv].tsv", affiliation_table="Galaxy22-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv", thresh=0.5, name = "2022JRLAT-16S")

@@ -4,9 +4,13 @@
 #'
 #' @export
 find_chimeras <- function(fordada, name){
+  print("find_chimeras")
+  print(colnames(fordada))
   # Remove chimeras
   ## Tune data structure
   samples <- colnames(fordada)[seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))]
+  
+  print("samples:")
   print(samples)
   fordada.m <- data.matrix(fordada[ , seq(1+which(colnames(fordada)=="observation_sum"), ncol(fordada))])
   rownames(fordada.m) <- fordada$seed_sequence
@@ -16,7 +20,7 @@ find_chimeras <- function(fordada, name){
   bimeras.v <- dada2::isBimeraDenovo(dada2::getUniques(fordada.t), minFoldParentOverAbundance=4, verbose=TRUE)
   bimeras.df <- data.frame(x=as.logical(bimeras.v), seq=names(bimeras.v))
   head(bimeras.df)
-  
+
   ## Export sequences that are not chimeras
   write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_cleaned_abundance.txt",sep="")), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
   

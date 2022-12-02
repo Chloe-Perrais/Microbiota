@@ -25,7 +25,7 @@ devtools::load_all()
 ```{r }
 ## Follow the instructions to install dada2: https://benjjneb.github.io/dada2/
 
-clean_OTU(abundance_table="16S_Galaxy17-[FROGS_BIOM_to_TSV__abundance.tsv].tsv", affiliation_table="16S_Galaxy18-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv", thresh=0.5, name = "2022_16S_JRLAT")
+clean_OTU(abundance_table="16S_Galaxy17-[FROGS_BIOM_to_TSV__abundance.tsv].tsv", affiliation_table="16S_Galaxy18-[FROGS_BIOM_to_TSV__multi-affiliations.tsv].tsv", thresh=0.5, name = "2022_16S_JRLAT", removecol="NC-Index")
 
 
 ```
