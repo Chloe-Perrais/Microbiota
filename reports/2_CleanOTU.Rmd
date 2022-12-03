@@ -33,7 +33,48 @@ clean_OTU(abundance_table="16S_Galaxy17-[FROGS_BIOM_to_TSV__abundance.tsv].tsv",
 ```{r }
 ## Import abundance table
 abundance_table <- data.table::fread(file=file.path(here::here(), "data", "raw_data", "COI_Galaxy22-[FROGS_BIOM_to_TSV__abundance.tsv].tsv"),sep="\t",header=TRUE)# to modify (name of the abundance file)
-  
+corrected_affiliation_table <- data.table::fread(file=file.path(here::here(), "data", "raw_data", "COI_Galaxy23-FROGS_BIOM_to_TSV__monoaffiliations.csv"),sep=";",header=TRUE)# to modify (name of the abundance file)
+head(corrected_affiliation_table)
+
+## Find cluster with multiple affiliation
+multi <- abundance_table$observation_name[grep("Multi", abundance_table$blast_taxonomy)]
+
+## Correct affiliation
+abundance_table$blast_taxonomy[grep("Multi", abundance_table$blast_taxonomy)] <- corrected_affiliation_table$blast_taxonomy[match(multi, corrected_affiliation_table$`#observation_name`)]
+
 find_chimeras(fordada=abundance_table, name = "2022_COI_JRLAT")
 
+## Import clean data
+abundance_table <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_abundance.txt"),sep="\t",header=TRUE)
+
+## Sum by species
+abundance_table_clean <- abundance_table %>% dplyr::select(blast_taxonomy, observation_sum:Undetermined) %>% 
+  dplyr::group_by(blast_taxonomy) %>% 
+  dplyr::summarise(across(everything(), sum))
+
+write.table(abundance_table_clean, file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_abundanceandtaxo.txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+```
+# Update metadata
+```{r }
+## Import metadata table
+metadata <- data.table::fread(file=file.path(here::here(), "data", "raw_data", "Sample_ISS.xlsx - Metadata.csv"), sep=",", header=TRUE)
+head(metadata)
+
+##Compute proportion only for Drosophila and replicate A
+prop_table_clean <- abundance_table_clean %>% dplyr::filter(grepl("Drosophila", blast_taxonomy)) %>% dplyr::select(blast_taxonomy:Undetermined) %>% dplyr::select(blast_taxonomy, ends_with("-A")) %>%  dplyr::mutate_if(is.numeric, ~round(./sum(.), 1)) 
+
+## Transpose the table
+prop_table_clean <- prop_table_clean %>%
+    tidyr::gather(key = Barcode, value = value, 2:ncol(prop_table_clean)) %>% 
+    tidyr::spread_(key = names(prop_table_clean)[1],value = 'value')
+## Simplify the name
+colnames(prop_table_clean) <- gsub("Arthropoda;Insecta;Diptera;Drosophilidae;Drosophilinae;Drosophila;", "", colnames(prop_table_clean))
+## Put back the barcode name
+prop_table_clean$Barcode <- gsub("-", "_", prop_table_clean$Barcode)
+prop_table_clean$Barcode <- gsub("_A", "", prop_table_clean$Barcode)
+
+metadata2 <-  dplyr::left_join(metadata, prop_table_clean, by="Barcode")
+#metadata2$Drosophila_melanogaster <- as.numeric(metadata2$Drosophila_melanogaster)
+
+write.table(metadata2, file=file.path(here::here(), "data", "derived_data", "Metadata_withSpecies.txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
