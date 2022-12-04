@@ -1,5 +1,0 @@
-abundance_table_clean.blast_taxonomy.grepl..Drosophila...abundance_table_clean.blast_taxonomy..
-Arthropoda;Insecta;Diptera;Drosophilidae;Drosophilinae;Drosophila;Drosophila_melanogaster
-Arthropoda;Insecta;Diptera;Drosophilidae;Drosophilinae;Drosophila;Drosophila_simulans
-Arthropoda;Insecta;Diptera;Drosophilidae;Drosophilinae;Drosophila;Drosophila_suzukii
-Arthropoda;Insecta;Diptera;Drosophilidae;Drosophilinae;Drosophila;Drosophila_yakuba

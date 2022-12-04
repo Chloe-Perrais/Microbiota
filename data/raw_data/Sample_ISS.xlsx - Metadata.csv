@@ -8,7 +8,7 @@ Date,DNA_extraction_plate,Row,Column,Barcode,BarcodeOld,SampleType,Sample,Fruit,
 18/10/2022,B8,B,8,FRT_BL_MAZ_UNF_03,FRT_BL_MAZ_UNF_03,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
 18/10/2022,C8,C,8,FRT_BL_MAZ_UNF_04,FRT_BL_MAZ_UNF_04,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
 18/10/2022,C7,C,7,FRT_BL_MAZ_INF_01,FRT_BL_MAZ_INF_XX,FRT,pool of 4 infested blackberries,BL,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,G
-"18/10/2022,D7,D,7,FRT_BL_MAZ_INF_02,FRT_BL_MAZ_INF_XX,FRT,""pool of 4 infested blackberries (labelled """"dead"""")"",BL,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,H"
+18/10/2022,D7,D,7,FRT_BL_MAZ_INF_02,FRT_BL_MAZ_INF_XX,FRT,pool of 4 infested blackberries (labelled dead),BL,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,H
 18/10/2022,F8,F,8,FRT_ST_MAZ_UNF_01,FRT_ST_MAZ_UNF_01,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
 18/10/2022,G8,G,8,FRT_ST_MAZ_UNF_02,FRT_ST_MAZ_UNF_02,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
 18/10/2022,C9,C,9,FRT_ST_MAZ_UNF_03,FRT_ST_MAZ_UNF_03,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
@@ -65,11 +65,11 @@ Date,DNA_extraction_plate,Row,Column,Barcode,BarcodeOld,SampleType,Sample,Fruit,
 11/10/2022,A3,A,3,LRV_BB_MAZ_XXX_03,LRV_BB_MAZ_XXX_03,LRV,pools of 6 larvae from 6 blackberries,BB,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
 11/10/2022,B3,B,3,CTL_XX_WAT_LRV_01,CTL_XX_WAT_LRV_01,CTL,washing controls larvae - sterile water from first bath for larvae,NA,NA,NA,NA,NA,NA,NA,NA,,NA
 11/10/2022,C3,C,3,CTL_XX_WAT_LRV_02,CTL_XX_WAT_LRV_02,CTL,washing controls larvae - sterile water from last baths for larvae,NA,NA,NA,NA,NA,NA,NA,NA,,NA
-"17/10/2022,D3,D,3,CTL_XX_LRV_COI_01,CTL_XX_LRV_COI_01,CTL,""COI control (pool of 1 larva of D. suzukii-France, 2 larvae D. melanogaster, 2 larvae D. simulans)"",LB,NA,NA,NA,NA,NA,lab,NA,,NA"
-"17/10/2022,E3,E,3,CTL_XX_LRV_COI_02,CTL_XX_LRV_COI_02,CTL,""COI control (pool of 1 larva of D. suzukii-France, 1 larva of D. suzukii-Netherlands, 1 larva D. melanogaster, 1 larva D. simulans)"",LB,NA,NA,NA,NA,NA,lab,NA,,NA"
+17/10/2022,D3,D,3,CTL_XX_LRV_COI_01,CTL_XX_LRV_COI_01,CTL,"COI control (pool of 1 larva of D. suzukii-France, 2 larvae D. melanogaster, 2 larvae D. simulans)",LB,NA,NA,NA,NA,NA,lab,NA,,NA
+17/10/2022,E3,E,3,CTL_XX_LRV_COI_02,CTL_XX_LRV_COI_02,CTL,"COI control (pool of 1 larva of D. suzukii-France, 1 larva of D. suzukii-Netherlands, 1 larva D. melanogaster, 1 larva D. simulans)",LB,NA,NA,NA,NA,NA,lab,NA,,NA
 20/10/2022,H8,H,8,CTL_XX_DNA_EXT_01,CTL_XX_DNA_EXT_01,CTL,negative extraction control - Well of Qiagen Collection Microtube (1.2ml) with no sample,NA,NA,NA,NA,NA,NA,NA,NA,,NA
-"3/10/2022,F9,F,9,CTL_DN_MOC_COM_01,CTL_DN_MOC_COM_01,CTL,""positive control - mock microbial community (equal proportions, ZymoBiomics)"",NA,NA,NA,NA,NA,NA,NA,NA,,NA"
-"3/10/2022,G9,G,9,CTL_DN_MOC_COM_02,CTL_DN_MOC_COM_02,CTL,""positive control - mock microbial community (log proportions, ZymoBiomics)"",NA,NA,NA,NA,NA,NA,NA,NA,,NA"
+3/10/2022,F9,F,9,CTL_DN_MOC_COM_01,CTL_DN_MOC_COM_01,CTL,"positive control - mock microbial community (equal proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,NA,,NA
+3/10/2022,G9,G,9,CTL_DN_MOC_COM_02,CTL_DN_MOC_COM_02,CTL,"positive control - mock microbial community (log proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,NA,,NA
 3/10/2022,H9,H,9,CTL_NO_DNA_PCR_XX,CTL_NO_DNA_PCR_XX,CTL,PCR control - PCR without DNA,NA,NA,NA,NA,NA,NA,NA,NA,,NA
 20/10/2022,A10,A,10,CH_AEST01155,CH_AEST01155,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
 20/10/2022,B10,B,10,ST_AEST01156,ST_AEST01156,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
@@ -79,7 +79,7 @@ Date,DNA_extraction_plate,Row,Column,Barcode,BarcodeOld,SampleType,Sample,Fruit,
 20/10/2022,F10,F,10,BL_AEST01286,BL_AEST01286,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Control,NA,,NA
 20/10/2022,G10,G,10,CH_AEST01189,CH_AEST01189,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Mauguio,NA,,NA
 20/10/2022,H10,H,10,ST_AEST01190,ST_AEST01190,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Mauguio,NA,Paper with AEST0191 inside,NA
-"20/10/2022,A11,A,11,BL_AEST01191,BL_AEST01191,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Mauguio,NA,""Paper with AEST0190 inside, no adult left in tube"",NA"
+20/10/2022,A11,A,11,BL_AEST01191,BL_AEST01191,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Mauguio,NA,"Paper with AEST0190 inside, no adult left in tube",NA
 20/10/2022,B11,B,11,CH_AEST01306,CH_AEST01306,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Control,NA,,NA
 20/10/2022,C11,C,11,ST_AEST01307,ST_AEST01307,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Control,NA,,NA
 20/10/2022,D11,D,11,BL_AEST01308,BL_AEST01308,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Control,NA,,NA
@@ -91,7 +91,9 @@ Date,DNA_extraction_plate,Row,Column,Barcode,BarcodeOld,SampleType,Sample,Fruit,
 20/10/2022,B12,B,12,BL_AEST01475,BL_AEST01475,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
 20/10/2022,C12,C,12,CH_PUREE0001,CH_PUREE0001,CH,cherry purée (Boiron),CH,NA,NA,NA,NA,NA,NA,NA,,NA
 20/10/2022,D12,D,12,ST_PUREE0001,ST_PUREE0001,ST,strawberry purée (Sycodis),ST,NA,NA,NA,NA,NA,NA,NA,,NA
-"20/10/2022,E12,E,12,BL_PUREE0001,BL_PUREE0001,BL,""blackberry purée (mixed from whole fruits, Sycodis)"",BL,NA,NA,NA,NA,NA,NA,NA,,NA"
+20/10/2022,E12,E,12,BL_PUREE0001,BL_PUREE0001,BL,"blackberry purée (mixed from whole fruits, Sycodis)",BL,NA,NA,NA,NA,NA,NA,NA,,NA
 20/10/2022,F12,F,12,CH_PUREE0002,CH_PUREE0002,CH,cherry purée (Boiron),CH,NA,NA,NA,NA,NA,NA,NA,,NA
 20/10/2022,G12,G,12,ST_PUREE0002,ST_PUREE0002,ST,strawberry purée (Sycodis),ST,NA,NA,NA,NA,NA,NA,NA,,NA
-"20/10/2022,H12,H,12,BL_PUREE0002,BL_PUREE0002,BL,""blackberry purée (mixed from whole fruits, Sycodis)"",BL,NA,NA,NA,NA,NA,NA,NA,,NA"
+20/10/2022,H12,H,12,BL_PUREE0002,BL_PUREE0002,BL,"blackberry purée (mixed from whole fruits, Sycodis)",BL,NA,NA,NA,NA,NA,NA,NA,,NA
+Not done,,0,,,,,pools of 5 uninfested old blackberries (BL O),,,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,F
+Not done,,0,,,,,pools of 5 infested blackberries,,,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,G
