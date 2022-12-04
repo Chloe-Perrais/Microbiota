@@ -24,15 +24,18 @@ devtools::load_all()
 # Check coverage of different OTUs/samples
 ```{r }
 ## Import clean data
-abundance_table <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_abundance.txt"),sep="\t",header=TRUE)
+abundance_table <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_abundance.tsv"),sep="\t",header=TRUE)
 
+## Split taxonomy and add species as row name
 abundance_table2 <- abundance_table %>% 
-  tidyr::separate(col=blast_taxonomy, into=c("tx1","tx2", "tx3", "tx4", "tx5", "tx6", "Species"), sep=";", remove=FALSE) %>%
-  dplyr::mutate(Species=paste0(Species, rownames(.)), Species2=paste0(Species, rownames(.))) %>%
+  tidyr::separate(col=blast_taxonomy, into=c("Domain","Phylum", "Class", "Order", "Family", "Genus", "Species"), sep=";", remove=FALSE) %>%
+  dplyr::mutate(Species=paste0(Species, rownames(.)), Species2=Species) %>%
   tibble::column_to_rownames(var = "Species2")
+## Check rownames
+rownames(abundance_table2)
 
 ## Check distribution of coverage depth across OTUs
-ggplot(abundance_table2, aes(x=observation_sum)) + geom_histogram()
+ggplot(abundance_table2, aes(x=observation_sum)) + geom_histogram()+ scale_x_log10()
 
 ## Check OTUs with the highest coverage
 abundance_table2 %>% 
@@ -51,7 +54,7 @@ covdepthbysample <- abundance_table2 %>%
 covdepthbysample <- dplyr::as_tibble(data.frame(barcode = names(covdepthbysample), covdepth=t(covdepthbysample)))
 
 ## Check distribution of coverage depth across samples
-ggplot(covdepthbysample, aes(x=covdepth)) + geom_histogram() + geom_vline(aes(xintercept = 1000), colour="red")
+ggplot(covdepthbysample, aes(x=covdepth)) + geom_histogram() + scale_x_log10() + geom_vline(aes(xintercept = 1000), colour="red")
 
 ## Check samples with the highest coverage=pupae, larvae and adults
 covdepthbysample %>% 
