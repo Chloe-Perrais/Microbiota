@@ -1745,7 +1745,7 @@ abundance_tableTccfiltered &lt;- abundance_table %&gt;%
   dplyr::mutate(dplyr::across(ends_with(&quot;-A&quot;)|ends_with(&quot;-B&quot;)|ends_with(&quot;-C&quot;), ~Filter_contaminant(., CT$value)))
 
 ## Export results
-write.table(abundance_tableTccfiltered, file=file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, &quot;2022_COI_JRLAT_cleaned_filtered_abundance.txt&quot;), sep=&quot;\t&quot;, row.names=FALSE, col.names=TRUE, quote=FALSE)</code></pre>
+write.table(abundance_tableTccfiltered, file=file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, &quot;2022_COI_JRLAT_cleaned_filtered_abundance_final.tsv&quot;), sep=&quot;\t&quot;, row.names=FALSE, col.names=TRUE, quote=FALSE)</code></pre>
 </div>
 <div id="update-metadata" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Update metadata</h1>
@@ -1848,7 +1848,7 @@ prop_table_clean$Drosophila_yakuba</code></pre>
 metadata2 &lt;-  dplyr::left_join(metadata, prop_table_clean, by=&quot;Barcode&quot;)
 #metadata2$Drosophila_melanogaster &lt;- as.numeric(metadata2$Drosophila_melanogaster)
 
-write.table(metadata2, file=file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, &quot;Metadata_final.txt&quot;), sep=&quot;\t&quot;, row.names=FALSE, col.names=TRUE, quote=FALSE)</code></pre>
+write.table(metadata2, file=file.path(here::here(), &quot;data&quot;, &quot;derived_data&quot;, &quot;Metadata_final.tsv&quot;), sep=&quot;\t&quot;, row.names=FALSE, col.names=TRUE, quote=FALSE)</code></pre>
 </div>
 
 

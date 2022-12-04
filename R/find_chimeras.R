@@ -22,10 +22,10 @@ find_chimeras <- function(fordada, name){
   head(bimeras.df)
 
   ## Export sequences that are not chimeras
-  write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_cleaned_abundance.txt",sep="")), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
+  write.table(fordada[bimeras.df$x==FALSE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_cleaned_abundance.tsv",sep="")), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)#writing of filtered abundance table (without identified chimeras)
   
   ## Export sequences that are chimeras
-  write.table(fordada[bimeras.df$x==TRUE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_list.txt", sep="")), sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)#downloading of identified chimeras
+  write.table(fordada[bimeras.df$x==TRUE,], file = file.path(here::here(), "data", "derived_data", paste(name,"_chimeras_list.tsv", sep="")), sep="\t",row.names=FALSE,col.names=TRUE,quote=FALSE)#downloading of identified chimeras
   
   ## Summary file
   number_of_total_clusters = nrow(fordada)

@@ -92,7 +92,7 @@ abundance_tableTccfiltered <- abundance_table %>%
   dplyr::mutate(dplyr::across(ends_with("-A")|ends_with("-B")|ends_with("-C"), ~Filter_contaminant(., CT$value)))
 
 ## Export results
-write.table(abundance_tableTccfiltered, file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_filtered_abundance.txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(abundance_tableTccfiltered, file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
 
 # Update metadata
@@ -137,5 +137,5 @@ prop_table_clean <- prop_table_clean %>%
 metadata2 <-  dplyr::left_join(metadata, prop_table_clean, by="Barcode")
 #metadata2$Drosophila_melanogaster <- as.numeric(metadata2$Drosophila_melanogaster)
 
-write.table(metadata2, file=file.path(here::here(), "data", "derived_data", "Metadata_final.txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(metadata2, file=file.path(here::here(), "data", "derived_data", "Metadata_final.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
