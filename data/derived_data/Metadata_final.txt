@@ -2,7 +2,7 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 18/10/2022	G6	G	6	FRT_BL_ISL_UNF_XX	FRT_BL_ISL_UNF_XX	FRT	pool of 5 uninfested fresh blackberries (BL F)	BL	NA	NA	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 13/10/2022	(use only 5 among the 8 bags)	A	0	0	1
 18/10/2022	A9	A	9	FRT_BL_ISL_UNO_XX	FRT_BL_ISL_UNO_XX	FRT	pool of 5 uninfested old blackberries (BL O)	BL	NA	NA	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 13/10/2022		B	NA	NA	NA
 18/10/2022	H6	H	6	FRT_BL_CAR_UNF_XX	FRT_BL_CAR_UNF_XX	FRT	pool of 5 uninfested fresh blackberries (BL F)	BL	NA	NA	NA	NA	5 x 40ul	Carpentras	Sampled on the 14/10/2022		C	0	0	1
-18/10/2022	B9	B	9	FRT_BL_CAR_UNO_XX	FRT_BL_CAR_UNO_XX	FRT	pool of 5 uninfested old blackberries (BL O)	BL	NA	NA	NA	NA	5 x 40ul	Carpentras	Sampled on the 14/10/2022		D	0	0	1
+18/10/2022	B9	B	9	FRT_BL_CAR_UNO_XX	FRT_BL_CAR_UNO_XX	FRT	pool of 5 uninfested old blackberries (BL O)	BL	NA	NA	NA	NA	5 x 40ul	Carpentras	Sampled on the 14/10/2022		D	NA	NA	NA
 18/10/2022	H7	H	7	FRT_BL_MAZ_UNF_01	FRT_BL_MAZ_UNF_01	FRT	pools of 5 uninfested fresh blackberries (BL F)	BL	NA	NA	NA	NA	5 x 40ul	Mazan	Sampled on the 14/10/2022		E	0	0	1
 18/10/2022	A8	A	8	FRT_BL_MAZ_UNF_02	FRT_BL_MAZ_UNF_02	FRT	pools of 5 uninfested fresh blackberries (BL F)	BL	NA	NA	NA	NA	5 x 40ul	Mazan	Sampled on the 14/10/2022		E	0	0	1
 18/10/2022	B8	B	8	FRT_BL_MAZ_UNF_03	FRT_BL_MAZ_UNF_03	FRT	pools of 5 uninfested fresh blackberries (BL F)	BL	NA	NA	NA	NA	5 x 40ul	Mazan	Sampled on the 14/10/2022		E	0	0	1
@@ -20,8 +20,8 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 18/10/2022	E6	E	6	FRT_ST_ISS_UNF_02	FRT_ST_ISS_UNF_02	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350)	ST	2	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	F6	F	6	FRT_ST_ISS_UNF_03	FRT_ST_ISS_UNF_03	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350)	ST	2	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	0	1	0
 18/10/2022	E7	E	7	FRT_ST_ISS_UNF_04	FRT_ST_ISS_UNF_01	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
-18/10/2022	F7	F	7	FRT_ST_ISS_UNF_05	FRT_ST_ISS_UNF_02	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	0	0	1
-18/10/2022	G7	G	7	FRT_ST_ISS_UNF_06	FRT_ST_ISS_UNF_03	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	0	0	1
+18/10/2022	F7	F	7	FRT_ST_ISS_UNF_05	FRT_ST_ISS_UNF_02	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
+18/10/2022	G7	G	7	FRT_ST_ISS_UNF_06	FRT_ST_ISS_UNF_03	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	B7	B	7	FRT_ST_ISS_INM_XX	FRT_ST_ISS_INM_XX	FRT	pool of 5 infested strawberries	ST	2_3_4_5	2_4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		M	0	0	1
 18/10/2022	A7	A	7	FRT_ST_ISS_IND_XX	FRT_ST_ISS_IND_XX	FRT	pool of 2 infested strawberries	ST	5	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		M	0	1	0
 18/10/2022	F3	F	3	ADT_ST_ISS_XXX_01	ADT_ST_ISS_XXX_01	ADT	pools of 5 adults	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
@@ -70,7 +70,7 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 20/10/2022	H8	H	8	CTL_XX_DNA_EXT_01	CTL_XX_DNA_EXT_01	CTL	negative extraction control - Well of Qiagen Collection Microtube (1.2ml) with no sample	NA	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 3/10/2022	F9	F	9	CTL_DN_MOC_COM_01	CTL_DN_MOC_COM_01	CTL	positive control - mock microbial community (equal proportions, ZymoBiomics)	NA	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 3/10/2022	G9	G	9	CTL_DN_MOC_COM_02	CTL_DN_MOC_COM_02	CTL	positive control - mock microbial community (log proportions, ZymoBiomics)	NA	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
-3/10/2022	H9	H	9	CTL_NO_DNA_PCR_XX	CTL_NO_DNA_PCR_XX	CTL	PCR control - PCR without DNA	NA	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
+3/10/2022	H9	H	9	CTL_NO_DNA_PCR_XX	CTL_NO_DNA_PCR_XX	CTL	PCR control - PCR without DNA	NA	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 20/10/2022	A10	A	10	CH_AEST01155	CH_AEST01155	CH	pool of 5 adults	CH	NA	NA	NA	NA	NA	Saint-Gely-du-Fesc	NA		NA	NA	NA	NA
 20/10/2022	B10	B	10	ST_AEST01156	ST_AEST01156	ST	pool of 5 adults	ST	NA	NA	NA	NA	NA	Saint-Gely-du-Fesc	NA		NA	NA	NA	NA
 20/10/2022	C10	C	10	BL_AEST01157	BL_AEST01157	BL	pool of 5 adults	BL	NA	NA	NA	NA	NA	Saint-Gely-du-Fesc	NA		NA	NA	NA	NA
@@ -95,5 +95,3 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 20/10/2022	F12	F	12	CH_PUREE0002	CH_PUREE0002	CH	cherry purée (Boiron)	CH	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 20/10/2022	G12	G	12	ST_PUREE0002	ST_PUREE0002	ST	strawberry purée (Sycodis)	ST	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
 20/10/2022	H12	H	12	BL_PUREE0002	BL_PUREE0002	BL	blackberry purée (mixed from whole fruits, Sycodis)	BL	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
-Not done		0	NA				pools of 5 uninfested old blackberries (BL O)						5 x 40ul	Mazan	Sampled on the 14/10/2022		F	NA	NA	NA
-Not done		0	NA				pools of 5 infested blackberries						5 x 40ul	Mazan	Sampled on the 14/10/2022		G	NA	NA	NA
