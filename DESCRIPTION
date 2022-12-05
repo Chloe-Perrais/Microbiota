@@ -35,7 +35,6 @@ Imports:
     data.table,
     dplyr,
     here,
-    lme4,
     matrixStats,
     mc2d,
     phyloseq,
