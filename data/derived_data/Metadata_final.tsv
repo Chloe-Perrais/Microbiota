@@ -15,14 +15,14 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 18/10/2022	D9	D	9	FRT_ST_MAZ_UNF_04	FRT_ST_MAZ_UNF_04	FRT	pools of 5 uninfested strawberries	ST	NA	NA	NA	NA	5 x 40ul	Mazan	Sampled on the 14/10/2022		I	NA	NA	NA
 18/10/2022	E9	E	9	FRT_ST_MAZ_UNF_05	FRT_ST_MAZ_UNF_05	FRT	pools of 5 uninfested strawberries	ST	NA	NA	NA	NA	5 x 40ul	Mazan	Sampled on the 14/10/2022		I	NA	NA	NA
 18/10/2022	D8	D	8	FRT_ST_ISS_UNF_XX	FRT_ST_ISS_UNF_XX	FRT	pool of 5 uninfested fresh strawberries (ST F)	ST	NA	NA	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 13/10/2022		J	NA	NA	NA
-18/10/2022	E8	E	8	FRT_ST_ISS_UNO_XX	FRT_ST_ISS_UNO_XX	FRT	pool of 5 uninfested old stawberries (ST O)	ST	NA	NA	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 13/10/2022		K	0	1	0
+18/10/2022	E8	E	8	FRT_ST_ISS_UNO_XX	FRT_ST_ISS_UNO_XX	FRT	pool of 5 uninfested old stawberries (ST O)	ST	NA	NA	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 13/10/2022		K	NA	NA	NA
 18/10/2022	D6	D	6	FRT_ST_ISS_UNF_01	FRT_ST_ISS_UNF_01	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350)	ST	2	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	E6	E	6	FRT_ST_ISS_UNF_02	FRT_ST_ISS_UNF_02	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350)	ST	2	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	F6	F	6	FRT_ST_ISS_UNF_03	FRT_ST_ISS_UNF_03	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350)	ST	2	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	0	1	0
 18/10/2022	E7	E	7	FRT_ST_ISS_UNF_04	FRT_ST_ISS_UNF_01	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	F7	F	7	FRT_ST_ISS_UNF_05	FRT_ST_ISS_UNF_02	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
 18/10/2022	G7	G	7	FRT_ST_ISS_UNF_06	FRT_ST_ISS_UNF_03	FRT	pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700)	ST	3_4	2	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		L	NA	NA	NA
-18/10/2022	B7	B	7	FRT_ST_ISS_INM_XX	FRT_ST_ISS_INM_XX	FRT	pool of 5 infested strawberries	ST	2_3_4_5	2_4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		M	0	0	1
+18/10/2022	B7	B	7	FRT_ST_ISS_INM_XX	FRT_ST_ISS_INM_XX	FRT	pool of 5 infested strawberries	ST	2_3_4_5	2_4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		M	NA	NA	NA
 18/10/2022	A7	A	7	FRT_ST_ISS_IND_XX	FRT_ST_ISS_IND_XX	FRT	pool of 2 infested strawberries	ST	5	4	NA	NA	5 x 40ul	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		M	0	1	0
 18/10/2022	F3	F	3	ADT_ST_ISS_XXX_01	ADT_ST_ISS_XXX_01	ADT	pools of 5 adults	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
 18/10/2022	G3	G	3	ADT_ST_ISS_XXX_02	ADT_ST_ISS_XXX_02	ADT	pools of 5 adults	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
@@ -34,16 +34,16 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 18/10/2022	E4	E	4	ADT_ST_ISS_XXX_08	ADT_ST_ISS_XXX_08	ADT	pools of 5 adults	ST	2_3	4_2	06-07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
 18/10/2022	F4	F	4	ADT_ST_ISS_XXX_09	ADT_ST_ISS_XXX_09	ADT	pools of 5 adults	ST	4	2	07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
 18/10/2022	G4	G	4	ADT_ST_ISS_XXX_10	ADT_ST_ISS_XXX_10	ADT	pools of 5 adults	ST	4	2	07/10/2022	40%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	B5	B	5	PUC_ST_ISS_XXX_01	PUC_ST_ISS_XXX_01	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	C5	C	5	PUC_ST_ISS_XXX_02	PUC_ST_ISS_XXX_02	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	D5	D	5	PUC_ST_ISS_XXX_03	PUC_ST_ISS_XXX_03	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
+18/10/2022	B5	B	5	PUC_ST_ISS_XXX_01	PUC_ST_ISS_XXX_01	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
+18/10/2022	C5	C	5	PUC_ST_ISS_XXX_02	PUC_ST_ISS_XXX_02	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
+18/10/2022	D5	D	5	PUC_ST_ISS_XXX_03	PUC_ST_ISS_XXX_03	PUC	pools of 5 pupal cases	ST	4	2	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
 18/10/2022	H4	H	4	PUC_ST_ISS_XXX_04	PUC_ST_ISS_XXX_04	PUC	pools of 5 pupal cases	ST	2	4	06/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	A5	A	5	PUC_ST_ISS_XXX_05	PUC_ST_ISS_XXX_05	PUC	pools of 5 pupal cases	ST	2	4	06/10/2022	40%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	0.6	0.4
-18/10/2022	E5	E	5	PUC_ST_ISS_XXX_06	PUC_ST_ISS_XXX_06	PUC	pools of 5 pupal cases	ST	2	4	07/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	0.9	0.1
-18/10/2022	F5	F	5	PUC_ST_ISS_XXX_07	PUC_ST_ISS_XXX_07	PUC	pools of 5 pupal cases	ST	2	4	07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	0.9	0.1
-18/10/2022	G5	G	5	PUC_ST_ISS_XXX_08	PUC_ST_ISS_XXX_08	PUC	pools of 5 pupal cases	ST	2_3	4_2	06-07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	H5	H	5	PUC_ST_ISS_XXX_09	PUC_ST_ISS_XXX_09	PUC	pools of 5 pupal cases	ST	4	2	07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
-18/10/2022	A6	A	6	PUC_ST_ISS_XXX_10	PUC_ST_ISS_XXX_10	PUC	pools of 5 pupal cases	ST	4	2	07/10/2022	40%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
+18/10/2022	A5	A	5	PUC_ST_ISS_XXX_05	PUC_ST_ISS_XXX_05	PUC	pools of 5 pupal cases	ST	2	4	06/10/2022	40%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
+18/10/2022	E5	E	5	PUC_ST_ISS_XXX_06	PUC_ST_ISS_XXX_06	PUC	pools of 5 pupal cases	ST	2	4	07/10/2022	0%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
+18/10/2022	F5	F	5	PUC_ST_ISS_XXX_07	PUC_ST_ISS_XXX_07	PUC	pools of 5 pupal cases	ST	2	4	07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
+18/10/2022	G5	G	5	PUC_ST_ISS_XXX_08	PUC_ST_ISS_XXX_08	PUC	pools of 5 pupal cases	ST	2_3	4_2	06-07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
+18/10/2022	H5	H	5	PUC_ST_ISS_XXX_09	PUC_ST_ISS_XXX_09	PUC	pools of 5 pupal cases	ST	4	2	07/10/2022	20%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
+18/10/2022	A6	A	6	PUC_ST_ISS_XXX_10	PUC_ST_ISS_XXX_10	PUC	pools of 5 pupal cases	ST	4	2	07/10/2022	40%	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
 18/10/2022	B6	B	6	CTM_ST_ISS_XXX_02	CTM_ST_ISS_XXX_02	CTM	control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #2	ST	2	4	NA	NA	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
 18/10/2022	C6	C	6	CTM_ST_ISS_XXX_04	CTM_ST_ISS_XXX_04	CTM	control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #4	ST	4	2	NA	NA	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	NA	NA	NA
 04/10/2022	A1	A	1	PUP_ST_ISS_XXX_01	PUP_ST_ISS_XXX_01	PUP	pools of 5 pupae	ST	4	2	NA	NA	NA	Isle-sur-la-Sorgue	Sampled on the 26-27/10/2022		NA	0	1	0
@@ -63,7 +63,7 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 11/10/2022	G2	G	2	LRV_BB_MAZ_XXX_01	LRV_BB_MAZ_XXX_01	LRV	pools of 4 larvae from 4 blackberries	BB	NA	NA	NA	NA	NA	Mazan	Sampled on the 14/10/2022		NA	0	0	1
 11/10/2022	H2	H	2	LRV_BB_MAZ_XXX_02	LRV_BB_MAZ_XXX_02	LRV	pools of 5 larvae from 5 blackberries	BB	NA	NA	NA	NA	NA	Mazan	Sampled on the 14/10/2022		NA	0	0	1
 11/10/2022	A3	A	3	LRV_BB_MAZ_XXX_03	LRV_BB_MAZ_XXX_03	LRV	pools of 6 larvae from 6 blackberries	BB	NA	NA	NA	NA	NA	Mazan	Sampled on the 14/10/2022		NA	0	0	1
-11/10/2022	B3	B	3	CTL_XX_WAT_LRV_01	CTL_XX_WAT_LRV_01	CTL	washing controls larvae - sterile water from first bath for larvae	NA	NA	NA	NA	NA	NA	NA	NA		NA	0	1	0
+11/10/2022	B3	B	3	CTL_XX_WAT_LRV_01	CTL_XX_WAT_LRV_01	CTL	washing controls larvae - sterile water from first bath for larvae	NA	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 11/10/2022	C3	C	3	CTL_XX_WAT_LRV_02	CTL_XX_WAT_LRV_02	CTL	washing controls larvae - sterile water from last baths for larvae	NA	NA	NA	NA	NA	NA	NA	NA		NA	0.1	0.3	0.5
 17/10/2022	D3	D	3	CTL_XX_LRV_COI_01	CTL_XX_LRV_COI_01	CTL	COI control (pool of 1 larva of D. suzukii-France, 2 larvae D. melanogaster, 2 larvae D. simulans)	LB	NA	NA	NA	NA	NA	lab	NA		NA	0.3	0.3	0.4
 17/10/2022	E3	E	3	CTL_XX_LRV_COI_02	CTL_XX_LRV_COI_02	CTL	COI control (pool of 1 larva of D. suzukii-France, 1 larva of D. suzukii-Netherlands, 1 larva D. melanogaster, 1 larva D. simulans)	LB	NA	NA	NA	NA	NA	lab	NA		NA	0.4	0.4	0.2
@@ -91,7 +91,7 @@ Date	DNA_extraction_plate	Row	Column	Barcode	BarcodeOld	SampleType	Sample	Fruit	
 20/10/2022	B12	B	12	BL_AEST01475	BL_AEST01475	BL	pool of 5 adults	BL	NA	NA	NA	NA	NA	Saint-Gely-du-Fesc	NA		NA	NA	NA	NA
 20/10/2022	C12	C	12	CH_PUREE0001	CH_PUREE0001	CH	cherry purée (Boiron)	CH	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 20/10/2022	D12	D	12	ST_PUREE0001	ST_PUREE0001	ST	strawberry purée (Sycodis)	ST	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
-20/10/2022	E12	E	12	BL_PUREE0001	BL_PUREE0001	BL	blackberry purée (mixed from whole fruits, Sycodis)	BL	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
+20/10/2022	E12	E	12	BL_PUREE0001	BL_PUREE0001	BL	blackberry purée (mixed from whole fruits, Sycodis)	BL	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 20/10/2022	F12	F	12	CH_PUREE0002	CH_PUREE0002	CH	cherry purée (Boiron)	CH	NA	NA	NA	NA	NA	NA	NA		NA	NA	NA	NA
 20/10/2022	G12	G	12	ST_PUREE0002	ST_PUREE0002	ST	strawberry purée (Sycodis)	ST	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
 20/10/2022	H12	H	12	BL_PUREE0002	BL_PUREE0002	BL	blackberry purée (mixed from whole fruits, Sycodis)	BL	NA	NA	NA	NA	NA	NA	NA		NA	0	0	1
