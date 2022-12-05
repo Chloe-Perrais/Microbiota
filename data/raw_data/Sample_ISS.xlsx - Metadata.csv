@@ -1,99 +1,99 @@
-Date,DNA_extraction_plate,Row,Column,Barcode,Sample,Cage,Greenhouse,EmergenceDate,Dead,Volume,Locality,SamplingDate,Comments,ZiplocBag
-18/10/2022,G6,G,6,FRT_BL_ISL_UNF_XX,pool of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,(use only 5 among the 8 bags),A
-18/10/2022,A9,A,9,FRT_BL_ISL_UNO_XX,pool of 5 uninfested old blackberries (BL O),NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,B
-18/10/2022,H6,H,6,FRT_BL_CAR_UNF_XX,pool of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Carpentras,Sampled on the 14/10/2022,,C
-18/10/2022,B9,B,9,FRT_BL_CAR_UNO_XX,pool of 5 uninfested old blackberries (BL O),NA,NA,NA,NA,5 x 40ul,Carpentras,Sampled on the 14/10/2022,,D
-18/10/2022,H7,H,7,FRT_BL_MAZ_UNF_01,pools of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
-18/10/2022,A8,A,8,FRT_BL_MAZ_UNF_02,pools of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
-18/10/2022,B8,B,8,FRT_BL_MAZ_UNF_03,pools of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
-18/10/2022,C8,C,8,FRT_BL_MAZ_UNF_04,pools of 5 uninfested fresh blackberries (BL F),NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
-18/10/2022,C7,C,7,FRT_BL_MAZ_INF_XX,pool of 4 infested blackberries,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,G
-18/10/2022,D7,D,7,FRT_BL_MAZ_INF_XX,"pool of 4 infested blackberries (labelled ""dead"")",NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,H
-18/10/2022,F8,F,8,FRT_ST_MAZ_UNF_01,pools of 5 uninfested strawberries,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
-18/10/2022,G8,G,8,FRT_ST_MAZ_UNF_02,pools of 5 uninfested strawberries,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
-18/10/2022,C9,C,9,FRT_ST_MAZ_UNF_03,pools of 5 uninfested strawberries,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
-18/10/2022,D9,D,9,FRT_ST_MAZ_UNF_04,pools of 5 uninfested strawberries,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
-18/10/2022,E9,E,9,FRT_ST_MAZ_UNF_05,pools of 5 uninfested strawberries,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
-18/10/2022,D8,D,8,FRT_ST_ISS_UNF_XX,pool of 5 uninfested fresh strawberries (ST F),NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,J
-18/10/2022,E8,E,8,FRT_ST_ISS_UNO_XX,pool of 5 uninfested old stawberries (ST O),NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,K
-18/10/2022,D6,D,6,FRT_ST_ISS_UNF_01,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,E6,E,6,FRT_ST_ISS_UNF_02,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,F6,F,6,FRT_ST_ISS_UNF_03,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,E7,E,7,FRT_ST_ISS_UNF_01,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,F7,F,7,FRT_ST_ISS_UNF_02,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,G7,G,7,FRT_ST_ISS_UNF_03,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
-18/10/2022,B7,B,7,FRT_ST_ISS_INM_XX,pool of 5 infested strawberries,2_3_4_5,2_4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,M
-18/10/2022,A7,A,7,FRT_ST_ISS_IND_XX,pool of 2 infested strawberries,5,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,M
-18/10/2022,F3,F,3,ADT_ST_ISS_XXX_01,pools of 5 adults,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,G3,G,3,ADT_ST_ISS_XXX_02,pools of 5 adults,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,H3,H,3,ADT_ST_ISS_XXX_03,pools of 5 adults,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,A4,A,4,ADT_ST_ISS_XXX_04,pools of 5 adults,2,4,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,B4,B,4,ADT_ST_ISS_XXX_05,pools of 5 adults,2,4,06/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,C4,C,4,ADT_ST_ISS_XXX_06,pools of 5 adults,2,4,07/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,D4,D,4,ADT_ST_ISS_XXX_07,pools of 5 adults,2,4,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,E4,E,4,ADT_ST_ISS_XXX_08,pools of 5 adults,2_3,4_2,06-07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,F4,F,4,ADT_ST_ISS_XXX_09,pools of 5 adults,4,2,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,G4,G,4,ADT_ST_ISS_XXX_10,pools of 5 adults,4,2,07/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,B5,B,5,PUC_ST_ISS_XXX_01,pools of 5 pupal cases,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,C5,C,5,PUC_ST_ISS_XXX_02,pools of 5 pupal cases,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,D5,D,5,PUC_ST_ISS_XXX_03,pools of 5 pupal cases,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,H4,H,4,PUC_ST_ISS_XXX_04,pools of 5 pupal cases,2,4,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,A5,A,5,PUC_ST_ISS_XXX_05,pools of 5 pupal cases,2,4,06/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,E5,E,5,PUC_ST_ISS_XXX_06,pools of 5 pupal cases,2,4,07/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,F5,F,5,PUC_ST_ISS_XXX_07,pools of 5 pupal cases,2,4,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,G5,G,5,PUC_ST_ISS_XXX_08,pools of 5 pupal cases,2_3,4_2,06-07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,H5,H,5,PUC_ST_ISS_XXX_09,pools of 5 pupal cases,4,2,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,A6,A,6,PUC_ST_ISS_XXX_10,pools of 5 pupal cases,4,2,07/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,B6,B,6,CTM_ST_ISS_XXX_02,control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #2,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-18/10/2022,C6,C,6,CTM_ST_ISS_XXX_04,control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #4,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,A1,A,1,PUP_ST_ISS_XXX_01,pools of 5 pupae,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,B1,B,1,PUP_ST_ISS_XXX_02,pools of 5 pupae,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,C1,C,1,PUP_ST_ISS_XXX_03,pools of 5 pupae,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,D1,D,1,PUP_ST_ISS_XXX_04,pools of 5 pupae,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,E1,E,1,PUP_ST_ISS_XXX_05,pools of 5 pupae,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,F1,F,1,PUP_ST_ISS_XXX_06,pools of 5 pupae,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,G1,G,1,PUP_ST_ISS_XXX_07,pools of 5 pupae,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,H1,H,1,PUP_ST_ISS_XXX_08,pools of 5 pupae,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,A2,A,2,PUP_ST_ISS_XXX_09,pools of 5 pupae,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,B2,B,2,PUP_ST_ISS_XXX_10,pools of 5 pupae,3,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,C2,C,2,PUP_ST_ISS_XXX_11,pools of 5 pupae,3,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-04/10/2022,D2,D,2,PUP_ST_ISS_XXX_12,pools of 5 pupae,1,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-10-11/10/2022,E2,E,2,LRV_ST_ISS_XXX_01,pools of 5 larvae from 2 strawberries,5,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-10-11/10/2022,F2,F,2,LRV_ST_ISS_XXX_02,pools of 5 larvae from 5 strawberries,2_3_4_5,2_4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
-11/10/2022,G2,G,2,LRV_BB_MAZ_XXX_01,pools of 4 larvae from 4 blackberries,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
-11/10/2022,H2,H,2,LRV_BB_MAZ_XXX_02,pools of 5 larvae from 5 blackberries,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
-11/10/2022,A3,A,3,LRV_BB_MAZ_XXX_03,pools of 6 larvae from 6 blackberries,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
-11/10/2022,B3,B,3,CTL_XX_WAT_LRV_01,washing controls larvae - sterile water from first bath for larvae,NA,NA,NA,NA,NA,NA,NA,,NA
-11/10/2022,C3,C,3,CTL_XX_WAT_LRV_02,washing controls larvae - sterile water from last baths for larvae,NA,NA,NA,NA,NA,NA,NA,,NA
-17/10/2022,D3,D,3,CTL_XX_LRV_COI_01,"COI control (pool of 1 larva of D. suzukii-France, 2 larvae D. melanogaster, 2 larvae D. simulans)",NA,NA,NA,NA,NA,lab,NA,,NA
-17/10/2022,E3,E,3,CTL_XX_LRV_COI_02,"COI control (pool of 1 larva of D. suzukii-France, 1 larva of D. suzukii-Netherlands, 1 larva D. melanogaster, 1 larva D. simulans)",NA,NA,NA,NA,NA,lab,NA,,NA
-20/10/2022,H8,H,8,CTL_XX_DNA_EXT_01,negative extraction control - Well of Qiagen Collection Microtube (1.2ml) with no sample,NA,NA,NA,NA,NA,NA,NA,,NA
-3/10/2022,F9,F,9,CTL_DN_MOC_COM_01,"positive control - mock microbial community (equal proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,,NA
-3/10/2022,G9,G,9,CTL_DN_MOC_COM_02,"positive control - mock microbial community (log proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,,NA
-3/10/2022,H9,H,9,CTL_NO_DNA_PCR_XX,PCR control - PCR without DNA,NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,A10,A,10,CH_AEST01155,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,B10,B,10,ST_AEST01156,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,C10,C,10,BL_AEST01157,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,D10,D,10,CH_AEST01284,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,E10,E,10,ST_AEST01285,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,F10,F,10,BL_AEST01286,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,G10,G,10,CH_AEST01189,pool of 5 adults,NA,NA,NA,NA,NA,Mauguio,NA,,NA
-20/10/2022,H10,H,10,ST_AEST01190,pool of 5 adults,NA,NA,NA,NA,NA,Mauguio,NA,Paper with AEST0191 inside,NA
-20/10/2022,A11,A,11,BL_AEST01191,pool of 5 adults,NA,NA,NA,NA,NA,Mauguio,NA,"Paper with AEST0190 inside, no adult left in tube",NA
-20/10/2022,B11,B,11,CH_AEST01306,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,C11,C,11,ST_AEST01307,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,D11,D,11,BL_AEST01308,pool of 5 adults,NA,NA,NA,NA,NA,Control,NA,,NA
-20/10/2022,E11,E,11,CH_AEST01402,pool of 5 adults,NA,NA,NA,NA,NA,Mauguio,NA,,NA
-20/10/2022,F11,F,11,ST_AEST01403,pool of 4 adults,NA,NA,NA,NA,NA,Mauguio,NA,No adult left in tube,NA
-20/10/2022,G11,G,11,BL_AEST01404,pool of 5 adults,NA,NA,NA,NA,NA,Mauguio,NA,,NA
-20/10/2022,H11,H,11,CH_AEST01473,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,A12,A,12,ST_AEST01474,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,B12,B,12,BL_AEST01475,pool of 5 adults,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
-20/10/2022,C12,C,12,CH_PUREE0001,cherry purée (Boiron),NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,D12,D,12,ST_PUREE0001,strawberry purée (Sycodis),NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,E12,E,12,BL_PUREE0001,"blackberry purée (mixed from whole fruits, Sycodis)",NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,F12,F,12,CH_PUREE0002,cherry purée (Boiron),NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,G12,G,12,ST_PUREE0002,strawberry purée (Sycodis),NA,NA,NA,NA,NA,NA,NA,,NA
-20/10/2022,H12,H,12,BL_PUREE0002,"blackberry purée (mixed from whole fruits, Sycodis)",NA,NA,NA,NA,NA,NA,NA,,NA
-Not done,,0,,,pools of 5 uninfested old blackberries (BL O),,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,F
-Not done,,0,,,pools of 5 infested blackberries,,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,G
+Date,DNA_extraction_plate,Row,Column,Barcode,BarcodeOld,SampleType,Sample,Fruit,Cage,Greenhouse,EmergenceDate,Dead,Volume,Locality,SamplingDate,Comments,ZiplocBag
+18/10/2022,G6,G,6,FRT_BL_ISL_UNF_XX,FRT_BL_ISL_UNF_XX,FRT,pool of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,(use only 5 among the 8 bags),A
+18/10/2022,A9,A,9,FRT_BL_ISL_UNO_XX,FRT_BL_ISL_UNO_XX,FRT,pool of 5 uninfested old blackberries (BL O),BL,NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,B
+18/10/2022,H6,H,6,FRT_BL_CAR_UNF_XX,FRT_BL_CAR_UNF_XX,FRT,pool of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Carpentras,Sampled on the 14/10/2022,,C
+18/10/2022,B9,B,9,FRT_BL_CAR_UNO_XX,FRT_BL_CAR_UNO_XX,FRT,pool of 5 uninfested old blackberries (BL O),BL,NA,NA,NA,NA,5 x 40ul,Carpentras,Sampled on the 14/10/2022,,D
+18/10/2022,H7,H,7,FRT_BL_MAZ_UNF_01,FRT_BL_MAZ_UNF_01,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
+18/10/2022,A8,A,8,FRT_BL_MAZ_UNF_02,FRT_BL_MAZ_UNF_02,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
+18/10/2022,B8,B,8,FRT_BL_MAZ_UNF_03,FRT_BL_MAZ_UNF_03,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
+18/10/2022,C8,C,8,FRT_BL_MAZ_UNF_04,FRT_BL_MAZ_UNF_04,FRT,pools of 5 uninfested fresh blackberries (BL F),BL,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,E
+18/10/2022,C7,C,7,FRT_BL_MAZ_INF_01,FRT_BL_MAZ_INF_XX,FRT,pool of 4 infested blackberries,BL,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,G
+18/10/2022,D7,D,7,FRT_BL_MAZ_INF_02,FRT_BL_MAZ_INF_XX,FRT,pool of 4 infested blackberries (labelled dead),BL,NA,NA,NA,NA,4 x 50ul,Mazan,Sampled on the 14/10/2022,,H
+18/10/2022,F8,F,8,FRT_ST_MAZ_UNF_01,FRT_ST_MAZ_UNF_01,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
+18/10/2022,G8,G,8,FRT_ST_MAZ_UNF_02,FRT_ST_MAZ_UNF_02,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
+18/10/2022,C9,C,9,FRT_ST_MAZ_UNF_03,FRT_ST_MAZ_UNF_03,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
+18/10/2022,D9,D,9,FRT_ST_MAZ_UNF_04,FRT_ST_MAZ_UNF_04,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
+18/10/2022,E9,E,9,FRT_ST_MAZ_UNF_05,FRT_ST_MAZ_UNF_05,FRT,pools of 5 uninfested strawberries,ST,NA,NA,NA,NA,5 x 40ul,Mazan,Sampled on the 14/10/2022,,I
+18/10/2022,D8,D,8,FRT_ST_ISS_UNF_XX,FRT_ST_ISS_UNF_XX,FRT,pool of 5 uninfested fresh strawberries (ST F),ST,NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,J
+18/10/2022,E8,E,8,FRT_ST_ISS_UNO_XX,FRT_ST_ISS_UNO_XX,FRT,pool of 5 uninfested old stawberries (ST O),ST,NA,NA,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 13/10/2022,,K
+18/10/2022,D6,D,6,FRT_ST_ISS_UNF_01,FRT_ST_ISS_UNF_01,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),ST,2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,E6,E,6,FRT_ST_ISS_UNF_02,FRT_ST_ISS_UNF_02,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),ST,2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,F6,F,6,FRT_ST_ISS_UNF_03,FRT_ST_ISS_UNF_03,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to fruits in cage 2 (bags 201-350),ST,2,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,E7,E,7,FRT_ST_ISS_UNF_04,FRT_ST_ISS_UNF_01,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),ST,3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,F7,F,7,FRT_ST_ISS_UNF_05,FRT_ST_ISS_UNF_02,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),ST,3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,G7,G,7,FRT_ST_ISS_UNF_06,FRT_ST_ISS_UNF_03,FRT,pools of 5 uninfested (ie. with no larvae found) strawberries corresponding to the fruits in cage 4 (bags 351-700),ST,3_4,2,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,L
+18/10/2022,B7,B,7,FRT_ST_ISS_INM_XX,FRT_ST_ISS_INM_XX,FRT,pool of 5 infested strawberries,ST,2_3_4_5,2_4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,M
+18/10/2022,A7,A,7,FRT_ST_ISS_IND_XX,FRT_ST_ISS_IND_XX,FRT,pool of 2 infested strawberries,ST,5,4,NA,NA,5 x 40ul,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,M
+18/10/2022,F3,F,3,ADT_ST_ISS_XXX_01,ADT_ST_ISS_XXX_01,ADT,pools of 5 adults,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,G3,G,3,ADT_ST_ISS_XXX_02,ADT_ST_ISS_XXX_02,ADT,pools of 5 adults,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,H3,H,3,ADT_ST_ISS_XXX_03,ADT_ST_ISS_XXX_03,ADT,pools of 5 adults,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,A4,A,4,ADT_ST_ISS_XXX_04,ADT_ST_ISS_XXX_04,ADT,pools of 5 adults,ST,2,4,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,B4,B,4,ADT_ST_ISS_XXX_05,ADT_ST_ISS_XXX_05,ADT,pools of 5 adults,ST,2,4,06/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,C4,C,4,ADT_ST_ISS_XXX_06,ADT_ST_ISS_XXX_06,ADT,pools of 5 adults,ST,2,4,07/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,D4,D,4,ADT_ST_ISS_XXX_07,ADT_ST_ISS_XXX_07,ADT,pools of 5 adults,ST,2,4,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,E4,E,4,ADT_ST_ISS_XXX_08,ADT_ST_ISS_XXX_08,ADT,pools of 5 adults,ST,2_3,4_2,06-07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,F4,F,4,ADT_ST_ISS_XXX_09,ADT_ST_ISS_XXX_09,ADT,pools of 5 adults,ST,4,2,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,G4,G,4,ADT_ST_ISS_XXX_10,ADT_ST_ISS_XXX_10,ADT,pools of 5 adults,ST,4,2,07/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,B5,B,5,PUC_ST_ISS_XXX_01,PUC_ST_ISS_XXX_01,PUC,pools of 5 pupal cases,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,C5,C,5,PUC_ST_ISS_XXX_02,PUC_ST_ISS_XXX_02,PUC,pools of 5 pupal cases,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,D5,D,5,PUC_ST_ISS_XXX_03,PUC_ST_ISS_XXX_03,PUC,pools of 5 pupal cases,ST,4,2,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,H4,H,4,PUC_ST_ISS_XXX_04,PUC_ST_ISS_XXX_04,PUC,pools of 5 pupal cases,ST,2,4,06/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,A5,A,5,PUC_ST_ISS_XXX_05,PUC_ST_ISS_XXX_05,PUC,pools of 5 pupal cases,ST,2,4,06/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,E5,E,5,PUC_ST_ISS_XXX_06,PUC_ST_ISS_XXX_06,PUC,pools of 5 pupal cases,ST,2,4,07/10/2022,0%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,F5,F,5,PUC_ST_ISS_XXX_07,PUC_ST_ISS_XXX_07,PUC,pools of 5 pupal cases,ST,2,4,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,G5,G,5,PUC_ST_ISS_XXX_08,PUC_ST_ISS_XXX_08,PUC,pools of 5 pupal cases,ST,2_3,4_2,06-07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,H5,H,5,PUC_ST_ISS_XXX_09,PUC_ST_ISS_XXX_09,PUC,pools of 5 pupal cases,ST,4,2,07/10/2022,20%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,A6,A,6,PUC_ST_ISS_XXX_10,PUC_ST_ISS_XXX_10,PUC,pools of 5 pupal cases,ST,4,2,07/10/2022,40%,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,B6,B,6,CTM_ST_ISS_XXX_02,CTM_ST_ISS_XXX_02,CTM,control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #2,ST,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+18/10/2022,C6,C,6,CTM_ST_ISS_XXX_04,CTM_ST_ISS_XXX_04,CTM,control adults/pupal cases - pool of some medium from each of 5 eppendorfs for cage #4,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,A1,A,1,PUP_ST_ISS_XXX_01,PUP_ST_ISS_XXX_01,PUP,pools of 5 pupae,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,B1,B,1,PUP_ST_ISS_XXX_02,PUP_ST_ISS_XXX_02,PUP,pools of 5 pupae,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,C1,C,1,PUP_ST_ISS_XXX_03,PUP_ST_ISS_XXX_03,PUP,pools of 5 pupae,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,D1,D,1,PUP_ST_ISS_XXX_04,PUP_ST_ISS_XXX_04,PUP,pools of 5 pupae,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,E1,E,1,PUP_ST_ISS_XXX_05,PUP_ST_ISS_XXX_05,PUP,pools of 5 pupae,ST,4,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,F1,F,1,PUP_ST_ISS_XXX_06,PUP_ST_ISS_XXX_06,PUP,pools of 5 pupae,ST,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,G1,G,1,PUP_ST_ISS_XXX_07,PUP_ST_ISS_XXX_07,PUP,pools of 5 pupae,ST,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,H1,H,1,PUP_ST_ISS_XXX_08,PUP_ST_ISS_XXX_08,PUP,pools of 5 pupae,ST,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,A2,A,2,PUP_ST_ISS_XXX_09,PUP_ST_ISS_XXX_09,PUP,pools of 5 pupae,ST,2,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,B2,B,2,PUP_ST_ISS_XXX_10,PUP_ST_ISS_XXX_10,PUP,pools of 5 pupae,ST,3,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,C2,C,2,PUP_ST_ISS_XXX_11,PUP_ST_ISS_XXX_11,PUP,pools of 5 pupae,ST,3,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+04/10/2022,D2,D,2,PUP_ST_ISS_XXX_12,PUP_ST_ISS_XXX_12,PUP,pools of 5 pupae,ST,1,2,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+10-11/10/2022,E2,E,2,LRV_ST_ISS_XXX_01,LRV_ST_ISS_XXX_01,LRV,pools of 5 larvae from 2 strawberries,ST,5,4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+10-11/10/2022,F2,F,2,LRV_ST_ISS_XXX_02,LRV_ST_ISS_XXX_02,LRV,pools of 5 larvae from 5 strawberries,ST,2_3_4_5,2_4,NA,NA,NA,Isle-sur-la-Sorgue,Sampled on the 26-27/10/2022,,NA
+11/10/2022,G2,G,2,LRV_BB_MAZ_XXX_01,LRV_BB_MAZ_XXX_01,LRV,pools of 4 larvae from 4 blackberries,BB,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
+11/10/2022,H2,H,2,LRV_BB_MAZ_XXX_02,LRV_BB_MAZ_XXX_02,LRV,pools of 5 larvae from 5 blackberries,BB,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
+11/10/2022,A3,A,3,LRV_BB_MAZ_XXX_03,LRV_BB_MAZ_XXX_03,LRV,pools of 6 larvae from 6 blackberries,BB,NA,NA,NA,NA,NA,Mazan,Sampled on the 14/10/2022,,NA
+11/10/2022,B3,B,3,CTL_XX_WAT_LRV_01,CTL_XX_WAT_LRV_01,CTL,washing controls larvae - sterile water from first bath for larvae,NA,NA,NA,NA,NA,NA,NA,NA,,NA
+11/10/2022,C3,C,3,CTL_XX_WAT_LRV_02,CTL_XX_WAT_LRV_02,CTL,washing controls larvae - sterile water from last baths for larvae,NA,NA,NA,NA,NA,NA,NA,NA,,NA
+17/10/2022,D3,D,3,CTL_XX_LRV_COI_01,CTL_XX_LRV_COI_01,CTL,"COI control (pool of 1 larva of D. suzukii-France, 2 larvae D. melanogaster, 2 larvae D. simulans)",LB,NA,NA,NA,NA,NA,lab,NA,,NA
+17/10/2022,E3,E,3,CTL_XX_LRV_COI_02,CTL_XX_LRV_COI_02,CTL,"COI control (pool of 1 larva of D. suzukii-France, 1 larva of D. suzukii-Netherlands, 1 larva D. melanogaster, 1 larva D. simulans)",LB,NA,NA,NA,NA,NA,lab,NA,,NA
+20/10/2022,H8,H,8,CTL_XX_DNA_EXT_01,CTL_XX_DNA_EXT_01,CTL,negative extraction control - Well of Qiagen Collection Microtube (1.2ml) with no sample,NA,NA,NA,NA,NA,NA,NA,NA,,NA
+3/10/2022,F9,F,9,CTL_DN_MOC_COM_01,CTL_DN_MOC_COM_01,CTL,"positive control - mock microbial community (equal proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,NA,,NA
+3/10/2022,G9,G,9,CTL_DN_MOC_COM_02,CTL_DN_MOC_COM_02,CTL,"positive control - mock microbial community (log proportions, ZymoBiomics)",NA,NA,NA,NA,NA,NA,NA,NA,,NA
+3/10/2022,H9,H,9,CTL_NO_DNA_PCR_XX,CTL_NO_DNA_PCR_XX,CTL,PCR control - PCR without DNA,NA,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,A10,A,10,CH_AEST01155,CH_AEST01155,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,B10,B,10,ST_AEST01156,ST_AEST01156,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,C10,C,10,BL_AEST01157,BL_AEST01157,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,D10,D,10,CH_AEST01284,CH_AEST01284,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,E10,E,10,ST_AEST01285,ST_AEST01285,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,F10,F,10,BL_AEST01286,BL_AEST01286,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,G10,G,10,CH_AEST01189,CH_AEST01189,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Mauguio,NA,,NA
+20/10/2022,H10,H,10,ST_AEST01190,ST_AEST01190,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Mauguio,NA,Paper with AEST0191 inside,NA
+20/10/2022,A11,A,11,BL_AEST01191,BL_AEST01191,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Mauguio,NA,"Paper with AEST0190 inside, no adult left in tube",NA
+20/10/2022,B11,B,11,CH_AEST01306,CH_AEST01306,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,C11,C,11,ST_AEST01307,ST_AEST01307,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,D11,D,11,BL_AEST01308,BL_AEST01308,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Control,NA,,NA
+20/10/2022,E11,E,11,CH_AEST01402,CH_AEST01402,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Mauguio,NA,,NA
+20/10/2022,F11,F,11,ST_AEST01403,ST_AEST01403,ST,pool of 4 adults,ST,NA,NA,NA,NA,NA,Mauguio,NA,No adult left in tube,NA
+20/10/2022,G11,G,11,BL_AEST01404,BL_AEST01404,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Mauguio,NA,,NA
+20/10/2022,H11,H,11,CH_AEST01473,CH_AEST01473,CH,pool of 5 adults,CH,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,A12,A,12,ST_AEST01474,ST_AEST01474,ST,pool of 5 adults,ST,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,B12,B,12,BL_AEST01475,BL_AEST01475,BL,pool of 5 adults,BL,NA,NA,NA,NA,NA,Saint-Gely-du-Fesc,NA,,NA
+20/10/2022,C12,C,12,CH_PUREE0001,CH_PUREE0001,CH,cherry purée (Boiron),CH,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,D12,D,12,ST_PUREE0001,ST_PUREE0001,ST,strawberry purée (Sycodis),ST,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,E12,E,12,BL_PUREE0001,BL_PUREE0001,BL,"blackberry purée (mixed from whole fruits, Sycodis)",BL,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,F12,F,12,CH_PUREE0002,CH_PUREE0002,CH,cherry purée (Boiron),CH,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,G12,G,12,ST_PUREE0002,ST_PUREE0002,ST,strawberry purée (Sycodis),ST,NA,NA,NA,NA,NA,NA,NA,,NA
+20/10/2022,H12,H,12,BL_PUREE0002,BL_PUREE0002,BL,"blackberry purée (mixed from whole fruits, Sycodis)",BL,NA,NA,NA,NA,NA,NA,NA,,NA
+Not done,,0,,,,,pools of 5 uninfested old blackberries (BL O),,,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,F
+Not done,,0,,,,,pools of 5 infested blackberries,,,,,,5 x 40ul,Mazan,Sampled on the 14/10/2022,,G
