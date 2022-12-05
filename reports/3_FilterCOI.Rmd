@@ -54,7 +54,7 @@ covdepthbysample <- abundance_table2 %>%
 covdepthbysample <- dplyr::as_tibble(data.frame(barcode = names(covdepthbysample), covdepth=t(covdepthbysample)))
 
 ## Check distribution of coverage depth across samples
-ggplot(covdepthbysample, aes(x=covdepth)) + geom_histogram() + scale_x_log10() + geom_vline(aes(xintercept = 1000), colour="red")
+ggplot(covdepthbysample, aes(x=covdepth+1)) + geom_histogram() + scale_x_log10() + geom_vline(aes(xintercept = 1000), colour="red")
 
 ## Check samples with the highest coverage=pupae, larvae and adults
 covdepthbysample %>% 
@@ -71,6 +71,7 @@ covdepthbysample %>%
 ```{r }
 
 ## Use controls to find maximum coverage depth for each OTU
+## See section "Threshold TCC: filtering for cross-contamination" p9 in Galan et al 2016: https://journals.asm.org/doi/10.1128/mSystems.00032-16
 ## Find controls
 CT <- abundance_table2 %>% 
   dplyr::select(Species, contains("CT")&contains("-A")&(contains("PCR")|contains("EXT")))
@@ -86,16 +87,28 @@ CT <- CT %>%
   print(n = 30)
 
 
-Filter_contaminant <- function(x, Tcc){
-  x[x<=Tcc] <- 0
+Filter_contaminant <- function(x, TccTfa){
+  x[x<=TccTfa] <- 0
   return(x)
 }
 ## Filter abundance table
 abundance_tableTccfiltered <- abundance_table %>%
   dplyr::mutate(dplyr::across(ends_with("-A")|ends_with("-B")|ends_with("-C"), ~Filter_contaminant(., CT$value)))
 
+```
+
+# Filter abundances based on number of sequences on the flow cell
+```{r }
+## See section "Threshold TFA: filtering out incorrectly assigned sequences" p9 in Galan et al 2016: https://journals.asm.org/doi/10.1128/mSystems.00032-16
+## We used a value of Rfa of 0.01%, which is a bit less conservative than the 0.02% of Galan et al 2016
+Rfa <- 0.0001
+
+## Filter abundance table
+abundance_tableTccTfafiltered <- abundance_tableTccfiltered %>%
+  dplyr::mutate(dplyr::across(ends_with("-A")|ends_with("-B")|ends_with("-C"), ~Filter_contaminant(., abundance_tableTccfiltered$observation_sum*Rfa)))
+
 ## Export results
-write.table(abundance_tableTccfiltered, file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(abundance_tableTccTfafiltered, file=file.path(here::here(), "data", "derived_data", "2022_COI_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
 
 # Update metadata
@@ -110,7 +123,7 @@ metadata <- metadata %>%
 tail(metadata)
 
 ## Sum coverage depth across OTUs from the same species
-abundance_table_sum <- abundance_tableTccfiltered %>% dplyr::select(blast_taxonomy, observation_sum:Undetermined) %>% 
+abundance_table_sum <- abundance_tableTccTfafiltered %>% dplyr::select(blast_taxonomy, observation_sum:Undetermined) %>% 
   dplyr::group_by(blast_taxonomy) %>% 
   dplyr::summarise(across(everything(), sum))
 
@@ -138,7 +151,6 @@ prop_table_clean <- prop_table_clean %>%
 
 ## Merge the two datasets
 metadata2 <-  dplyr::left_join(metadata, prop_table_clean, by="Barcode")
-#metadata2$Drosophila_melanogaster <- as.numeric(metadata2$Drosophila_melanogaster)
 
 write.table(metadata2, file=file.path(here::here(), "data", "derived_data", "Metadata_final.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```

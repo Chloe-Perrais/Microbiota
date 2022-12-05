@@ -59,7 +59,7 @@ covdepthbysample <- abundance_table2 %>%
 covdepthbysample <- dplyr::as_tibble(data.frame(barcode = names(covdepthbysample), covdepth=t(covdepthbysample)))
 
 ## Check distribution of coverage depth across samples
-ggplot(covdepthbysample, aes(x=covdepth)) + geom_histogram() + geom_vline(aes(xintercept = 7000), colour="red")
+ggplot(covdepthbysample, aes(x=covdepth+1)) + geom_histogram() + geom_vline(aes(xintercept = 7000), colour="red")
 
 ## Check samples with the highest coverage
 covdepthbysample %>% 
@@ -149,7 +149,7 @@ Species <- c("Staphylococcus aureus", "Bacillus subtilis", "Lactobacillus fermen
 theoreticalproportions <- theoreticalproportions[match(Species, theoreticalproportions$Zymobact),]
 theoreticalproportions$Prop <- theoreticalproportions$ExpectedComp16S/sum(theoreticalproportions$ExpectedComp16S) 
 
-## Good correspondence between observed and expected
+## Good consistency between observed and expected
 data.frame(CT1, ExpectFreq=theoreticalproportions$Prop, Species=Species )
 ```
 # Compare observed and observed frequency in the mock community (DNA standard II, log distribution)
@@ -183,6 +183,6 @@ Species <- c("Bacillus subtilis","Escherichia coli","Salmonella enterica" ,"Ente
 theoreticalproportions <- theoreticalproportions[match(Species, theoreticalproportions$Zymobact),]
 theoreticalproportions$Prop <- round(theoreticalproportions$ExpectedComp16S/sum(theoreticalproportions$ExpectedComp16S), 3)
 
-## Good correspondence between observed and expected
+## Consistency between observed and expected freqeuncy OK
 data.frame(CT2, ExpectFreq=theoreticalproportions$Prop, Species=Species )
 ```
