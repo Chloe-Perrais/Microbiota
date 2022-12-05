@@ -1,0 +1,66 @@
+---
+title: "Analyse_abondance_16S"
+author: "GERIN-JEAN David"
+date: "2022-12-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Prepare data for phyloseq analysis
+```{r}
+## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+
+#table_OTU
+#importe data
+data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"),sep="\t",header=TRUE)
+
+
+##Define the row names from the columns
+
+library(tidyverse)
+otu_mat <- data16S%>%
+    rownames_to_column(var="Otu")
+otu_mat=otu_mat[,c(1,14:301)]
+
+#otu_mat merge differente repliquate together
+
+
+
+
+
+
+
+
+#tax_mat
+#split to have family names
+data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";")
+
+library(tidyverse)
+tax_mat <- data16S_family%>%
+    rownames_to_column(var="Otu")
+tax_mat=tax_mat[,c(1,4:10)]
+#tax_mat are ok each otu have a taxonomy afiliation 
+
+#samples_df
+#importe data
+sample_df <- read.delim("~/logiciel/GitHub/Microbiota/data/derived_data/Metadata_final.tsv")
+
+sample_df$Sample_texte=sample_df$Sample
+sample_df$Sample=sample_df$Barcode
+sample_df=sample_df[,c(1,4:10)]
+
+
+
+
+#problem for chang name of column 
+## Transform to phyloseq objects
+OTU = phyloseq::otu_table(otu_mat, taxa_are_rows = TRUE)
+TAX = phyloseq::tax_table(tax_mat)
+samples = phyloseq::sample_data(samples_df)
+
+carbom <- phyloseq::phyloseq(OTU, TAX, samples)
+carbom
+```
