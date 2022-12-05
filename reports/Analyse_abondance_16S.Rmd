@@ -25,15 +25,17 @@ otu_mat <- data16S%>%
     rownames_to_column(var="Otu")
 otu_mat=otu_mat[,c(1,14:301)]
 
-#otu_mat merge differente repliquate together
+#add a row at the end of the table for the sum of OTUs for each sample
+otu_mat=otu_mat[,-1]
+sum <- t(data.frame("sum"=colSums(otu_mat[,])))
+otu_mat_sum <- rbind(otu_mat,sum)
 
 
 
 
 
 
-
-
+##not tested yet
 #tax_mat
 #split to have family names
 data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";")
