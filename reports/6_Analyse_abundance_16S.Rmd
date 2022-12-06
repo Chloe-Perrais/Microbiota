@@ -7,17 +7,45 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
 ```
 
-## Prepare data for phyloseq analysis
+# Prepare data for phyloseq analysis
+## Import data
 ```{r}
 ## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
 
 #table_OTU
-#importe data
-data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"),sep="\t",header=TRUE)
+#import data
+data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t",header=TRUE)
+#import metadata
+metadata <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "Metadata_final.tsv"), sep="\t",header=TRUE)
+#split to have family names
+data16S$blast_taxonomy
+taxonomy <- 
+  data16S %>%
+  dplyr::select(observation_name, blast_taxonomy)  %>%
+  tidyr::separate(col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";", remove=TRUE)
+```
 
+## Clean metadata
+```{r}
 
+## Remove controls and samples from other experiment
+metadata <- metadata %>%
+  dplyr::filter(!(grepl("^CT", Barcode)|grepl("^ST", Barcode)|grepl("^BL", Barcode)|grepl("^CH", Barcode)))
+metadata$Barcode
+
+## Split barcode
+metadata <- metadata %>%
+  tidyr::separate(col=Barcode, into=c("Type","Fruit","Population","Status","Number"),  sep="_", remove=FALSE)
+
+colnames(metadata)
+```
+
+## old stuff
+```{r}
+colnames(taxonomy)
 ##Define the row names from the columns
 
 library(tidyverse)
