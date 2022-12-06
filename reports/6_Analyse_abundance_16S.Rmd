@@ -42,6 +42,9 @@ metadata$Barcode
 metadata <- metadata %>%
   tidyr::separate(col=Barcode, into=c("Type","Fruit","Population","Status","Number"),  sep="_", remove=FALSE)
 
+metadata$Status[metadata$Status=="INM"] <- "INF"
+metadata$Status[metadata$Status=="IND"] <- "INF"
+
 ## Add a column to have more details for the fruits
 Groups <- paste(metadata$Type,metadata$Fruit,metadata$Status)
 metadata <- cbind(metadata, Groups)
@@ -128,7 +131,10 @@ phyloseq::plot_richness(carbom, measures=c("Chao1", "Shannon"), color="Groups")
 
 ## Perform ordination (Beta diversity)
 ```{r, eval=TRUE}
-carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
+#carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
+
+carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="jaccard")
+
 plot_ordination(carbom, carbom.ord, type="Fruit", color="Groups", shape= "Type", title="")
 
 ```
@@ -138,6 +144,9 @@ plot_ordination(carbom, carbom.ord, type="Fruit", color="Groups", shape= "Type",
 
 total = median(sample_sums(carbom))
 carbom_abund <- filter_taxa(carbom, function(x) sum(x > total*0.20) > 0, TRUE)
-plot_heatmap(carbom_abund, method = "NMDS", distance = "bray", sample.order = "Type", "Fruit", "Status")
+plot_heatmap(carbom_abund, method = "NMDS", distance = "bray", sample.order = "Type")
+
+
+plot_heatmap(carbom_abund, method = "NMDS", distance = "jaccard", sample.order = "Type")
 
 ```
