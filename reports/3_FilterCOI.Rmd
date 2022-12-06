@@ -65,6 +65,7 @@ covdepthbysample %>%
 covdepthbysample %>% 
   dplyr::filter(covdepth < 1000)  %>% print(n = 100)
 
+grepl("Species",x)
 ```
 
 # Filter abundances based on negative controls

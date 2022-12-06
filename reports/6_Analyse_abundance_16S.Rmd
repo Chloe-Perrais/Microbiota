@@ -28,6 +28,9 @@ taxonomy <-
   data16S %>%
   dplyr::select(observation_name, blast_taxonomy)  %>%
   tidyr::separate(col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";", remove=TRUE)
+
+## Merge unknown families together
+taxonomy$family[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "unknown"
 ```
 
 ## Clean metadata
@@ -45,11 +48,19 @@ metadata <- metadata %>%
 metadata$Status[metadata$Status=="INM"] <- "INF"
 metadata$Status[metadata$Status=="IND"] <- "INF"
 
+metadata$Age <- as.factor(metadata$Status)
+levels(metadata$Age) <- c("Fresh", "Fresh", "Old", "NA")
+metadata$Status <- as.factor(metadata$Status)
+levels(metadata$Status) <- c("Inf", "Uninf", "Uninf", "NA")
+  
 ## Add a column to have more details for the fruits
-Groups <- paste(metadata$Type,metadata$Fruit,metadata$Status)
-metadata <- cbind(metadata, Groups)
+metadata$Status2 <- as.character(metadata$Status)
+metadata$Status2[metadata$Status2=="NA"] <- ""
+metadata$Groups <- paste(metadata$Type,metadata$Fruit,metadata$Status2)
+
 colnames(metadata)
 ```
+
 ## Merge replicates together
 ```{r}
 
@@ -64,10 +75,13 @@ data16S$Sample <- gsub("-", "_", data16S$Sample)
 
 data16S <- data16S %>% 
   group_by(observation_name, Sample) %>% 
-  summarise(CountSum = sum(count))
+  summarise(CountMean = round(mean(count)))
+
+## Remove samples with covergae lower than larvae
+
 
 data16S <- data16S %>% 
-  pivot_wider(names_from = Sample, values_from = CountSum)
+  pivot_wider(names_from = Sample, values_from = CountMean)
 
 write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
@@ -116,17 +130,32 @@ phyloseq::rank_names(carbom)
 phyloseq::sample_variables(carbom)
 phyloseq::plot_bar(carbom, fill="family")
 
+plot_composition(carbom, "kingdom", "Bacteria", "phylum", fill = "phylum") + 
+  facet_grid(~Type, scales = "free_x", space = "free_x")
+
+plot_composition(carbom, "phylum", "Firmicutes", "genus", fill = "genus", numberOfTaxa = 5) + 
+  facet_grid(~Groups, scales = "free_x", space = "free_x")
+
+#merge sample from the same group together 
 carbom_type <- merge_samples(carbom, "Groups")
 phyloseq::plot_bar(carbom_type, fill = "family") + 
   geom_bar(aes(color=family, fill=family), stat="identity", position="stack")
 
-```
+## Rarefy dataset
+carbom_rare <- rarefy_even_depth(carbom, rngseed = 20190124)
+phyloseq::plot_bar(carbom_rare, fill="family")
 
+
+```
+## Rarefaction
+```{r}
+vegan::rarecurve(t(otu_mat), step=50, cex=0.5)
+```
 ## Plot alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
 
-phyloseq::plot_richness(carbom, measures=c("Chao1", "Shannon"), color="Groups")
+phyloseq::plot_richness(carbom_rare, measures=c("Chao1", "Shannon"), color="Groups")
 ```
 
 ## Perform ordination (Beta diversity)
