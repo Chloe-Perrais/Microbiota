@@ -138,6 +138,6 @@ plot_ordination(carbom, carbom.ord, type="Fruit", color="Groups", shape= "Type",
 
 total = median(sample_sums(carbom))
 carbom_abund <- filter_taxa(carbom, function(x) sum(x > total*0.20) > 0, TRUE)
-plot_heatmap(carbom_abund, method = "NMDS", distance = "bray", sample.order = "observation_name")
+plot_heatmap(carbom_abund, method = "NMDS", distance = "bray", sample.order = "Type", "Fruit", "Status")
 
 ```
