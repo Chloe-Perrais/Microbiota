@@ -28,41 +28,26 @@ data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data"
 
 #split to have family names
 data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";")
+
+#remove control (CTL) and undetermined
+data16S_family=data16S_family %>% 
+  select(!starts_with("CTL"))%>% 
+  select(!"Undetermined")
+
+#remove useless column
+data16S_family_final <- data16S_family[,19:length(data16S_family)]
 ```
 
 #Acetobacter
 ```{r }
-#group the family
-dataAAB <- subset(data16S_family, family=="Acetobacteraceae")
-#remove useless column
-dataAAB_final <- dataAAB[,19:306]
-#sum of each row for 1 column
-dataAAB_sum_final <- data.frame("count"=Matrix::colSums(dataAAB_final))
-
-library(tidyverse)
-dataAAB_sum_final <- dataAAB_sum_final%>%
-  rownames_to_column(var="Sample")
-
-dataAAB_sum_final$Sample=gsub("A","",dataAAB_sum_final$Sample)
-dataAAB_sum_final$Sample=gsub("B","",dataAAB_sum_final$Sample)
-dataAAB_sum_final$Sample=gsub("C","",dataAAB_sum_final$Sample)
-
-#Linear model
-m0 <- lme4::lmer(log(count+1)~1+(1|Sample), data = dataAAB_sum_final)
-summary(m0)
-## Extract variance components
-varcomp <- data.frame(lme4::VarCorr(m0))$vcov
-## Compute repeatability
-repeatability = varcomp[1]/sum(varcomp)
-repeatability
+Compute_repeat(group="Acetobacter", data_group=data16S_family_final)
 ```
  
 #Lactobacillaceae
 ```{r }
 #group the family
 dataLAB <- subset(data16S_family, family=="Lactobacillaceae")
-#remove useless column
-dataLAB_final <- dataLAB[,19:306]
+
 #sum of each row for 1 column
 dataLAB_sum_final <- data.frame("count"=Matrix::colSums(dataLAB_final))
 
