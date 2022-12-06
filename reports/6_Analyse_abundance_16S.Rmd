@@ -42,54 +42,60 @@ metadata <- metadata %>%
 
 colnames(metadata)
 ```
-
-## old stuff
+## Merge replicates together
 ```{r}
-colnames(taxonomy)
+
+data16S <- data16S %>%
+  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
+
+data16S <- data16S %>%
+  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count")
+
+data16S$Sample <- substr(data16S$Barcode, 1, 17)
+data16S$Sample <- gsub("-", "_", data16S$Sample)
+
+data16S <- data16S %>% 
+  group_by(observation_name, Sample) %>% 
+  summarise(CountSum = sum(count))
+
+data16S <- data16S %>% 
+  pivot_wider(names_from = Sample, values_from = CountSum)
+
+write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+```
+## Prepare data for phyloseq
+```{r}
+
 ##Define the row names from the columns
+otu_mat <- data16S
+colnames(otu_mat)
 
-library(tidyverse)
-otu_mat <- data16S%>%
-    rownames_to_column(var="Otu")
-otu_mat=otu_mat[,c(1,14:301)]
+## Remove OTU column and add it as row names
+otu_mat <- otu_mat %>%
+    tibble::column_to_rownames(var="observation_name")
+rownames(otu_mat)
 
-#add a row at the end of the table for the sum of OTUs for each sample
-otu_mat=otu_mat[,-1]
-sum <- t(data.frame("sum"=colSums(otu_mat[,])))
-otu_mat_sum <- rbind(otu_mat,sum)
+## Remove OTU column and add it as row names
+tax_mat <- taxonomy %>%
+    tibble::column_to_rownames(var="observation_name")
+rownames(tax_mat)
 
+## Remove sample column and add it as row names
+samples_df <- metadata %>%
+    tibble::column_to_rownames(var="Barcode")
+rownames(samples_df)
 
+## Transform into matrices otu and tax tables (sample table can be left as data frame)
+otu_mat <- as.matrix(otu_mat)
+tax_mat <- as.matrix(tax_mat)
 
-
-
-
-##not tested yet
-#tax_mat
-#split to have family names
-data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";")
-
-library(tidyverse)
-tax_mat <- data16S_family%>%
-    rownames_to_column(var="Otu")
-tax_mat=tax_mat[,c(1,4:10)]
-#tax_mat are ok each otu have a taxonomy afiliation 
-
-#samples_df
-#importe data
-sample_df <- read.delim("~/logiciel/GitHub/Microbiota/data/derived_data/Metadata_final.tsv")
-
-sample_df$Sample_texte=sample_df$Sample
-sample_df$Sample=sample_df$Barcode
-sample_df=sample_df[,c(1,4:10)]
-
-
-
-
-#problem for chang name of column 
 ## Transform to phyloseq objects
 OTU = phyloseq::otu_table(otu_mat, taxa_are_rows = TRUE)
 TAX = phyloseq::tax_table(tax_mat)
 samples = phyloseq::sample_data(samples_df)
+
+phyloseq::sample_names(OTU)
+phyloseq::sample_names(samples)
 
 carbom <- phyloseq::phyloseq(OTU, TAX, samples)
 carbom
