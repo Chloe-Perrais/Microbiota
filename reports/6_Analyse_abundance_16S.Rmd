@@ -15,13 +15,15 @@ devtools::load_all()
 # Prepare data for phyloseq analysis
 ## Import data
 ```{r}
-## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+## Please follow the instructions here to prepare your data (without sub-setting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
 
 #table_OTU
 #import data
 data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t",header=TRUE)
+
 #import metadata
 metadata <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "Metadata_final.tsv"), sep="\t",header=TRUE)
+
 #split to have family names
 data16S$blast_taxonomy
 taxonomy <- 
@@ -64,9 +66,11 @@ colnames(metadata)
 ## Merge replicates together
 ```{r}
 
+#select the column start xxx
 data16S <- data16S %>%
   dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
 
+#transform the table to long data set 
 data16S <- data16S %>%
   tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count")
 
@@ -75,16 +79,17 @@ data16S$Sample <- gsub("-", "_", data16S$Sample)
 
 data16S <- data16S %>% 
   group_by(observation_name, Sample) %>% 
-  summarise(CountMean = round(mean(count)))
+  dplyr::summarise(CountMean = round(mean(count)))
 
-## Remove samples with covergae lower than larvae
+## Remove samples with coverage lower than larvae
 
 
 data16S <- data16S %>% 
-  pivot_wider(names_from = Sample, values_from = CountMean)
+  tidyr::pivot_wider(names_from = Sample, values_from = CountMean)
 
 write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
+
 ## Prepare data for phyloseq
 ```{r}
 
@@ -139,12 +144,17 @@ plot_composition(carbom, "phylum", "Firmicutes", "genus", fill = "genus", number
 #merge sample from the same group together 
 carbom_type <- merge_samples(carbom, "Groups")
 phyloseq::plot_bar(carbom_type, fill = "family") + 
-  geom_bar(aes(color=family, fill=family), stat="identity", position="stack")
+  geom_bar(aes(color = family, fill = family), stat = "identity", position="stack")
 
-## Rarefy dataset
+## Rarefy data set
 carbom_rare <- rarefy_even_depth(carbom, rngseed = 20190124)
-phyloseq::plot_bar(carbom_rare, fill="family")
+phyloseq::plot_bar(carbom_rare, fill = "family")
 
+
+
+
+#Group by fruit ? 
+phyloseq::plot_bar(carbom_rare, "Fruit", fill = "family", facet_grid=~Type)
 
 ```
 ## Rarefaction
