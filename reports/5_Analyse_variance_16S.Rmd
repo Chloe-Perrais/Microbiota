@@ -1,0 +1,87 @@
+---
+title: "Repeatability_16S"
+author: "David Gerin-Jean, Chloé Perrais"
+date: "`r format(Sys.Date(), '%d-%B-%Y')`"
+output: 
+  html_document:
+    theme: "journal"
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include =FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+devtools::load_all()
+```
+
+## Compute variance using LMM
+```{r }
+#import data
+data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"),sep="\t",header=TRUE)
+
+#split to have family names
+data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";")
+
+#remove control (CTL) and undetermined
+data16S_family=data16S_family %>% 
+  select(c(7,grep("observation_sum",colnames(data16S_family)):ncol(data16S_family)))%>% 
+  select(!starts_with("CTL"))%>% 
+  select(-Undetermined)
+
+data16S_family <- 
+  data16S_family %>%
+  dplyr::select(-observation_sum) %>%
+  dplyr::mutate(observation_sum=rowSums(select(., !contains("family"))))
+
+data16S_family <- 
+  data16S_family %>%
+  group_by(family) %>% 
+  summarise(across(everything(), ~ sum(.x))) %>% 
+  ungroup() %>%
+  dplyr::filter(family!="NA" & family!="Multi-affiliation") %>%
+  arrange(desc(observation_sum)) %>%
+  dplyr::select(-observation_sum)
+
+data16S_family$family
+```
+
+##Variance for 8 major microbiota species
+```{r }
+Variance_16S <- sapply(data16S_family$family[1:8], Compute_var, last_position=17, data_group=data16S_family)
+Variance_16S <- t(Variance_16S)
+Variance_16S <- data.frame(Variance_16S)
+
+
+
+
+
+library(tidyverse)
+Variance_16S=Variance_16S%>%
+  rownames_to_column(var="Family")
+Variance_16S$PCR=as.numeric(Variance_16S$PCR)
+Variance_16S$Family=as.factor(Variance_16S$Family)  
+Variance_16S=Variance_16S%>%
+  pivot_longer(2:4)
+  
+```
+
+##Variance barplot
+```{r}
+b <- ggplot2::ggplot(data=Variance_16S, aes(x=Family, y=value, fill=name))+
+  scale_fill_brewer(palette="Dark2")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  ggtitle("Standardized variance due to Extraction, PCR and between samples (Residual)")+
+  xlab("Taxonomy families")+
+  ylab("Standardized variances")+
+  labs(fill="Explanatory factors")+
+  geom_col()
+b
+```
+
