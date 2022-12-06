@@ -1,0 +1,102 @@
+---
+title: "Analyse_abondance_16S"
+author: "GERIN-JEAN David"
+date: "2022-12-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+
+# Prepare data for phyloseq analysis
+## Import data
+```{r}
+## Please follow the instructions here to prepare your data (without subsetting samples or taxa): https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#read-the-data-and-create-phyloseq-objects
+
+#table_OTU
+#import data
+data16S <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final.tsv"), sep="\t",header=TRUE)
+#import metadata
+metadata <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "Metadata_final.tsv"), sep="\t",header=TRUE)
+#split to have family names
+data16S$blast_taxonomy
+taxonomy <- 
+  data16S %>%
+  dplyr::select(observation_name, blast_taxonomy)  %>%
+  tidyr::separate(col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";", remove=TRUE)
+```
+
+## Clean metadata
+```{r}
+
+## Remove controls and samples from other experiment
+metadata <- metadata %>%
+  dplyr::filter(!(grepl("^CT", Barcode)|grepl("^ST", Barcode)|grepl("^BL", Barcode)|grepl("^CH", Barcode)))
+metadata$Barcode
+
+## Split barcode
+metadata <- metadata %>%
+  tidyr::separate(col=Barcode, into=c("Type","Fruit","Population","Status","Number"),  sep="_", remove=FALSE)
+
+colnames(metadata)
+```
+## Merge replicates together
+```{r}
+
+data16S <- data16S %>%
+  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
+
+data16S <- data16S %>%
+  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count")
+
+data16S$Sample <- substr(data16S$Barcode, 1, 17)
+data16S$Sample <- gsub("-", "_", data16S$Sample)
+
+data16S <- data16S %>% 
+  group_by(observation_name, Sample) %>% 
+  summarise(CountSum = sum(count))
+
+data16S <- data16S %>% 
+  pivot_wider(names_from = Sample, values_from = CountSum)
+
+write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+```
+## Prepare data for phyloseq
+```{r}
+
+##Define the row names from the columns
+otu_mat <- data16S
+colnames(otu_mat)
+
+## Remove OTU column and add it as row names
+otu_mat <- otu_mat %>%
+    tibble::column_to_rownames(var="observation_name")
+rownames(otu_mat)
+
+## Remove OTU column and add it as row names
+tax_mat <- taxonomy %>%
+    tibble::column_to_rownames(var="observation_name")
+rownames(tax_mat)
+
+## Remove sample column and add it as row names
+samples_df <- metadata %>%
+    tibble::column_to_rownames(var="Barcode")
+rownames(samples_df)
+
+## Transform into matrices otu and tax tables (sample table can be left as data frame)
+otu_mat <- as.matrix(otu_mat)
+tax_mat <- as.matrix(tax_mat)
+
+## Transform to phyloseq objects
+OTU = phyloseq::otu_table(otu_mat, taxa_are_rows = TRUE)
+TAX = phyloseq::tax_table(tax_mat)
+samples = phyloseq::sample_data(samples_df)
+
+phyloseq::sample_names(OTU)
+phyloseq::sample_names(samples)
+
+carbom <- phyloseq::phyloseq(OTU, TAX, samples)
+carbom
+```
