@@ -187,13 +187,17 @@ phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fil
 phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
-  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
+  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x") + theme(plot.title = element_text(hjust = 0.5))+
+  ggtitle("Composition of bacteria family") + 
+  labs(fill='Family')
+
 p
 
 
-ggsave(file.path(here::here(), "plots", "toto.pdf"), height = 6, width = 8)
+ggsave(file.path(here::here(), "plots", "toto.jpeg"), height = 6, width = 8)
 
 #merge sample from the same group together 
+#not included in paper 
 carbom_type <- phyloseq::merge_samples(carbom, "Groups")
 phyloseq::plot_bar(carbom_type, fill = "family") + 
   geom_bar(aes(color = family, fill = family), stat = "identity", position="stack")
@@ -206,7 +210,13 @@ carbom_rare_higher400 <- phyloseq::rarefy_even_depth(carbom_higher400, rngseed =
 phyloseq::plot_bar(carbom_rare_higher400, fill = "family")
 phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9)
 phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
-  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
+  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x") +
+  ggtitle("Composition of bacteria family rare_higher400") + 
+  labs(fill='Family')
+
+
+ggsave(file.path(here::here(), "plots", "toto400.jpeg"), height = 6, width = 8)
+
 
 ```
 ## Rarefaction
@@ -217,7 +227,12 @@ p <- vegan::rarecurve(t(otu_mat),
                       step = 50, label = FALSE, 
                       sample = min(rowSums(t(otu_mat)), 
                                    col = "blue", cex = 0.6), ylab ="Number of OTUs")
+p
+
+#ggsave(file.path(here::here(), "plots", "Rarefaction.jpeg"), height = 6, width = 8)
+
 ```
+
 ## Plot alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
@@ -232,19 +247,22 @@ phyloseq::plot_richness(carbom_rare_higher400, measures=c("Chao1", "Shannon"), c
 
 carbom.ord_carbom_rare_higher400 <- phyloseq::ordinate(carbom_rare_higher400, method ="NMDS", distance ="jaccard")
 
-phyloseq::plot_ordination(carbom_rare_higher400, carbom.ord_carbom_rare_higher400, type="Fruit", color="Groups", shape= "Type", title="")
+phyloseq::plot_ordination(carbom_rare_higher400, carbom.ord_carbom_rare_higher400, type="Fruit", color="Groups", shape= "Type", title="Ordination higher than 400") 
 
 ```
 
 ## Heatmap (Beta diversity)
 ```{r, eval=TRUE}
 
-total = median(sample_sums(carbom))
-identical(carbom_abund_higher400, carbom_higher400)
+total = median(phyloseq::sample_sums(carbom))
 carbom_abund_higher400 <- phyloseq::filter_taxa(carbom, function(x) sum(x ) > 400, TRUE)
-phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "bray", sample.order = "Type")
+
+#check the similarity between the function here and previous splitting
+identical(carbom_abund_higher400, carbom_higher400)
+
+phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "bray", sample.order = "Type", title="Rare higher than 400 method bray")
 
 
-phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "jaccard", sample.order = "Groups")
+phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "jaccard", sample.order = "Groups", title="Rare higher than 400 method jaccard")
 
 ```
