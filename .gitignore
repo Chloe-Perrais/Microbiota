@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< HEAD
+=======
+.DS_Store
+.Rdata
+.httr-oauth
+>>>>>>> ebd25f1ec138fa8be19e25575b1c259abacd6991
