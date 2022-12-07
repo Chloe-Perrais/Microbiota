@@ -2,8 +2,6 @@
 title: "7_Analyse_abundance_COI"
 author: "Lorie Zhang"
 date: '2022-12-07'
-author: "GERIN-JEAN David"
-date: "2022-12-06"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -40,11 +38,7 @@ dataCOI$blast_taxonomy
 taxonomy <- 
   dataCOI %>%
   dplyr::select(observation_name, blast_taxonomy)  %>%
-  tidyr::separate(col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";", remove=TRUE)
-
-## Merge unknown families together
-table(taxonomy$species)
-taxonomy$species[taxonomy$family=="NA"|taxonomy$family=="no data"] <- "Unknown"
+  tidyr::separate(col=blast_taxonomy, into=c("Kingdom","Phylum","Class","Order","Family","Genus","Species"),  sep=";", remove=TRUE)
 
 ```
 
@@ -81,26 +75,27 @@ metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9
 colnames(metadata)
 ```
 
-## Remove samples with coverage lower than larvae (will be completed after)
+## Remove samples with coverage lower than larvae 
 ```{r}
 
 #select the column start xxx
 dataCOI <- dataCOI %>%
-  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
+  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")|dplyr::starts_with("NC")))
 
 #transform the table to long data set 
 dataCOI <- dataCOI %>%
   tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count") 
 
-dataCOI$Barcode <- gsub("-", "_", dataCOI$Barcode)
+dataCOI$Samples <- substr(dataCOI$Barcode, 1, 17)
+dataCOI$Samples <- gsub("-", "_", dataCOI$Samples)
 
 ## Compute mean across the three replicates
 dataCOI <- dataCOI %>% 
-  dplyr::group_by(observation_name, Barcode) %>% 
+  dplyr::group_by(observation_name, Samples) %>% 
   dplyr::summarise(CountMean = round(mean(count))) %>% 
   dplyr::ungroup()
 dataCOI <- dataCOI %>% 
-  tidyr::pivot_wider(names_from = Barcode, values_from = CountMean)
+  tidyr::pivot_wider(names_from = Samples, values_from = CountMean)
 
 ## Remove samples with coverage lower than larvae
 ## Check samples with the highest coverage
@@ -113,8 +108,12 @@ covdepthbysample <- covdepthbysample %>%
  dplyr::arrange(count) %>%
 print(n = 50)
 
+sampleslowerthan300 <- covdepthbysample$Barcode[covdepthbysample$count<300]
+dataCOI_higher300 <- dataCOI %>% 
+  dplyr::select(!all_of(sampleslowerthan300))
+
 ## Check distribution of coverage depth across samples
-ggplot(covdepthbysample, aes(x=count)) + geom_histogram() + geom_vline(aes(xintercept = 400), colour="red")+ geom_vline(aes(xintercept = 1300), colour="red")
+ggplot(covdepthbysample, aes(x=count)) + geom_histogram() + geom_vline(aes(xintercept = 100), colour="red")+ geom_vline(aes(xintercept = 300), colour="red")
 
 ```
 
@@ -123,13 +122,13 @@ ggplot(covdepthbysample, aes(x=count)) + geom_histogram() + geom_vline(aes(xinte
 
 ##Define the row names from the columns
 otu_mat <- dataCOI
-otu_mat_higher400 <- data16S_higher400
+otu_mat_higher300 <- dataCOI_higher300
 colnames(otu_mat)
 
 ## Remove OTU column and add it as row names
 otu_mat <- otu_mat %>%
     tibble::column_to_rownames(var="observation_name")
-otu_mat_higher400 <- otu_mat_higher400 %>%
+otu_mat_higher300 <- otu_mat_higher300 %>%
     tibble::column_to_rownames(var="observation_name")
 rownames(otu_mat)
 
@@ -145,21 +144,20 @@ rownames(samples_df)
 
 ## Transform into matrices otu and tax tables (sample table can be left as data frame)
 otu_mat <- as.matrix(otu_mat)
-otu_mat_higher400 <- as.matrix(otu_mat_higher400)
+otu_mat_higher300 <- as.matrix(otu_mat_higher300)
 tax_mat <- as.matrix(tax_mat)
 
 ## Transform to phyloseq objects
 OTU = phyloseq::otu_table(otu_mat, taxa_are_rows = TRUE)
-OTU_higher400 = phyloseq::otu_table(otu_mat_higher400, taxa_are_rows = TRUE)
+OTU_higher300 = phyloseq::otu_table(otu_mat_higher300, taxa_are_rows = TRUE)
 TAX = phyloseq::tax_table(tax_mat)
 samples = phyloseq::sample_data(samples_df)
 
-phyloseq::sample_names(OTU_higher400)
 phyloseq::sample_names(samples)
+phyloseq::sample_names(otu_mat_higher300)
 
 carbom <- phyloseq::phyloseq(OTU, TAX, samples)
-carbom_higher400 <- phyloseq::phyloseq(OTU_higher400, TAX, samples)
-carbom_higher1300 <- phyloseq::phyloseq(OTU_higher1300, TAX, samples)
+carbom_higher300 <- phyloseq::phyloseq(OTU_higher300, TAX, samples)
 carbom
 ```
 
@@ -168,15 +166,15 @@ carbom
 phyloseq::sample_names(carbom)
 phyloseq::rank_names(carbom)
 phyloseq::sample_variables(carbom)
-phyloseq::plot_bar(carbom, fill="family")
+phyloseq::plot_bar(carbom, fill="Species")
 
 #Group by adult, fruit, larva, pupal case and pupa
-phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 11) +
+phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 11) +
   facet_grid(~Type, scales = "free_x", space = "free_x")
 
-phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
-p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 p
 
@@ -185,41 +183,36 @@ ggsave(file.path(here::here(), "plots", "toto.pdf"), height = 6, width = 8)
 
 #merge sample from the same group together 
 carbom_type <- phyloseq::merge_samples(carbom, "Groups")
-phyloseq::plot_bar(carbom_type, fill = "family") + 
-  geom_bar(aes(color = family, fill = family), stat = "identity", position="stack")
+phyloseq::plot_bar(carbom_type, fill = "Species") + 
+  geom_bar(aes(color = Species, fill = Species), stat = "identity", position="stack")
 
 ## Rarefy data set
 carbom_rare <- phyloseq::rarefy_even_depth(carbom, rngseed = 20190124)
-carbom_rare_higher400 <- phyloseq::rarefy_even_depth(carbom_higher400, rngseed = 20190124)
+carbom_rare_higher300 <- phyloseq::rarefy_even_depth(carbom_higher300, rngseed = 20190124)
 
 ## After rarefaction
-phyloseq::plot_bar(carbom_rare_higher400, fill = "family")
-phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9)
-phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+phyloseq::plot_bar(carbom_rare_higher300, fill = "Species")
+phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family","Species", fill = "Species", numberOfTaxa = 9)
+phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family","Species", fill = "Species", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 
 ```
 ## Rarefaction
 ```{r}
-vegan::rarecurve(t(otu_mat), step=50, cex=0.5)
+vegan::rarecurve(t(otu_mat_higher300), step=50, cex=0.5)
 
-p <- vegan::rarecurve(t(otu_mat), 
+p <- vegan::rarecurve(t(otu_mat_higher300), 
                       step = 50, label = FALSE, 
                       sample = min(rowSums(t(otu_mat)), 
                                    col = "blue", cex = 0.6), ylab ="Number of OTUs")
-```
-carbom_type <- phyloseq::merge_samples(carbom, "Groups")
-phyloseq::plot_bar(carbom_type, fill = "family") + 
-  geom_bar(aes(color=family, fill=family), stat="identity", position="stack")
-
 ```
 
 ## Plot alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
 
-phyloseq::plot_richness(carbom_rare, measures=c("Chao1", "Shannon"), color="Groups")
-phyloseq::plot_richness(carbom_rare_higher400, measures=c("Chao1", "Shannon"), color="Groups")
+phyloseq::plot_richness(carbom_rare, measures=c("Chao1", "Shannon"), color="Species")
+phyloseq::plot_richness(carbom_rare_higher300, measures=c("Chao1", "Shannon"), color="Groups")
 phyloseq::plot_richness(carbom, measures=c("Chao1", "Shannon"), color="Groups")
 ```
 
