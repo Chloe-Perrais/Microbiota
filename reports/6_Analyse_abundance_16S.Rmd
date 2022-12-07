@@ -32,7 +32,13 @@ taxonomy <-
   tidyr::separate(col=blast_taxonomy, into=c("kingdom","phylum","class","order","family","genus","species"),  sep=";", remove=TRUE)
 
 ## Merge unknown families together
-taxonomy$family[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "unknown"
+table(taxonomy$family)
+taxonomy$kingdom[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "Unknown"
+taxonomy$phylum[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "Unknown"
+taxonomy$class[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "Unknown"
+taxonomy$order[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "Unknown"
+taxonomy$family[taxonomy$family=="NA"|taxonomy$family=="Multi-affiliation"|taxonomy$family=="unknown family"] <- "Unknown"
+
 ```
 
 ## Clean metadata
@@ -58,7 +64,12 @@ levels(metadata$Status) <- c("Inf", "Uninf", "Uninf", "NA")
 ## Add a column to have more details for the fruits
 metadata$Status2 <- as.character(metadata$Status)
 metadata$Status2[metadata$Status2=="NA"] <- ""
-metadata$Groups <- paste(metadata$Type,metadata$Fruit,metadata$Status2)
+metadata$Groups <- as.factor(paste(metadata$Type,metadata$Fruit,metadata$Status2))
+
+metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9, 1)] )
+ 
+  
+## mutate(cyl = factor(cyl, levels = c(4, 6, 8)))
 
 colnames(metadata)
 ```
@@ -70,22 +81,44 @@ colnames(metadata)
 data16S <- data16S %>%
   dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
 
+
 #transform the table to long data set 
 data16S <- data16S %>%
-  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count")
+  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count") 
+ 
 
-data16S$Sample <- substr(data16S$Barcode, 1, 17)
-data16S$Sample <- gsub("-", "_", data16S$Sample)
+data16S$Samples <- substr(data16S$Barcode, 1, 17)
+data16S$Samples <- gsub("-", "_", data16S$Samples)
 
+## Compute mean across the three replicates
 data16S <- data16S %>% 
-  group_by(observation_name, Sample) %>% 
-  dplyr::summarise(CountMean = round(mean(count)))
+  dplyr::group_by(observation_name, Samples) %>% 
+  dplyr::summarise(CountMean = round(mean(count))) %>% 
+  dplyr::ungroup()
+data16S <- data16S %>% 
+  tidyr::pivot_wider(names_from = Samples, values_from = CountMean)
 
 ## Remove samples with coverage lower than larvae
+## Check samples with the highest coverage
+covdepthbysample <- data16S %>% 
+  dplyr::select(-observation_name) %>%
+  dplyr::summarise_all(sum)
+#transform the table to long data set 
+covdepthbysample <- covdepthbysample %>%
+  tidyr::pivot_longer(cols=everything(), names_to = "Barcode", values_to = "count") %>%
+ dplyr::arrange(count) %>%
+print(n = 50)
 
+## Check distribution of coverage depth across samples
+ggplot(covdepthbysample, aes(x=count)) + geom_histogram() + geom_vline(aes(xintercept = 400), colour="red")+ geom_vline(aes(xintercept = 1300), colour="red")
 
-data16S <- data16S %>% 
-  tidyr::pivot_wider(names_from = Sample, values_from = CountMean)
+sampleslowerthan400 <- covdepthbysample$Barcode[covdepthbysample$count<400]
+sampleslowerthan1300 <- covdepthbysample$Barcode[covdepthbysample$count<1300]
+
+data16S_higher400 <- data16S %>% 
+  dplyr::select(!all_of(sampleslowerthan400))
+data16S_higher1300 <- data16S %>% 
+  dplyr::select(!all_of(sampleslowerthan1300))
 
 write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
@@ -95,12 +128,18 @@ write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_
 
 ##Define the row names from the columns
 otu_mat <- data16S
+otu_mat_higher400 <- data16S_higher400
+otu_mat_higher1300 <- data16S_higher1300
 colnames(otu_mat)
 
 ## Remove OTU column and add it as row names
 otu_mat <- otu_mat %>%
     tibble::column_to_rownames(var="observation_name")
-rownames(otu_mat)
+otu_mat_higher400 <- otu_mat_higher400 %>%
+    tibble::column_to_rownames(var="observation_name")
+otu_mat_higher1300 <- otu_mat_higher1300 %>%
+    tibble::column_to_rownames(var="observation_name")
+rownames(otu_mat_higher400)
 
 ## Remove OTU column and add it as row names
 tax_mat <- taxonomy %>%
@@ -114,17 +153,23 @@ rownames(samples_df)
 
 ## Transform into matrices otu and tax tables (sample table can be left as data frame)
 otu_mat <- as.matrix(otu_mat)
+otu_mat_higher400 <- as.matrix(otu_mat_higher400)
+otu_mat_higher1300 <- as.matrix(otu_mat_higher1300)
 tax_mat <- as.matrix(tax_mat)
 
 ## Transform to phyloseq objects
 OTU = phyloseq::otu_table(otu_mat, taxa_are_rows = TRUE)
+OTU_higher400 = phyloseq::otu_table(otu_mat_higher400, taxa_are_rows = TRUE)
+OTU_higher1300 = phyloseq::otu_table(otu_mat_higher1300, taxa_are_rows = TRUE)
 TAX = phyloseq::tax_table(tax_mat)
 samples = phyloseq::sample_data(samples_df)
 
-phyloseq::sample_names(OTU)
+phyloseq::sample_names(OTU_higher400)
 phyloseq::sample_names(samples)
 
 carbom <- phyloseq::phyloseq(OTU, TAX, samples)
+carbom_higher400 <- phyloseq::phyloseq(OTU_higher400, TAX, samples)
+carbom_higher1300 <- phyloseq::phyloseq(OTU_higher1300, TAX, samples)
 carbom
 ```
 
@@ -135,46 +180,59 @@ phyloseq::rank_names(carbom)
 phyloseq::sample_variables(carbom)
 phyloseq::plot_bar(carbom, fill="family")
 
-plot_composition(carbom, "kingdom", "Bacteria", "phylum", fill = "phylum") + 
+#Group by adult, fruit, larva, pupal case and pupa
+phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 11) +
   facet_grid(~Type, scales = "free_x", space = "free_x")
 
-plot_composition(carbom, "phylum", "Firmicutes", "genus", fill = "genus", numberOfTaxa = 5) + 
-  facet_grid(~Groups, scales = "free_x", space = "free_x")
+phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
+p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
+p
+
+
+ggsave(file.path(here::here(), "plots", "toto.pdf"), height = 6, width = 8)
 
 #merge sample from the same group together 
-carbom_type <- merge_samples(carbom, "Groups")
+carbom_type <- phyloseq::merge_samples(carbom, "Groups")
 phyloseq::plot_bar(carbom_type, fill = "family") + 
   geom_bar(aes(color = family, fill = family), stat = "identity", position="stack")
 
 ## Rarefy data set
-carbom_rare <- rarefy_even_depth(carbom, rngseed = 20190124)
-phyloseq::plot_bar(carbom_rare, fill = "family")
+carbom_rare <- phyloseq::rarefy_even_depth(carbom, rngseed = 20190124)
+carbom_rare_higher400 <- phyloseq::rarefy_even_depth(carbom_higher400, rngseed = 20190124)
 
-
-
-
-#Group by fruit ? 
-phyloseq::plot_bar(carbom_rare, "Fruit", fill = "family", facet_grid=~Type)
+## After rarefaction
+phyloseq::plot_bar(carbom_rare_higher400, fill = "family")
+phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9)
+phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
+  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 
 ```
 ## Rarefaction
 ```{r}
 vegan::rarecurve(t(otu_mat), step=50, cex=0.5)
+
+p <- vegan::rarecurve(t(otu_mat), 
+                      step = 50, label = FALSE, 
+                      sample = min(rowSums(t(otu_mat)), 
+                                   col = "blue", cex = 0.6), ylab ="Number of OTUs")
 ```
 ## Plot alpha diversity by sample
 ```{r}
 ## use the code available here: https://vaulot.github.io/tutorials/Phyloseq_tutorial.html#bar-graphs)
 
 phyloseq::plot_richness(carbom_rare, measures=c("Chao1", "Shannon"), color="Groups")
+phyloseq::plot_richness(carbom_rare_higher400, measures=c("Chao1", "Shannon"), color="Groups")
 ```
 
 ## Perform ordination (Beta diversity)
 ```{r, eval=TRUE}
 #carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
 
-carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="jaccard")
+carbom.ord_carbom_rare_higher400 <- phyloseq::ordinate(carbom_rare_higher400, method ="NMDS", distance ="jaccard")
 
-plot_ordination(carbom, carbom.ord, type="Fruit", color="Groups", shape= "Type", title="")
+phyloseq::plot_ordination(carbom_rare_higher400, carbom.ord_carbom_rare_higher400, type="Fruit", color="Groups", shape= "Type", title="")
 
 ```
 
@@ -182,10 +240,11 @@ plot_ordination(carbom, carbom.ord, type="Fruit", color="Groups", shape= "Type",
 ```{r, eval=TRUE}
 
 total = median(sample_sums(carbom))
-carbom_abund <- filter_taxa(carbom, function(x) sum(x > total*0.20) > 0, TRUE)
-plot_heatmap(carbom_abund, method = "NMDS", distance = "bray", sample.order = "Type")
+identical(carbom_abund_higher400, carbom_higher400)
+carbom_abund_higher400 <- phyloseq::filter_taxa(carbom, function(x) sum(x ) > 400, TRUE)
+phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "bray", sample.order = "Type")
 
 
-plot_heatmap(carbom_abund, method = "NMDS", distance = "jaccard", sample.order = "Type")
+phyloseq::plot_heatmap(carbom_rare_higher400, method = "NMDS", distance = "jaccard", sample.order = "Groups")
 
 ```
