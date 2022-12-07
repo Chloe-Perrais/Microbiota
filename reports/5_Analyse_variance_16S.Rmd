@@ -1,5 +1,5 @@
 ---
-title: "Repeatability_16S"
+title: "Variance_16S"
 author: "David Gerin-Jean, Chloé Perrais"
 date: "`r format(Sys.Date(), '%d-%B-%Y')`"
 output: 
@@ -31,22 +31,22 @@ data16S_family <- tidyr::separate(data=data16S, col=blast_taxonomy, into=c("king
 
 #remove control (CTL) and undetermined
 data16S_family=data16S_family %>% 
-  select(c(7,grep("observation_sum",colnames(data16S_family)):ncol(data16S_family)))%>% 
-  select(!starts_with("CTL"))%>% 
-  select(-Undetermined)
+  dplyr::select(c(7,grep("observation_sum",colnames(data16S_family)):ncol(data16S_family)))%>% 
+  dplyr::select(!starts_with("CTL"))%>% 
+  dplyr::select(-Undetermined)
 
 data16S_family <- 
   data16S_family %>%
   dplyr::select(-observation_sum) %>%
-  dplyr::mutate(observation_sum=rowSums(select(., !contains("family"))))
+  dplyr::mutate(observation_sum=rowSums(dplyr::select(., !contains("family"))))
 
 data16S_family <- 
   data16S_family %>%
-  group_by(family) %>% 
-  summarise(across(everything(), ~ sum(.x))) %>% 
-  ungroup() %>%
+  dplyr::group_by(family) %>% 
+  dplyr::summarise(across(everything(), ~ sum(.x))) %>% 
+  dplyr::ungroup() %>%
   dplyr::filter(family!="NA" & family!="Multi-affiliation") %>%
-  arrange(desc(observation_sum)) %>%
+  dplyr::arrange(desc(observation_sum)) %>%
   dplyr::select(-observation_sum)
 
 data16S_family$family
