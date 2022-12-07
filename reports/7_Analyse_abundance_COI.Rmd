@@ -81,21 +81,33 @@ metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9
 colnames(metadata)
 ```
 
-## Remove samples with coverage lower than larvae (I'll see after)
+## Remove samples with coverage lower than larvae (will be completed after)
 ```{r}
 
 #select the column start xxx
 dataCOI <- dataCOI %>%
-  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")|dplyr::starts_with("NC")))
-
-## Check samples with the highest coverage
-#dataCOI$count <- as.character(dataCOI$count)
+  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
 
 #transform the table to long data set 
+dataCOI <- dataCOI %>%
+  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count") 
+
+dataCOI$Barcode <- gsub("-", "_", dataCOI$Barcode)
+
+## Compute mean across the three replicates
+dataCOI <- dataCOI %>% 
+  dplyr::group_by(observation_name, Barcode) %>% 
+  dplyr::summarise(CountMean = round(mean(count))) %>% 
+  dplyr::ungroup()
+dataCOI <- dataCOI %>% 
+  tidyr::pivot_wider(names_from = Barcode, values_from = CountMean)
+
+## Remove samples with coverage lower than larvae
+## Check samples with the highest coverage
 covdepthbysample <- dataCOI %>% 
   dplyr::select(-observation_name) %>%
-  dplyr::summarise_all(sum)  
-  
+  dplyr::summarise_all(sum)
+#transform the table to long data set 
 covdepthbysample <- covdepthbysample %>%
   tidyr::pivot_longer(cols=everything(), names_to = "Barcode", values_to = "count") %>%
  dplyr::arrange(count) %>%
@@ -104,36 +116,6 @@ print(n = 50)
 ## Check distribution of coverage depth across samples
 ggplot(covdepthbysample, aes(x=count)) + geom_histogram() + geom_vline(aes(xintercept = 400), colour="red")+ geom_vline(aes(xintercept = 1300), colour="red")
 
-sampleslowerthan400 <- covdepthbysample$Barcode[covdepthbysample$count<400]
-
-data16S_higher400 <- data16S %>% 
-  dplyr::select(!all_of(sampleslowerthan400))
-
-## Add a column to have more details for the fruits
-Groups <- paste(metadata$Type,metadata$Fruit,metadata$Status)
-metadata <- cbind(metadata, Groups)
-colnames(metadata)
-```
-## Merge replicates together
-```{r}
-
-data16S <- data16S %>%
-  dplyr::select(!(dplyr::starts_with("CT")|dplyr::starts_with("ST")|dplyr::starts_with("BL")|dplyr::starts_with("CH")|dplyr::starts_with("Undetermined")|dplyr::starts_with("observation_sum")|dplyr::starts_with("#comment")|dplyr::starts_with("rdp_tax_and_bootstrap")|dplyr::starts_with("seed_id")|dplyr::starts_with("seed_sequence")))
-
-data16S <- data16S %>%
-  tidyr::pivot_longer(!observation_name, names_to = "Barcode", values_to = "count")
-
-data16S$Sample <- substr(data16S$Barcode, 1, 17)
-data16S$Sample <- gsub("-", "_", data16S$Sample)
-
-data16S <- data16S %>% 
-  dplyr::group_by(observation_name, Sample) %>% 
-  dplyr::summarise(CountSum = sum(count))
-
-data16S <- data16S %>% 
-  tidyr::pivot_wider(names_from = Sample, values_from = CountSum)
-
-write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_filtered_abundance_final_perSample.tsv"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 ```
 
 ## Prepare data for phyloseq
@@ -142,7 +124,6 @@ write.table(data16S, file=file.path(here::here(), "data", "derived_data", "2022_
 ##Define the row names from the columns
 otu_mat <- dataCOI
 otu_mat_higher400 <- data16S_higher400
-otu_mat <- data16S
 colnames(otu_mat)
 
 ## Remove OTU column and add it as row names
@@ -176,15 +157,9 @@ samples = phyloseq::sample_data(samples_df)
 phyloseq::sample_names(OTU_higher400)
 phyloseq::sample_names(samples)
 
-carbom <- phyloseq::phyloseq(OTU, TAX, sample_names)
-carbom_higher400 <- phyloseq::phyloseq(OTU_higher400, TAX, samples)
-TAX = phyloseq::tax_table(tax_mat)
-samples = phyloseq::sample_data(samples_df)
-
-phyloseq::sample_names(OTU)
-phyloseq::sample_names(samples)
-
 carbom <- phyloseq::phyloseq(OTU, TAX, samples)
+carbom_higher400 <- phyloseq::phyloseq(OTU_higher400, TAX, samples)
+carbom_higher1300 <- phyloseq::phyloseq(OTU_higher1300, TAX, samples)
 carbom
 ```
 
