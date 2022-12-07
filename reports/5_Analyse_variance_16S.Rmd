@@ -89,20 +89,13 @@ b
 ```{r}
 chi_data=Variance_16S%>%
   dplyr::filter(name=="PCR")%>%
- dplyr::select(-name)%>%
- column_to_rownames(var="Family")
+ dplyr::select(-name)
 
-
-#chi_data$mean=mean(chi_data$value)
-
- chi_data= t(chi_data)
+chi_data$mean=mean(chi_data$value)
 
 
 #test chi 2
 
-
-chisq.test(chi_data)
-
-##no work p-value is wrong
+chisq.test(chi_data$Family,chi_data$value)
 
 ```
