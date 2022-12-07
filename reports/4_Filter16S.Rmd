@@ -24,9 +24,9 @@ devtools::load_all()
 # Check coverage of different OTUs/samples
 ```{r }
 ## Import clean data
-abundance_table <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022_16S_JRLAT_cleaned_abundance.tsv"),sep="\t",header=TRUE)
+abundance_table <- data.table::fread(file=file.path(here::here(), "data", "derived_data", "2022JRLAT-16S_cleaned_abundance.txt"),sep="\t",header=TRUE)
 
-## Remove chloroplast and mitochondria
+2## Remove chloroplast and mitochondria
 abundance_table <- abundance_table %>%
   dplyr::filter(!grepl("Plantae", blast_taxonomy))
 
@@ -150,7 +150,11 @@ theoreticalproportions <- theoreticalproportions[match(Species, theoreticalpropo
 theoreticalproportions$Prop <- theoreticalproportions$ExpectedComp16S/sum(theoreticalproportions$ExpectedComp16S) 
 
 ## Good consistency between observed and expected
-data.frame(CT1, ExpectFreq=theoreticalproportions$Prop, Species=Species )
+MOC_pro=data.frame(CT1, ExpectFreq=theoreticalproportions$Prop, Species=Species )
+
+#test if the manipulation change the proportion 
+chisq.test(MOC_pro$ObsFreq,MOC_pro$ExpectFreq)
+
 ```
 # Compare observed and observed frequency in the mock community (DNA standard II, log distribution)
 ```{r }
@@ -184,5 +188,8 @@ theoreticalproportions <- theoreticalproportions[match(Species, theoreticalpropo
 theoreticalproportions$Prop <- round(theoreticalproportions$ExpectedComp16S/sum(theoreticalproportions$ExpectedComp16S), 3)
 
 ## Consistency between observed and expected freqeuncy OK
-data.frame(CT2, ExpectFreq=theoreticalproportions$Prop, Species=Species )
+MOC_log=data.frame(CT2, ExpectFreq=theoreticalproportions$Prop, Species=Species )
+
+#test 
+chisq.test(MOC_log$ObsFreq,MOC_log$ExpectFreq)
 ```
