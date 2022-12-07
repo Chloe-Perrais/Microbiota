@@ -186,8 +186,10 @@ phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fil
 
 phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
+
+
 p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "family", numberOfTaxa = 9) + 
-  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x") + theme(plot.title = element_text(hjust = 0.5))+
+  facet_grid(~Type+Fruit, scales = "free_x", space = "free_x") + theme(plot.title = element_text(hjust = 0.5))+
   ggtitle("Composition of bacteria family") + 
   labs(fill='Family')
 
