@@ -169,12 +169,10 @@ phyloseq::sample_variables(carbom)
 phyloseq::plot_bar(carbom, fill="Species")
 
 #Group by adult, fruit, larva, pupal case and pupa
-phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 11) +
+phyloseq.extended::plot_composition(carbom, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) +
   facet_grid(~Type, scales = "free_x", space = "free_x")
 
-phyloseq.extended::plot_composition(carbom, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 9) + 
-  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
-p <-phyloseq.extended::plot_composition(carbom_higher400, "kingdom", "Bacteria", "family", fill = "Species", numberOfTaxa = 9) + 
+p <-phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 p
 
