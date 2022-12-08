@@ -67,15 +67,14 @@ metadata$Status2 <- as.character(metadata$Status)
 metadata$Status2[metadata$Status2=="NA"] <- ""
 metadata$Groups <- as.factor(paste(metadata$Type,metadata$Fruit,metadata$Status2))
 
-metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9, 1)] )
- 
-  
-## mutate(cyl = factor(cyl, levels = c(4, 6, 8)))
+#metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9, 1)] )
+
+#mutate(metadata$Groups = factor(metadata$Groups, levels = c(4, 6, 8)))
 
 colnames(metadata)
 ```
 
-## Remove samples with coverage lower than larvae 
+## Remove samples with coverage lower than 300 
 ```{r}
 
 #select the column start xxx
@@ -171,11 +170,13 @@ phyloseq::plot_bar(carbom, fill="Species")
 #Group by adult, fruit, larva, pupal case and pupa
 phyloseq.extended::plot_composition(carbom, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) +
   facet_grid(~Type, scales = "free_x", space = "free_x")
+phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) +
+  facet_grid(~Type, scales = "free_x", space = "free_x")
 
-p <-phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
-  facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
-p
-
+phyloseq.extended::plot_composition(carbom, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
+  facet_grid(~Type+Fruit+Status, scales = "free_x", space = "free_x")
+phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
+  facet_grid(~Type+Fruit+Status, scales = "free_x", space = "free_x")
 
 ggsave(file.path(here::here(), "plots", "toto.pdf"), height = 6, width = 8)
 
@@ -190,8 +191,8 @@ carbom_rare_higher300 <- phyloseq::rarefy_even_depth(carbom_higher300, rngseed =
 
 ## After rarefaction
 phyloseq::plot_bar(carbom_rare_higher300, fill = "Species")
-phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family","Species", fill = "Species", numberOfTaxa = 9)
-phyloseq.extended::plot_composition(carbom_rare_higher400, "kingdom", "Bacteria", "family","Species", fill = "Species", numberOfTaxa = 9) + 
+phyloseq.extended::plot_composition(carbom_rare_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 9)
+phyloseq.extended::plot_composition(carbom_rare_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 9) + 
   facet_grid(~Type+Fruit+Status+Population, scales = "free_x", space = "free_x")
 
 ```
@@ -218,7 +219,7 @@ phyloseq::plot_richness(carbom, measures=c("Chao1", "Shannon"), color="Groups")
 ```{r, eval=TRUE}
 #carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="bray")
 
-carbom.ord_carbom_rare_higher400 <- phyloseq::ordinate(carbom_rare_higher400, method ="NMDS", distance ="jaccard")
+carbom.ord_carbom_rare_higher300 <- phyloseq::ordinate(carbom_rare_higher300, method ="NMDS", distance ="jaccard")
 
 phyloseq::plot_ordination(carbom_rare_higher400, carbom.ord_carbom_rare_higher400, type="Fruit", color="Groups", shape= "Type", title="")
 carbom.ord <- phyloseq::ordinate(carbom, method ="NMDS", distance ="jaccard")
