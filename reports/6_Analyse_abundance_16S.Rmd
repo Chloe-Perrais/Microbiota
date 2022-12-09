@@ -72,6 +72,24 @@ metadata$Groups <- factor(metadata$Groups, levels= levels(metadata$Groups)[c(2:9
 ## mutate(cyl = factor(cyl, levels = c(4, 6, 8)))
 
 colnames(metadata)
+
+## Add a column to know whether the pool is 100% Dsim, 100% Dsuz or a mix of the two species 
+metadata$DrosoSpecies <-ifelse(metadata$Type=="FRT"|is.na(metadata$Drosophila_simulans),NA,
+ifelse(metadata$Drosophila_simulans>0 & metadata$Drosophila_suzukii==0,
+"Dsim", ifelse(metadata$Drosophila_suzukii >0 &
+metadata$Drosophila_simulans==0, "Dsuz", "Dim_Dsuz")))
+
+metadata$Species <- ifelse(metadata$Type=="FRT", metadata$Fruit,
+paste(metadata$DrosoSpecies, metadata$Fruit, sep="_"))
+
+
+## Check that the samples for pupal cases and adults are in the same order
+metadata$Number[metadata$Type=="PUC"]
+metadata$Number[metadata$Type=="ADT"]
+
+## Assign pupal cases the species of the adults that emerged
+metadata$Species[metadata$Type=="PUC"] <-
+metadata$Species[metadata$Type=="ADT"]
 ```
 
 ## Merge replicates together
