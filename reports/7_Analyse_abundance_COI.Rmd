@@ -173,7 +173,7 @@ phyloseq.extended::plot_composition(carbom, "Kingdom", "Arthropoda", "Species", 
 phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) +
   facet_grid(~Type, scales = "free_x", space = "free_x")
 
-phyloseq.extended::plot_composition(carbom, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
+phyloseq.extended::plot_composition(carbom, "Family", "Drosophilinae", "Species", fill = "Species", numberOfTaxa = 11) + 
   facet_grid(~Type+Fruit+Status, scales = "free_x", space = "free_x")
 phyloseq.extended::plot_composition(carbom_higher300, "Kingdom", "Arthropoda", "Species", fill = "Species", numberOfTaxa = 11) + 
   facet_grid(~Type+Fruit+Status, scales = "free_x", space = "free_x")
